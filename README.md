@@ -4,8 +4,10 @@ MtreeRing
 
 
 
-<!--我的徽章-->
+**Authors:** [Jingning Shi](https://www.researchgate.net/profile/Shi_Jingning), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
+**License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
+<!--我的徽章-->
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
 [![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
