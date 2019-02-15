@@ -53,6 +53,8 @@ t1 <- imgInput(img = img.name, dpi = 1200)
 
 ### Detect ring borders 
 
+After reading the image, the automatic detection of ring borders can be performed using three approaches: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
+
 
 ```r
 ## Split a long core sample into 2 pieces to
@@ -61,5 +63,5 @@ t1 <- imgInput(img = img.name, dpi = 1200)
 t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 75% div align=left />
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 65% div align=left />
 
