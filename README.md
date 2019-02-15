@@ -74,5 +74,6 @@ MtreeRing::launchMtRApp()
 ```
 
 The GUI of MtreeRing makes use of a simple and familiar grid layout, like this
+<br></br>
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 75% height = 75% />  
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img004.png" width = 75% height = 75% />  
