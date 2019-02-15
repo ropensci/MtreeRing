@@ -62,9 +62,7 @@ t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 65% height = 65% div align=left />  
-
-*****
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 65% height = 65% />  
 
 ## Shiny application
 
