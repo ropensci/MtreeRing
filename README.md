@@ -46,7 +46,9 @@ library(MtreeRing)
 
 
 ```r
-## Read and plot the image
+## Read and plot a tree ring image
 img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- imgInput(img = img.name, dpi = 1200)
 ```
+
+![Image text](https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png)
