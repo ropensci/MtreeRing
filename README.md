@@ -51,5 +51,5 @@ img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- imgInput(img = img.name, dpi = 1200)
 ```
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 75% div align=right />
-![Image text](https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png)
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 75% div align=left />
+
