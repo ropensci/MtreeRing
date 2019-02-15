@@ -51,5 +51,15 @@ img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- imgInput(img = img.name, dpi = 1200)
 ```
 
+### Detect ring borders 
+
+
+```r
+## Split a long core sample into 2 pieces to
+## get better display performance and use the
+## watershed algorithm to detect ring borders:
+t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
+```
+
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 75% div align=left />
 
