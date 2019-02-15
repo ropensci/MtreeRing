@@ -63,7 +63,7 @@ t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 65% div align=left />  
-<br><br>
+<br>
 
 
 ## Shiny application
@@ -73,5 +73,4 @@ Run a Shiny-based application within the system's default web browser. The appli
 
 ```r
 launchMtRApp()
-#> Error in loadNamespace(name): there is no package called 'webshot'
 ```
