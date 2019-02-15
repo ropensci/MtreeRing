@@ -70,5 +70,9 @@ Run a Shiny-based application within the system's default web browser. The appli
 
 
 ```r
-launchMtRApp()
+MtreeRing::launchMtRApp()
 ```
+
+The GUI of MtreeRing makes use of a simple and familiar grid layout, like this
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 75% height = 75% />  
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img004.png" width = 75% height = 75% />  
