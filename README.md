@@ -62,7 +62,7 @@ t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 75% height = 65% div align=left />  
-
+<br/><br/>
 ## Shiny application
 
 Run a Shiny-based application within the system's default web browser. The application provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.
