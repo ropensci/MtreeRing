@@ -83,13 +83,20 @@ The dashboard has three components: a header, sidebar and body, like this
 ### 1. Image upload
 
 Once your launch the app, you can upload tree ring images from local hard disk. 
+After image loading, you can click on the "Measurement" link in the sidebar, and it switches content in the main body.
+
 
 ### 2. Path creation
 
-After image loading, you can click on the "Measurement" link in the sidebar, and it switches content in the main body.
+The R package has special support for linking/highlighting/filtering views that is not (yet) available outside of the R package. This functionality is built upon the [**crosstalk** package](https://rstudio.github.io/crosstalk/), which distinguishes between two event classes: *select* and *filter*. The **plotly** package interprets these classes in the following way:
+
+1. **Select**: add new "selection" trace(s) (i.e., graphical marks) and *dim* the other traces. Some people refer to this as "brushing" or "highlighting".
+2. **Filter**: retain "selection" trace(s), but *remove* other traces, and update the layout accordingly. Some people refer to this as "crossfilter" or "drill-down". 
+
+The following gif helps to demonstrate the difference
 
 A path creation consists of the following steps:
 
-#### a. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
-####b. Click "Create Path" (blue button on top left corner of the Measurement Window).
+1. Enter valid path information:including Series ID, DPI, Sampling year and Y-coordinate of the path.
+2. Click "Create Path" (blue button on top left corner of the Measurement Window).
 
