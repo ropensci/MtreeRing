@@ -83,12 +83,10 @@ The dashboard has three components: a header, sidebar and body, like this
 ### 1. Image upload
 
 Once your launch the app, you can upload tree ring images from local hard disk. 
-After image loading, you can click on the "Measurement" link in the sidebar, and it switches content in the main body.
-
 
 ### 2. Path creation
 
-A path creation consists of the following steps:
+After image loading, you can click on the "Measurement" link in the sidebar, and it switches content in the main body. A path creation consists of the following steps:
 
 1. Enter valid path information:including Series ID, DPI, Sampling year and Y-coordinate of the path.
 2. Click "Create Path" (blue button on top left corner of the Measurement Window).
