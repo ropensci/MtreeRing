@@ -61,8 +61,8 @@ After plotting the image, the automatic detection of ring borders can be perform
 t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
-
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 65% height = 65% />  
+<center><img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 65% height = 65% /></center>
+<center>Figure 1. The automatic detection of ring borders</center>
 
 ## Shiny application
 
@@ -91,3 +91,6 @@ After image loading, you can click on the "Measurement" link in the sidebar, and
 1. Enter valid path information:including Series ID, DPI, Sampling year and Y-coordinate of the path.
 2. Click "Create Path" (blue button on top left corner of the Measurement Window).
 
+In current version, the path is a horizontal dashed line (see ).
+
+### 2. Path creation
