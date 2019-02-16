@@ -82,7 +82,7 @@ The dashboard has three components: a header, sidebar and body, like this
 
 ### 1. Image upload
 
-Once your launch the app, you can upload tree ring images from local hard disk. [![here](https://cranchecks.info/badges/worst/MtreeRing)](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is sample image with the resolution of 1200 dpi.
+Once your launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is a sample image with the resolution of 1200 dpi.
 
 ### 2. Path creation
 
