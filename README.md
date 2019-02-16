@@ -86,9 +86,7 @@ Once your launch the app, you can upload tree ring images from local hard disk. 
 
 ### 2. Path creation
 
-After image loading, you can click on the "**Measurement**" link in the sidebar, and it switches content in the main body. 
-
-The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**.
+After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**.
 
 A path creation consists of the following steps:
 
@@ -96,6 +94,8 @@ A path creation consists of the following steps:
 2. Click "**Create Path**" (blue button on top left corner of the **Measurement Window**).
 
 In current version, the path is a horizontal dashed line (see Figure 1 above). The path position is usually placed at the center of the core sample and is adjustable both in width and color.
+
+<!--在这里放一个动态gif演示路径创建-->
 
 Detected ring borders are placed along the path, and are tagged with years and border numbers.
 
@@ -108,5 +108,5 @@ The Shiny-based app provides a mouse event, called "**brush**". You can select c
 <!--回头用动态gif代替-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
 
-If you have created a rectangle in the the **Measurement Window**, click on the green "**Run Detection**" button.
+After the rectangle has been created in the the **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders. see this example. 
 
