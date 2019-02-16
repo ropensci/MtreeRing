@@ -78,8 +78,8 @@ The dashboard has three components: a header, sidebar and body, like this
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
 
-### A simple workflow for ring-width measurement
+## A simple workflow for Shiny app
 
-#### 1. Image upload
+### 1. Image upload
 
 
