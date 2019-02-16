@@ -86,7 +86,11 @@ Once your launch the app, you can upload tree ring images from local hard disk. 
 
 ### 2. Path creation
 
-After image loading, you can click on the "**Measurement**" link in the sidebar, and it switches content in the main body. A path creation consists of the following steps:
+After image loading, you can click on the "**Measurement**" link in the sidebar, and it switches content in the main body. 
+
+The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**.
+
+A path creation consists of the following steps:
 
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
 2. Click "**Create Path**" (blue button on top left corner of the **Measurement Window**).
@@ -97,9 +101,12 @@ Detected ring borders are placed along the path, and are tagged with years and b
 
 ### 3. Ring detection
 
-If ring borders are clearly visible, click on an "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and edge detection. 
+If ring borders are clearly visible, click on the "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and edge detection. 
 
 The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This operation will create a blue rectangle. Here is a example.
 
+<!--回头用动态gif代替-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
+
+If you have created a rectangle in the the **Measurement Window**, click on the green "**Run Detection**" button.
 
