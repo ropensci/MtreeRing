@@ -89,6 +89,7 @@ Once your launch the app, you can upload tree ring images from local hard disk.
 After image loading, you can click on the "Measurement" link in the sidebar, and it switches content in the main body.
 
 A path creation consists of the following steps:
-a. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path
-b. Click "Create Path" (blue button on top left corner of the Measurement Window)
+
+a. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
+b. Click "Create Path" (blue button on top left corner of the Measurement Window).
 
