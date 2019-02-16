@@ -108,5 +108,9 @@ The Shiny-based app provides a mouse event, called "**brush**". You can select c
 <!--回头用动态gif代替-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
 
-After the rectangle has been created in the the **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders within the rectangle. We suggest createing a narrow rectangle to avoid avoid degrading performance of image processing. See this example. 
+After the rectangle has been created in the the **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders within the rectangle. We suggest createing a narrow rectangle to avoid degrading performance of image processing. See this example. 
+
+<!--放一个运行检测的例子-->
+
+### 4. Edit tree rings
 
