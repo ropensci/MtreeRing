@@ -86,10 +86,10 @@ Once your launch the app, you can upload tree ring images from local hard disk. 
 
 ### 2. Path creation
 
-After image loading, you can click on the **Measurement** link in the sidebar, and it switches content in the main body. A path creation consists of the following steps:
+After image loading, you can click on the "**Measurement**" link in the sidebar, and it switches content in the main body. A path creation consists of the following steps:
 
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
-2. Click **Create Path** (blue button on top left corner of the **Measurement Window**).
+2. Click "**Create Path**" (blue button on top left corner of the **Measurement Window**).
 
 In current version, the path is a horizontal dashed line (see Figure 1 above). The path position is usually placed at the center of the core sample and is adjustable both in width and color.
 
@@ -97,7 +97,7 @@ Detected ring borders are placed along the path, and are tagged with years and b
 
 ### 3. Ring detection
 
-If ring borders are clearly visible, click on an **Automation** button, and `MtreeRing` will show a new box at top right corner of the app.
+If ring borders are clearly visible, click on an "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app.
 
 
 
