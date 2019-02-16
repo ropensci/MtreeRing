@@ -91,6 +91,6 @@ After image loading, you can click on the "Measurement" link in the sidebar, and
 1. Enter valid path information:including Series ID, DPI, Sampling year and Y-coordinate of the path.
 2. Click "Create Path" (blue button on top left corner of the Measurement Window).
 
-In current version, the path is a horizontal dashed line (see ).
+In current version, the path is a horizontal dashed line (see Figure 1 above). Detected ring borders are placed along the path.
 
 ### 2. Path creation
