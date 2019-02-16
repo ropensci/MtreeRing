@@ -91,9 +91,9 @@ After image loading, you can click on the "**Measurement**" button in the sideba
 A path creation consists of the following steps:
 
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
-2. Click "**Create Path**" (blue button on top left corner of the **Measurement Window**).
+2. Click on the "**Create Path**" (blue button on top left corner of the **Measurement Window**).
 
-In current version, the path is a horizontal dashed line (see Figure 1 above). The path position is usually placed at the center of the core sample and is adjustable both in width and color.
+In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
 
 <!--在这里放一个动态gif演示路径创建-->
 
@@ -108,5 +108,5 @@ The Shiny-based app provides a mouse event, called "**brush**". You can select c
 <!--回头用动态gif代替-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
 
-After the rectangle has been created in the the **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders. see this example. 
+After the rectangle has been created in the the **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders within the rectangle. We suggest createing a narrow rectangle to avoid avoid degrading performance of image processing. See this example. 
 
