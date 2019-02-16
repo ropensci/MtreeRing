@@ -76,4 +76,10 @@ MtreeRing::launchMtRApp()
 The dashboard has three components: a header, sidebar and body, like this
 <br></br>
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% />  
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
+
+### A simple workflow for ring-width measurement
+
+#### 1. Image upload
+
+
