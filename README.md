@@ -73,7 +73,7 @@ Run a Shiny-based application within the system's default web browser. The appli
 MtreeRing::launchMtRApp()
 ```
 
-The GUI of MtreeRing makes use of a simple and familiar grid layout. It has three components: a header, sidebar and body, like this
+The dashboard has three components: a header, sidebar and body, like this
 <br></br>
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% />  
