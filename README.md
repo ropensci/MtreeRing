@@ -76,7 +76,7 @@ MtreeRing::launchMtRApp()
 The dashboard has three components: a header, sidebar and body, like this
 <br></br>
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
+
 
 ## A simple workflow for Shiny app
 
@@ -97,7 +97,9 @@ Detected ring borders are placed along the path, and are tagged with years and b
 
 ### 3. Ring detection
 
-If ring borders are clearly visible, click on an "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app.
+If ring borders are clearly visible, click on an "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and edge detection. 
 
+The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This operation will create a blue rectangle. Here is a example.
 
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img003.png" width = 85% height = 85% /> 
 
