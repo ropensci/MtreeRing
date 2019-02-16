@@ -114,5 +114,5 @@ After the rectangle has been created in the first graphical window **Measurement
 
 ### 4. Edit tree rings
 
-If pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually.
+If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually.
 
