@@ -1,7 +1,8 @@
 
 MtreeRing
 =======
-<!--setwd("C:/Users/snow/Desktop/MTR已投稿/rOPENsci相关")-->
+<!--setwd("C:/Users/snow/Desktop/MTR已投稿/rOPENsci相关");require(knitr)
+require(markdown);knit("README.Rmd")-->
 
 
 **Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
@@ -96,8 +97,7 @@ A path creation consists of the following steps:
 In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
 
 <!--在这里放一个动态gif演示路径创建-->
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation.gif" width = 100% height = 100% /> 
-
+![image](https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation.gif)
 
 Detected ring borders are placed along the path, and are tagged with years and border numbers.
 
