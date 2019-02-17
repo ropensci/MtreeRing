@@ -112,12 +112,12 @@ If ring borders are clearly visible, click on the "**Automation**" button, and `
 The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This operation will create a blue rectangle. Here is a example of **brush**.
 
 <!--回头用动态gif代替-->
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/Brush2.gif" width = 75% height = 75% /> 
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/Brush2.gif" width = 60% height = 60% /> 
 
 After the rectangle has been created in the first graphical window **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders within the rectangle. We suggest createing a narrow rectangle to accelerate the detecting process. See this example. 
 
 <!--放一个运行检测的gif例子-->
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingDetection2.gif" width = 75% height = 75% /> 
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingDetection2.gif" width = 60% height = 60% /> 
 
 ### 4. Edit tree rings
 
