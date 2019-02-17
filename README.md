@@ -94,10 +94,14 @@ A path creation consists of the following steps:
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
 2. Click on the "**Create Path**" (blue button on top left corner of the **Measurement Window**).
 
-In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
+See this example:
 
 <!--在这里放一个动态gif演示路径创建-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation3.gif" width = 70% height = 75% /> 
+
+In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
+
+
 
 Detected ring borders are placed along the path, and are tagged with years and border numbers.
 
@@ -105,7 +109,7 @@ Detected ring borders are placed along the path, and are tagged with years and b
 
 If ring borders are clearly visible, click on the "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
 
-The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This operation will create a blue rectangle. Here is a example of "**brush**".
+The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This operation will create a blue rectangle. Here is a example of **brush**.
 
 <!--回头用动态gif代替-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/Brush2.gif" width = 75% height = 75% /> 
@@ -113,6 +117,7 @@ The Shiny-based app provides a mouse event, called "**brush**". You can select c
 After the rectangle has been created in the first graphical window **Measurement Window**, you can click on the green "**Run Detection**" button, and the app will detect ring borders within the rectangle. We suggest createing a narrow rectangle to accelerate the detecting process. See this example. 
 
 <!--放一个运行检测的gif例子-->
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingDetection2.gif" width = 75% height = 75% /> 
 
 ### 4. Edit tree rings
 
