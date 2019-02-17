@@ -97,9 +97,9 @@ A path creation consists of the following steps:
 In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
 
 <!--在这里放一个动态gif演示路径创建-->
-
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation.gif" width = 115% height = 115% /> 
-
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation.gif" width = 90% height = 90% /> 
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation.gif" width = 100% height = 100% /> 
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation.gif" width = 110% height = 110% /> 
 
 Detected ring borders are placed along the path, and are tagged with years and border numbers.
 
