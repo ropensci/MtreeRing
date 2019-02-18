@@ -67,17 +67,18 @@ t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 
 ## Shiny application
 
-Run a Shiny-based application within the system's default web browser. The application provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.
-
 
 ```r
 MtreeRing::launchMtRApp()
 ```
 
-The dashboard has three components: a header, sidebar and body, like this
-<br></br>
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
+This command allows to run a Shiny-based application within the system's default web browser. The application provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.
 
+The dashboard has three components: a header, sidebar and body, like this
+
+<br></br>
+
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
 
 ## A simple workflow for Shiny app
 
@@ -165,5 +166,16 @@ You can also perform a mass deletion of borders using the input control below th
 When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue **Generate Series** button at the bottom right corner of the app. 
 
 To download a file, click on the **RWL** tab or **CSV** tab. You can provide additional **headers** for the RWL file to record more useful information, such as species, elevation, and site. 
+
+## Ring width correction
+
+If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. 
+
+Under such conditions, you can create two paths by setting `incline = TRUE` or checking the box "**Inclined tree rings**". See this example:
+
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingCorrection.png" /> 
+
+Ring width is estimated from distance between adjcent rings and orientation of ring borders.
+
 
 
