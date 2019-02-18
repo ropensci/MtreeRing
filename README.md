@@ -113,12 +113,14 @@ Let's start by introducing a new action. The Shiny-based app provides a mouse ev
 If ring borders are clearly visible, follow the steps below to detect tree rings:
 
 1. Click on the "**Automation**" button. 
-After clicking on this button, `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
+
+    After clicking on this button, `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
 
 2. Create a blue rectangle mentioned above in the first graphical window (**Measurement Window**) by brushing
 
 3. Click on the green "**Run Detection**" button. 
-The app will detect ring borders within the rectangular region. We suggest creating a narrow rectangle to accelerate the detecting process. 
+    
+    The app will detect ring borders within the rectangular region. We suggest creating a narrow rectangle to accelerate the detecting process. 
 
 See this eaxmple:
 
