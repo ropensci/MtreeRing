@@ -100,7 +100,7 @@ See this example:
 <!--在这里放一个动态gif演示路径创建-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation3.gif" width = 70% height = 75% /> 
 
-In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
+In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
 
 ### 3. Ring detection
 
@@ -121,7 +121,7 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
     
     The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process. 
 
-See this eaxmple:
+See this example:
 
 <!--放一个运行检测的gif例子-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingDetection2.gif" width = 60% height = 60% /> 
