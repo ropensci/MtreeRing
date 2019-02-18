@@ -92,7 +92,8 @@ After image loading, you can click on the "**Measurement**" button in the sideba
 A path creation consists of the following steps:
 
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
-2. Click on the "**Create Path**" (blue button on top left corner of the **Measurement Window**).
+
+2. Click on the "**Create Path**" (blue button at the top left corner of the **Measurement Window**).
 
 See this example:
 
@@ -100,8 +101,6 @@ See this example:
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation3.gif" width = 70% height = 75% /> 
 
 In current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
-
-Detected ring borders are placed along the path, and are tagged with years and border numbers.
 
 ### 3. Ring detection
 
@@ -114,13 +113,13 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 
 1. Click on the "**Automation**" button. 
 
-    After clicking on this button, `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
+    After clicking on this button, `MtreeRing` will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
 
-2. Create a blue rectangle mentioned above in the first graphical window (**Measurement Window**) by brushing
+2. Create a blue rectangle mentioned above in the first graphical window (**Measurement Window**) by brushing.
 
 3. Click on the green "**Run Detection**" button. 
     
-    The app will detect ring borders within the rectangular region. We suggest creating a narrow rectangle to accelerate the detecting process. 
+    The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process. 
 
 See this eaxmple:
 
