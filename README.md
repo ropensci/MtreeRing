@@ -164,6 +164,6 @@ You can also perform a mass deletion of borders using the input control below th
 
 When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue **Generate Series** button at the bottom right corner of the app. 
 
-To download a file, you can click on the **RWL** tab or **CSV** tab. As their name implies, currently supported formats include RWL and CSV. You can provide additional headers for the RWL file to record more useful information, such as species, elevation, and site. 
+To download a file, click on the **RWL** tab or **CSV** tab. You can also provide additional **headers** for the RWL file to record more useful information, such as species, elevation, and site. 
 
 
