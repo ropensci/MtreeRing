@@ -134,9 +134,10 @@ You may have noticed that the **Zoomed Image Window** has no image. In addition 
 
 1. Create a blue rectangle in the **Measurement Window** by brushing.
 
-2. **Double-click** on this rectangle, or Click on the blue **Create Sub-image** button below.
+2. **Double click** on this rectangle, or Click on the blue **Create Sub-image** button below.
 
 #### 4.1 Add tree rings
 
-After creating the zoomed-in image
+After creating the zoomed-in image, you can add a ring by double clicking on the path. See this example.
 
+<img src="https://github.com/jingningshi/test001/blob/master/man/figures/AddRing2.gif" width = 60% height = 60% /> 
