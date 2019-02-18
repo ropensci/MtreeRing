@@ -1,8 +1,8 @@
 
 MtreeRing
 =======
-<!--setwd("C:/Users/snow/Desktop/MTR已投稿/rOPENsci相关");require(knitr)
-require(markdown);knit("README.Rmd")-->
+<!--setwd("C:/Users/snow/Desktop/MTR已投稿/rOPENsci相关")-->
+<!--require(knitr);require(markdown);knit("README.Rmd")-->
 
 
 **Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
@@ -105,14 +105,22 @@ Detected ring borders are placed along the path, and are tagged with years and b
 
 ### 3. Ring detection
 
-Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This operation will create a blue rectangle. Here is an example of **brush**.
+Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This action will create a blue rectangle. Here is an example of **brush**.
 
 <!--回头用动态gif代替-->
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/Brush2.gif" width = 60% height = 60% /> 
 
-If ring borders are clearly visible, click on the "**Automation**" button, and `MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
+If ring borders are clearly visible, follow the steps below to detect tree rings:
 
-Then you can create a blue rectangle mentioned above in the first graphical window (**Measurement Window**), and click on the green "**Run Detection**" button. The app will detect ring borders within the rectangular region. We suggest creating a narrow rectangle to accelerate the detecting process. 
+1. Click on the "**Automation**" button. 
+
+`MtreeRing` will show a new box at top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
+
+2. Create a blue rectangle mentioned above in the first graphical window (**Measurement Window**) by brushing
+
+3. Click on the green "**Run Detection**" button. 
+
+The app will detect ring borders within the rectangular region. We suggest creating a narrow rectangle to accelerate the detecting process. 
 
 See this eaxmple:
 
