@@ -138,7 +138,9 @@ You may have noticed that the **Zoomed Image Window** has no image. In addition 
 
 #### 4.1 Add tree rings
 
-After creating the zoomed-in image, you can add a ring by double clicking on the path. See this example.
+After creating the zoomed-in image, you can add a ring by double clicking on the path. 
+
+See this example:
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/AddRing2.gif" width = 60% height = 60% /> 
 
@@ -146,7 +148,7 @@ After creating the zoomed-in image, you can add a ring by double clicking on the
 
 Follow these steps to remove tree rings: 
 
-1. Create a rectangle in the **Zoomed Image Window** by brushing
+1. Create a rectangle in the **Zoomed Image Window** by brushing.
 
 2. Click on the red **Delete Border** button at the top left corner of the **Zoomed Image Window**.
 
