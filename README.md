@@ -128,11 +128,15 @@ See this example:
 
 ### 4. Edit tree rings
 
-If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Zoomed Image Window**) is used to add (remove) misidentified tree ring borders to (from) the image.
+If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Zoomed Image Window**) is used to add (remove) tree ring borders to (from) the image.
 
 You may have noticed that the **Zoomed Image Window** has no image. In addition to detecting tree rings, the rectangle created in the **Measurement Window** can also be used to generate a zoomed-in image in the **Zoomed Image Window** through the following steps:
 
 1. Create a blue rectangle in the **Measurement Window** by brushing.
 
-2. **Double-click** on this rectangle, or Click on the blue **Creat Sub-image** button.
+2. **Double-click** on this rectangle, or Click on the blue **Create Sub-image** button below.
+
+#### 4.1 Add tree rings
+
+After creating the zoomed-in image
 
