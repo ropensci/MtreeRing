@@ -171,11 +171,11 @@ To download a file, click on the **RWL** tab or **CSV** tab. You can provide add
 
 If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. 
 
-Under such conditions, you can create two paths by setting `incline = TRUE` or checking the box "**Inclined tree rings**". See this example:
+Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by checking the box "**Inclined tree rings**". See this example:
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingCorrection.png" /> 
 
-Ring width is estimated from distance between adjcent rings and orientation of ring borders.
+The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.
 
 
 
