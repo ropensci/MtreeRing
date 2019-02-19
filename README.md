@@ -52,7 +52,7 @@ t1 <- imgInput(img = img.name, dpi = 1200)
 
 ### Detect ring borders 
 
-After plotting the image, the automatic detection of ring borders can be performed using three approaches: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
+After plotting the image, the automatic detection of ring borders can be performed three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
 
 
 ```r
@@ -76,19 +76,17 @@ This command allows to run a Shiny-based application within the system's default
 
 The dashboard has three components: a header, sidebar and body, like this
 
-<br></br>
-
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
 
 ## A simple workflow for Shiny app
 
 ### 1. Image upload
 
-Once your launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used for the demonstration of ring-width measurement. 
+Once you launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used for the demonstration of ring-width measurement. 
 
 ### 2. Path creation
 
-After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**.
+After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers
 
 A path creation consists of the following steps:
 
