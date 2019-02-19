@@ -72,7 +72,7 @@ t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 MtreeRing::launchMtRApp()
 ```
 
-This command allows to run a Shiny-based application within the system's default web browser. The application provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.
+This command allows to run a Shiny-based application within the system's default web browser. The app provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.
 
 The dashboard has three components: a header, sidebar and body, like this
 
@@ -86,13 +86,13 @@ Once you launch the app, you can upload tree ring images from local hard disk. [
 
 ### 2. Path creation
 
-After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers
+After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
 
 A path creation consists of the following steps:
 
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
 
-2. Click on the "**Create Path**" (blue button at the top left corner of the **Measurement Window**).
+2. Click on the blue "**Create Path**" button at the top left corner of the **Measurement Window**.
 
 See this example:
 
@@ -116,7 +116,7 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 
 2. Create a blue rectangle mentioned above in the first graphical window (**Measurement Window**) by brushing.
 
-3. Click on the green "**Run Detection**" button. 
+3. Click on the green "**Run Automatic Detection**" button. 
     
     The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process. 
 
