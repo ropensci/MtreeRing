@@ -129,11 +129,11 @@ See this example:
 
 If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Zoomed Image Window**) is used to add (remove) tree ring borders to (from) the image.
 
-You may have noticed that the **Zoomed Image Window** has no image. In addition to detecting tree rings, the rectangle created in the **Measurement Window** can also be used to generate a zoomed-in image in the **Zoomed Image Window** through the following steps:
+You may have noticed that the **Zoomed Image Window** has no image. To generate a zoomed-in image in the **Zoomed Image Window**, follow these steps:
 
 1. Create a blue rectangle in the **Measurement Window** by brushing.
 
-2. **Double click** on this rectangle, or Click on the blue **Create Sub-image** button below.
+2. **Double click** on this rectangle, or Click on the blue "**Create Sub-image**" button below.
 
 #### 4.1 Add tree rings
 
@@ -149,7 +149,7 @@ Follow these steps to remove tree rings:
 
 1. Create a rectangle in the **Zoomed Image Window** by brushing.
 
-2. Click on the red **Delete Border** button at the top left corner of the **Zoomed Image Window**.
+2. Click on the red "**Delete Border**" button at the top left corner of the **Zoomed Image Window**.
 
     This operation will delete all ring borders covered by the rectangular region. 
 
@@ -161,13 +161,13 @@ You can also perform a mass deletion of borders using the input control below th
 
 ### 5. File download
 
-When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue **Generate Series** button at the bottom right corner of the app. 
+When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue "**Generate Series**" button at the bottom right corner of the app. 
 
 To download a file, click on the **RWL** tab or **CSV** tab. You can provide additional **headers** for the RWL file to record more useful information, such as species, elevation, and site. 
 
 ## Ring width correction
 
-If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. 
+If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. Tangent lines of rings close to the pith are therefore not perpendicular to the horizontal path, which may lead to considerable errors in ring widths.
 
 Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by checking the box "**Inclined tree rings**". See this example:
 
