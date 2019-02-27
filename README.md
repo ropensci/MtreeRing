@@ -52,7 +52,7 @@ t1 <- imgInput(img = img.name, dpi = 1200)
 
 ### Detect ring borders 
 
-After plotting the image, the automatic detection of ring borders can be performed three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
+After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
 
 
 ```r
@@ -86,13 +86,13 @@ Once you launch the app, you can upload tree ring images from local hard disk. [
 
 ### 2. Path creation
 
-After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Measurement Window** and **Zoomed Image Window**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
+After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Tree Ring Detection** and **Tree Ring Editing**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
 
 A path creation consists of the following steps:
 
 1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
 
-2. Click on the blue "**Create Path**" button at the top left corner of the **Measurement Window**.
+2. Click on the blue "**Create Path**" button at the top left corner of the **Tree Ring Detection**.
 
 See this example:
 
@@ -114,9 +114,9 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 
     After clicking on this button, `MtreeRing` will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
 
-2. Create a blue rectangle mentioned above in the first graphical window (**Measurement Window**) by brushing.
+2. Create a blue rectangle mentioned above in the first graphical window (**Tree Ring Detection**) by brushing.
 
-3. Click on the green "**Run Automatic Detection**" button. 
+3. Click on the green "**Run Detection**" button. 
     
     The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process. 
 
@@ -127,11 +127,11 @@ See this example:
 
 ### 4. Edit tree rings
 
-If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Zoomed Image Window**) is used to add (remove) tree ring borders to (from) the image.
+If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Tree Ring Editing**) is used to add (remove) tree ring borders to (from) the image.
 
-You may have noticed that the **Zoomed Image Window** has no image. To generate a zoomed-in image in the **Zoomed Image Window**, follow these steps:
+You may have noticed that the **Tree Ring Editing** has no image. To generate a zoomed-in image in the **Tree Ring Editing**, follow these steps:
 
-1. Create a blue rectangle in the **Measurement Window** by brushing.
+1. Create a blue rectangle in the **Tree Ring Detection** by brushing.
 
 2. **Double click** on this rectangle, or Click on the blue "**Create Sub-image**" button below.
 
@@ -147,9 +147,9 @@ See this example:
 
 Follow these steps to remove tree rings: 
 
-1. Create a rectangle in the **Zoomed Image Window** by brushing.
+1. Create a rectangle in the **Tree Ring Editing** by brushing.
 
-2. Click on the red "**Delete Border**" button at the top left corner of the **Zoomed Image Window**.
+2. Click on the red "**Delete Border**" button at the top left corner of the **Tree Ring Editing**.
 
     This operation will delete all ring borders covered by the rectangular region. 
 
@@ -157,7 +157,7 @@ See this example:
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/RemoveRing.gif" width = 60% height = 60% /> 
 
-You can also perform a mass deletion of borders using the input control below the **Zoomed Image Window**.
+You can also perform a mass deletion of borders using the input control below the **Tree Ring Editing**.
 
 ### 5. File download
 
@@ -169,7 +169,7 @@ To download a file, click on the **RWL** tab or **CSV** tab. You can provide add
 
 If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. Tangent lines of rings close to the pith are therefore not perpendicular to the horizontal path, which may lead to considerable errors in ring widths.
 
-Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by checking the box "**Inclined tree rings**". See this example:
+Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by ticking the checkbox "**Inclined tree rings**". See this example.
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingCorrection.png" /> 
 
