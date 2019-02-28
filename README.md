@@ -82,7 +82,7 @@ The dashboard has three components: a header, sidebar and body, like this
 
 ### 1. Image upload
 
-Once you launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used for the demonstration of ring-width measurement. 
+Once you launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used to demonstrate the ring-width measurement. 
 
 ### 2. Path creation
 
@@ -129,7 +129,7 @@ See this example:
 
 If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Tree Ring Editing**) is used to add (remove) tree ring borders to (from) the image.
 
-You may have noticed that the **Tree Ring Editing** has no image. To generate a zoomed-in image in the **Tree Ring Editing**, follow these steps:
+You may have noticed that the graphical windows **Tree Ring Editing** has no image. To generate a zoomed-in image in this windows, follow these steps:
 
 1. Create a blue rectangle in the **Tree Ring Detection** by brushing.
 
@@ -143,7 +143,7 @@ See this example:
 
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/AddRing2.gif" width = 60% height = 60% /> 
 
-#### 4.1 Remove tree rings
+#### 4.2 Remove tree rings
 
 Follow these steps to remove tree rings: 
 
