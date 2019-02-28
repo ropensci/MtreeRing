@@ -1,14 +1,13 @@
 
 MtreeRing
 =======
-<!--setwd("C:/Users/snow/Desktop/MTR已投稿/rOPENsci相关")-->
-<!--require(knitr);require(markdown);knit("README.Rmd")-->
+
 
 
 **Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
 **License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
-<!--我的徽章-->
+
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
 [![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
@@ -96,7 +95,7 @@ A path creation consists of the following steps:
 
 See this example:
 
-<!--在这里放一个动态gif演示路径创建-->
+
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation3.gif" width = 70% height = 75% /> 
 
 In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
@@ -105,7 +104,7 @@ In the current version, the path is a horizontal dashed line (see Figure 1 above
 
 Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This action will create a blue rectangle. Here is an example of **brush**.
 
-<!--回头用动态gif代替-->
+
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/Brush2.gif" width = 60% height = 60% /> 
 
 If ring borders are clearly visible, follow the steps below to detect tree rings:
@@ -122,7 +121,7 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 
 See this example:
 
-<!--放一个运行检测的gif例子-->
+
 <img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingDetection2.gif" width = 60% height = 60% /> 
 
 ### 4. Edit tree rings
