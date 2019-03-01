@@ -2,8 +2,6 @@
 MtreeRing
 =======
 
-
-
 **Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
 **License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
