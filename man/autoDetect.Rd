@@ -4,12 +4,12 @@
 \description{This function is used to automatically detect tree-ring boundaries along the user-defined path.}
 \usage{
 autoDetect(ring.data, seg = 1, auto.path = TRUE, manual = FALSE, 
-    method = "watershed", incline = FALSE, sample.yr = NULL, 
-    watershed.threshold = "auto", watershed.adjust = 0.8, 
-    struc.ele1 = NULL, struc.ele2 = NULL, marker.correct = FALSE, 
-    default.canny = TRUE, canny.t1, canny.t2, canny.smoothing = 2, 
-    canny.adjust = 1.4, path.dis = 1, origin = 0, border.color = "black", 
-    border.type = 16, label.color = "black", label.cex = 1.2)
+  method = "canny", incline = FALSE, sample.yr = NULL, 
+  watershed.threshold = "auto", watershed.adjust = 0.8, 
+  struc.ele1 = NULL, struc.ele2 = NULL, marker.correct = FALSE, 
+  default.canny = TRUE, canny.t1, canny.t2, canny.smoothing = 2, 
+  canny.adjust = 1.4, path.dis = 1, origin = 0, border.color = "black", 
+  border.type = 16, label.color = "black", label.cex = 1.2)
 }
 \arguments{
   \item{ring.data}{A magick image object produced by \code{imgInput}.}
@@ -17,12 +17,12 @@ autoDetect(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   \item{auto.path}{A logical value. If \code{TRUE}, a path is automatically created at the center of the image. If \code{FALSE}, the function allows the user to create a sub-image and a path by interactive clickings. See details below.}
   \item{manual}{A logical value indicating whether to skip the automatic detection. If \code{TRUE}, ring boundaries are visually identified using the function \code{visualSelect}.}
   \item{method}{A character string specifying how ring borders are detected. It requires one of the following characters: \code{"watershed"}, \code{"canny"}, or \code{"lineardetect"}. See details below.}
-  \item{incline}{A logical value indicating whether to correct errors due to inclined rings. If \code{TRUE}, two horizontal paths will be added to the image.}
+  \item{incline}{A logical value indicating whether to correct ring widths. If \code{TRUE}, two horizontal paths are added to the image.}
   \item{sample.yr}{\code{NULL} or an integer giving the year of formation of the left-most ring. If \code{NULL}, use the current year.}
   \item{watershed.threshold}{The threshold used for producing the marker image, either a numeric from 0 to 1, or the character "auto" (using the Otsu algorithm), or a character of the form "XX\%" (e.g., "58\%").}
-  \item{watershed.adjust}{A numeric used to adjust the Otsu threshold. The default is 1 which means that the threshold will not be adjusted. The area of early-wood regions in the marker image will reduce along with the decrease of \code{watershed.adjust}.}
-  \item{struc.ele1}{\code{NULL} or a vector of length two specifying the width and height of the first structuring element. If \code{NULL}, the size of the structuring element is determined according to the argument \code{dpi}.}
-  \item{struc.ele2}{\code{NULL} or a vector of length two specifying the width and height of the second structuring element. If \code{NULL}, the size of the structuring element is determined according to the argument \code{dpi}.}
+  \item{watershed.adjust}{A numeric used to adjust the Otsu threshold. The default is 1 which means that the threshold will not be adjusted. The sizes of early-wood regions in the marker image will reduce along with the decrease of \code{watershed.adjust}.}
+  \item{struc.ele1}{\code{NULL} or a vector of length two specifying the width and height of the first structuring element. If \code{NULL}, the size of the structuring element is determined by the argument \code{dpi}.}
+  \item{struc.ele2}{\code{NULL} or a vector of length two specifying the width and height of the second structuring element. If \code{NULL}, the size of the structuring element is determined by the argument \code{dpi}.}
   \item{marker.correct}{A logical value indicating whether to relabel early-wood regions by comparing the values of their left-side neighbours.}
   \item{default.canny}{A logical value. If \code{TRUE}, upper and lower Canny thresholds are determined automatically.}
   \item{canny.t1}{A numeric giving the threshold for weak edges.}
@@ -33,11 +33,11 @@ autoDetect(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   \item{origin}{A numeric specifying the origin in smoothed gray to find the ring borders. See  \code{\link{ringBorders}} in the package \code{\link{measuRing}}.}
   \item{border.color}{Color for ring borders.}
   \item{border.type}{Symbol for ring borders. See \code{pch} in \code{\link{points}} for possible values and their shapes.}
-  \item{label.color}{Color for years and ring numbers.}
-  \item{label.cex}{The magnification to be used for years and ring numbers.}
+  \item{label.color}{Color for years and border numbers.}
+  \item{label.cex}{The magnification to be used for years and border numbers.}
 }
 \details{
-If \code{auto.path = TRUE}, the user can create a user-defined rectangular sub-image and a horizontal path by interactively clicking on the tree-ring image. The automatic detection will be performed within the rectangular sub-image along a pre-determined path. To create the sub-image and the path, follow these steps.
+If \code{auto.path = FALSE}, the user can create a user-defined rectangular sub-image and a horizontal path by interactively clicking on the tree-ring image. The automatic detection will be performed within the rectangular sub-image along a pre-determined path. To create the sub-image and the path, follow these steps.
 
 \itemize{
     \item
@@ -53,7 +53,7 @@ If \code{auto.path = TRUE}, the user can create a user-defined rectangular sub-i
      \item
      Step 3. Create a path
      
-     After creating the rectangular sub-image, the user can add a horizontal path by left-clicking on the sub-image (generally in the middle of the sub-image, try to choose a clean defect-free area). Ring borders and other markers are plotted along this path. If \code{incline = TRUE}, two paths are added simultaneously.
+     After creating the rectangular sub-image, the user can add a horizontal path by left-clicking on the sub-image (generally at the center of the sub-image, try to choose a clean defect-free area). Ring borders and other markers are plotted along this path. If \code{incline = TRUE}, two paths are added simultaneously.
 
 }
 
@@ -66,9 +66,9 @@ Argument \code{method} determines how ring borders are identified.
     \item
     If \code{method = "canny"}, this function uses the Canny algorithm to detect borders.
     \item
-    If \code{method = "lineardetect"}, a linear detection algorithm from the \code{\link{measuRing}} package is used to identify ring borders (Lara et al., 2015). Note that \code{incline = TRUE} is not supported in this mode and path will be created automatically in the middle position of the image without the need to specify by the user. 
+    If \code{method = "lineardetect"}, a linear detection algorithm from the package \code{\link{measuRing}} is used to identify ring borders (Lara et al., 2015). Note that \code{incline = TRUE} is not supported in this mode, and path will be automatically created at the center of the image. 
 }
-If the argument \code{method = "watershed"} or \code{"canny"}, the original image is processed by morphological openings and closings using rectangular structuring elements of increasing size before detecting borders. The first small structuring element is used to remove smaller dark spots in early-wood regions and the second large structuring element is used to remove light strips in late-wood regions.
+If the argument \code{method = "watershed"} or \code{"canny"}, the original image is processed by morphological openings and closings using rectangular structuring elements of increasing size before detecting borders. The first small structuring element is used to remove smaller dark spots in early wood regions, and the second large structuring element is used to remove light strips in late wood regions. More details can be found at Soille and Misson (2001).
 
 }
 
@@ -91,16 +91,15 @@ If the argument \code{method = "watershed"} or \code{"canny"}, the original imag
 \note{This function uses the function \code{\link{locator}} to record mouse positions so it only works on "X11", "windows" and "quartz".}
 
 \examples{
-## Find the image file name in package MtreeRing:
-img.name <- system.file("001.png", package = "MtreeRing")
+img.path <- system.file("001.png", package = "MtreeRing")
 
 ## Read and plot the image:
-t1 <- imgInput(img = img.name, dpi = 1200)
+t1 <- imgInput(img = img.path, dpi = 1200)
 
 ## Split a long core sample into 3 pieces to
 ## get better display performance and use the
 ## watershed algorithm to detect ring borders:
-t2 <- autoDetect(ring.data = t1, seg = 3, method = 'watershed')
+t2 <- autoDetect(t1, seg = 3, method = 'watershed', border.color = 'green')
 
 }
 
