@@ -32,7 +32,7 @@ or the development version from GitHub
 
 ```r
 # install.packages("devtools")
-devtools::install_github("ropensci/MtreeRing")
+devtools::install_github("JingningShi/MtreeRing")
 ```
 
 ## Utilities
