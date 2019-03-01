@@ -1,8 +1,7 @@
 
 MtreeRing
 =======
-<!--setwd("C:/Users/snow/Desktop/MTR已投稿/rOPENsci相关")-->
-<!--require(knitr);require(markdown);knit("README.Rmd")-->
+
 ```{r echo=FALSE}
 knitr::opts_chunk$set(
   comment = "#>",
