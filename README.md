@@ -2,10 +2,13 @@
 MtreeRing
 =======
 
+<!--require(knitr);require(markdown);knit("README.Rmd")-->
+
+
 **Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
 **License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
-
+<!--我的徽章-->
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
 [![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
@@ -49,7 +52,7 @@ t1 <- imgInput(img = img.name, dpi = 1200)
 
 ### Detect ring borders 
 
-After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://CRAN.R-project.org/package=measuRing).
+After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
 
 
 ```r
@@ -59,7 +62,7 @@ After plotting the image, the automatic detection of ring borders can be perform
 t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
-<center><img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img001.png" width = 65% height = 65% /></center>
+<center><img src="https://github.com/JingningShi/GifRepo/blob/master/figuresREADME-img001.png" width = 65% height = 65% /></center>
 <center>Figure 1. The automatic detection of ring borders</center>
 
 ## Shiny application
@@ -73,13 +76,13 @@ This command allows to run a Shiny-based application within the system's default
 
 The dashboard has three components: a header, sidebar and body, like this
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/README-img002.png" width = 85% height = 85% />  
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresREADME-img002.png" width = 85% height = 85% />  
 
 ## A simple workflow for Shiny app
 
 ### 1. Image upload
 
-Once you launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/jingningshi/test001/blob/master/man/figures/001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used to demonstrate the ring-width measurement. 
+Once you launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/JingningShi/GifRepo/blob/master/figures001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used to demonstrate the ring-width measurement. 
 
 ### 2. Path creation
 
@@ -93,8 +96,7 @@ A path creation consists of the following steps:
 
 See this example:
 
-
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/PathCreation3.gif" width = 70% height = 75% /> 
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresPathCreation3.gif" width = 70% height = 75% /> 
 
 In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
 
@@ -103,7 +105,7 @@ In the current version, the path is a horizontal dashed line (see Figure 1 above
 Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This action will create a blue rectangle. Here is an example of **brush**.
 
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/Brush2.gif" width = 60% height = 60% /> 
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresBrush2.gif" width = 60% height = 60% /> 
 
 If ring borders are clearly visible, follow the steps below to detect tree rings:
 
@@ -120,7 +122,7 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 See this example:
 
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingDetection2.gif" width = 60% height = 60% /> 
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresRingDetection2.gif" width = 60% height = 60% /> 
 
 ### 4. Edit tree rings
 
@@ -138,7 +140,7 @@ After creating the zoomed-in image, you can add a ring by **double clicking** on
 
 See this example:
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/AddRing2.gif" width = 60% height = 60% /> 
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresAddRing2.gif" width = 60% height = 60% /> 
 
 #### 4.2 Remove tree rings
 
@@ -152,7 +154,7 @@ Follow these steps to remove tree rings:
 
 See this example:
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RemoveRing.gif" width = 60% height = 60% /> 
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresRemoveRing.gif" width = 60% height = 60% /> 
 
 You can also perform a mass deletion of borders using the input control below the **Tree Ring Editing**.
 
@@ -168,7 +170,7 @@ If an increment borer is used to extract samples, it is well known that the auge
 
 Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by ticking the checkbox "**Inclined tree rings**". See this example.
 
-<img src="https://github.com/jingningshi/test001/blob/master/man/figures/RingCorrection.png" /> 
+<img src="https://github.com/JingningShi/GifRepo/blob/master/figuresRingCorrection.png" /> 
 
 The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.
 
