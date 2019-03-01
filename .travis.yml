@@ -9,7 +9,13 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y libmagick++-dev 
 
-
+addons:
+  apt:
+    packages:
+      - libtiff-dev
+      - libpng-dev
+      - libjpeg-dev
+      - libfftw3-dev
 cache: packages
 
 after_success:
