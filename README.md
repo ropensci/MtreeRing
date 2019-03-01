@@ -9,7 +9,7 @@ MtreeRing
 **License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
 <!--我的徽章-->
-[![Build Status](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)]
+[![Build Status](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
 [![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
