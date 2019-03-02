@@ -2,20 +2,13 @@
 title: "MtreeRing: Measuring Tree Ring Width in R"
 author: "Jingning Shi"
 date: "2019-03-01"
-output:
-  html_document:
-    toc: true
-    number_sections: true
-
-
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{downloading}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-```{r setup, include = FALSE}
-library(MtreeRing)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+
 <!--require(knitr);require(markdown);knit("introduction.Rmd")-->
 
 `MtreeRing` is a tool for automatically measuring tree-ring width using image processing techniques.
@@ -38,6 +31,7 @@ devtools::install_github("JingningShi/MtreeRing")
 ## Read and plot a tree ring image
 
 ```{r}
+library(MtreeRing)
 ## Read and plot a tree ring image
 img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- imgInput(img = img.name, dpi = 1200)

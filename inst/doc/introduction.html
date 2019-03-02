@@ -211,7 +211,8 @@ devtools::install_github(&quot;JingningShi/MtreeRing&quot;)</code></pre>
 </div>
 <div id="read-and-plot-a-tree-ring-image" class="section level2">
 <h2>Read and plot a tree ring image</h2>
-<pre class="r"><code>## Read and plot a tree ring image
+<pre class="r"><code>library(MtreeRing)
+## Read and plot a tree ring image
 img.name &lt;- system.file(&quot;001.png&quot;, package = &quot;MtreeRing&quot;)
 t1 &lt;- imgInput(img = img.name, dpi = 1200)</code></pre>
 <p><code>imgInput</code> supports commonly used image formats and returns a magick image object.</p>
