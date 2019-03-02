@@ -7,8 +7,15 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                        path.dis = 1, origin = 0, border.color = 'black',
                        border.type = 16, label.color = 'black', label.cex = 1.2)
 {
-  if (length(method) >= 2) 
+  if (!is.numeric(seg)) {
+   stop('The argument 'seg' should be a numeric vector of length one')
+  }
+  if (!is.character(method)) {
+   stop('The argument 'method' should be a character vector of length one')
+  }
+  if (length(method) >= 2) {
     stop("The argument 'method' should be a character vector of length one")
+  }
   if (method == "lineardetect" & incline) 
     stop("The linear detection can only create one path")
   device.number <- attributes(ring.data)$dn
