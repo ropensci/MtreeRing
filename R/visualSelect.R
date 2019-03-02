@@ -3,18 +3,12 @@ visualSelect <- function(ring.data, del = NULL, del.u = NULL,
 {
   rd.attr <- attributes(ring.data)
   x.dpi <- rd.attr$x.dpi
-  RGB <- rd.attr$RGB
-  dn <- rd.attr$dn
   seg.dn <- rd.attr$seg.dn
   seg <- rd.attr$seg
   incline <- rd.attr$incline
   py <- rd.attr$py
-  px2 <- rd.attr$px2
   py2 <- rd.attr$py2
-  px3 <- rd.attr$px3
-  py3 <- rd.attr$py3
   sample.yr <- rd.attr$sample.yr
-  path.dis <- rd.attr$path.dis
   border.type <- rd.attr$bt
   border.color <- rd.attr$bc
   label.color <- rd.attr$lc

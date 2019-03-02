@@ -2,7 +2,7 @@ calcRingWidth <- function(ring.data, seriesID)
 {
   rd.attr <- attributes(ring.data)
   x.dpi <- rd.attr$x.dpi
-  dp <- x.dpi/25.4
+  dp <- x.dpi / 25.4
   incline <- rd.attr$incline
   sample.yr <- rd.attr$sample.yr
   path.dis <- rd.attr$path.dis

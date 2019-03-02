@@ -1,8 +1,8 @@
-autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE, 
+autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                        method = 'canny', incline = FALSE, sample.yr = NULL, 
                        watershed.threshold = 'auto', watershed.adjust = 0.8, 
                        struc.ele1 = NULL, struc.ele2 = NULL, 
-                       marker.correct = FALSE, default.canny = TRUE, canny.t1, 
+                       marker.correction = FALSE, default.canny = TRUE, canny.t1, 
                        canny.t2, canny.smoothing = 2, canny.adjust = 1.4, 
                        path.dis = 1, origin = 0, border.color = 'black',
                        border.type = 16, label.color = 'black', label.cex = 1.2)
@@ -13,9 +13,8 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   if (!is.character(method)) {
     stop("The argument 'method' should be a character vector of length one")
   }
-  if (length(method) >= 2) {
+  if (length(method) >= 2) 
     stop("The argument 'method' should be a character vector of length one")
-  }
   if (method == "lineardetect" & incline) 
     stop("The linear detection can only create one path")
   device.number <- attributes(ring.data)$dn
@@ -49,7 +48,7 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     px2 <- px.sort[1]
     px3 <- px.sort[2]
     text.line <- 2 + text.line
-    mtext(paste('Step', step.number, 'has already done.'), 
+    mtext(paste('Step', step.number, 'has already done.'),
           side = 1, line = text.line, adj = 0, col = 'blue')
     text.line <- 2 + text.line
     step.number <- 1 + step.number
@@ -60,29 +59,29 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     step4 <- locator(n = 1, type = 'n')
     py2 <- round(step4$y)
     if (py2 <= 0) py2 <- 0
-    if (py2 >= rd.row) py2 <- rd.row - 1 
+    if (py2 >= rd.row) py2 <- rd.row - 1
     lines(c(px2, px3), c(py2, py2), lty = 2, lwd = 2, col = label.color)
     step5 <- locator(n = 1, type = 'n')
     py3 <- round(step5$y)
     if (py3 <= 0) py3 <- 0
-    if (py3 >= rd.row) py3 <- rd.row - 1 
+    if (py3 >= rd.row) py3 <- rd.row - 1
     lines(c(px2, px3), c(py3, py3), lty = 2, lwd = 2, col = label.color)
     py.sort <- sort(c(py2, py3))
     py2 <- py.sort[1]
-    py3 <- py.sort[2] 
+    py3 <- py.sort[2]
     if (incline) {
-      if (path.dis * dp >= (py3 - py2)) 
+      if (path.dis * dp >= (py3 - py2))
         stop('Please increase the width of the rectangular sub-image',
              ' or decrease the value of the argument \'path.dis\'')
     }
     text.line <- 2 + text.line
-    mtext(paste0('Step ', step.number, ' has already done '), 
+    mtext(paste0('Step ', step.number, ' has already done '),
           side = 1, line = text.line, adj = 0, col = 'blue')
     text.line <- 2 + text.line
     step.number <- 1 + step.number
     if (method != 'lineardetect') {
       mtext(paste0('Step ', step.number, ': Add a horizontal ',
-                   'path by left-clicking on the sub-image.'), 
+                   'path by left-clicking on the sub-image.'),
             side = 1, line = text.line, adj = 0)
       step1 <- locator(n = 1, type = 'n')
       py <- round(step1$y) 
@@ -121,9 +120,9 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
         stop('The y-position of the lower path is out of range')
     }
   }
-  img.range <- paste0(as.character(px3 - px2 + 1), 'x', 
+  img.range <- paste0(as.character(px3 - px2 + 1), 'x',
                       as.character(py3 - py2 + 1), '+',
-                      as.character(px2 - 1), '+', 
+                      as.character(px2 - 1), '+',
                       as.character(rd.row - py3 - 1))
   img.crop <- image_crop(ring.data, img.range)
   rd.martix <- img.crop[[1]]
@@ -166,7 +165,7 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, x.dpi)
       black.hat <- hat(seg.mor, x.dpi, watershed.threshold, watershed.adjust)
-      marker.img <- water.im(black.hat, marker.correct)
+      marker.img <- water.im(black.hat, marker.correction)
       seg.data <- watershed.im(marker.img, seg.mor)
     }  
     if (method == 'canny') {
@@ -175,11 +174,11 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
         canny.seg <- cannyEdges(as.cimg(seg.mor), alpha = canny.adjust, 
                                 sigma = canny.smoothing)
       } else {
-        canny.seg <- cannyEdges(as.cimg(seg.mor), t1=canny.t1, t2=canny.t2,
+        canny.seg <- cannyEdges(as.cimg(seg.mor), t1 = canny.t1, t2 = canny.t2,
                                 alpha = canny.adjust, sigma = canny.smoothing)
       }
-      seg.data <- canny.seg[, , 1, 1]
-    } 
+      seg.data <- canny.seg[,, 1, 1]
+    }
     if (method == 'lineardetect') {
       attributes(seg.data)['image'] <- 'img'
       smoothed <- graySmoothed(seg.data, ppi = x.dpi, rgb = RGB)
@@ -190,18 +189,18 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
       bor.u <- f.border(seg.data, py3 - py.upper, dp) + px2 - 1
     } else {
       if (method == 'lineardetect') {
-        bor.col <- bor.col + px2 -1
+        bor.col <- bor.col + px2 - 1
       } else {
         bor.col <- f.border(seg.data, py3 - py, dp) + px2 - 1
       }
     }
   }
-  img.name <- attributes(ring.data)$img.name  
+  img.name <- attributes(ring.data)$img.name
   seg.name <- paste(img.name, '-Section', 1:seg)
   if (!manual) {
     if (incline) {
-      img.attr <- f.plot.double(rd.m.array, bor.u, bor.l, x.left, x.right, 
-                    seg, py.upper, py.lower, dp, sample.yr, 
+      img.attr <- f.plot.double(rd.m.array, bor.u, bor.l, x.left, x.right,
+                    seg, py.upper, py.lower, dp, sample.yr,
                     py2, nrow(rd.m.array), py, seg.name, 
                     border.type,border.color, label.color, label.cex)
     } else {

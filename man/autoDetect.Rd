@@ -6,7 +6,7 @@
 autoDetect(ring.data, seg = 1, auto.path = TRUE, manual = FALSE, 
   method = "canny", incline = FALSE, sample.yr = NULL, 
   watershed.threshold = "auto", watershed.adjust = 0.8, 
-  struc.ele1 = NULL, struc.ele2 = NULL, marker.correct = FALSE, 
+  struc.ele1 = NULL, struc.ele2 = NULL, marker.correction = FALSE, 
   default.canny = TRUE, canny.t1, canny.t2, canny.smoothing = 2, 
   canny.adjust = 1.4, path.dis = 1, origin = 0, border.color = "black", 
   border.type = 16, label.color = "black", label.cex = 1.2)
@@ -23,7 +23,7 @@ autoDetect(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   \item{watershed.adjust}{A numeric used to adjust the Otsu threshold. The default is 1 which means that the threshold will not be adjusted. The sizes of early-wood regions in the marker image will reduce along with the decrease of \code{watershed.adjust}.}
   \item{struc.ele1}{\code{NULL} or a vector of length two specifying the width and height of the first structuring element. If \code{NULL}, the size of the structuring element is determined by the argument \code{dpi}.}
   \item{struc.ele2}{\code{NULL} or a vector of length two specifying the width and height of the second structuring element. If \code{NULL}, the size of the structuring element is determined by the argument \code{dpi}.}
-  \item{marker.correct}{A logical value indicating whether to relabel early-wood regions by comparing the values of their left-side neighbours.}
+  \item{marker.correction}{A logical value indicating whether to relabel early-wood regions by comparing the values of their left-side neighbours.}
   \item{default.canny}{A logical value. If \code{TRUE}, upper and lower Canny thresholds are determined automatically.}
   \item{canny.t1}{A numeric giving the threshold for weak edges.}
   \item{canny.t2}{A numeric giving the threshold for strong edges.}

@@ -344,8 +344,6 @@ createServer <- function(input, output, session)
     }
     options(warn = 0)
     dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
-    dimcol <- dim.tdata[1]
-    dimrow <- dim.tdata[2]
     attributes(tdata) <- c(attributes(tdata), 
                            list(img.name = img.name, dimt = dim.tdata))
     return(tdata)
@@ -858,7 +856,7 @@ createServer <- function(input, output, session)
     }
     df.loc$data <- f.df.loc
   })
-  plot3_ranges <- reactiveValues(data = NULL)
+  # plot3_ranges <- reactiveValues(data = NULL)
   observeEvent(input$buttonzoomdel, {
     if (is.null(input$zoom_brush$xmin)) {
       err.text <- 'You have not selected a part of the image by brushing'
@@ -1231,7 +1229,7 @@ createServer <- function(input, output, session)
         del.u <- strsplit(del.u, ",")[[1]] %>% as.numeric
       if(del.l != '')
         del.l <- strsplit(del.l, ",")[[1]] %>% as.numeric
-      ndf <- length(del.u) + length(del.l)
+      # ndf <- length(del.u) + length(del.l)
       up <- which(where.bx > 0)
       lenup <- length(up)
       bx.u <- bx[up]
@@ -1404,7 +1402,7 @@ createServer <- function(input, output, session)
       }
       plot.arg <- df.loc$data[1:2, ]
       dpi <- plot.arg[1, 1]
-      dp <- dpi/25.4
+      # dp <- dpi/25.4
       incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
       py <- plot.arg[2, 1]
       h.dis <- plot.arg[2, 2]
@@ -1513,7 +1511,7 @@ createServer <- function(input, output, session)
       } 
       plot.arg <- df.loc$data[1:2, ]
       dpi <- plot.arg[1, 1]
-      dp <- dpi/25.4
+      # dp <- dpi/25.4
       incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
       py <- plot.arg[2, 1]
       h.dis <- plot.arg[2, 2]

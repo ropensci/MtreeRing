@@ -12,9 +12,9 @@ imgInput <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
   if (img.size <=10 | !magick) {
     last.path <- basename(img)
     if (grepl("\\.tif", last.path))
-      tree.data <- readTIFF(img, native = FALSE, info = TRUE)
+      tree.data <- readTIFF(img, native = FALSE, info = FALSE)
     if (grepl("\\.png", last.path))
-      tree.data <- readPNG(img, native = FALSE, info = TRUE)
+      tree.data <- readPNG(img, native = FALSE, info = FALSE)
     if (grepl("\\.jpg", last.path) | grepl("\\.jpeg", last.path))
       tree.data <- readJPEG(img, native = FALSE)
     if (grepl("\\.bmp", last.path))
