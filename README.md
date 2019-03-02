@@ -14,6 +14,7 @@ MtreeRing
 [![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/MtreeRing?color=orange)](https://CRAN.R-project.org/package=MtreeRing)
+[![codecov](https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/JingningShi/MtreeRing)
 
 
 `MtreeRing` is a tool for automatically measuring tree-ring width using image processing techniques.
@@ -53,7 +54,7 @@ t1 <- imgInput(img = img.name, dpi = 1200)
 
 ### Detect ring borders 
 
-After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://cran.r-project.org/web/packages/measuRing/index.html).
+After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://CRAN.R-project.org/package=measuRing).
 
 
 ```r
