@@ -8,10 +8,10 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                        border.type = 16, label.color = 'black', label.cex = 1.2)
 {
   if (!is.numeric(seg)) {
-   stop('The argument 'seg' should be a numeric vector of length one')
+    stop("The argument 'seg' should be a numeric vector of length one")
   }
   if (!is.character(method)) {
-   stop('The argument 'method' should be a character vector of length one')
+    stop("The argument 'method' should be a character vector of length one")
   }
   if (length(method) >= 2) {
     stop("The argument 'method' should be a character vector of length one")
