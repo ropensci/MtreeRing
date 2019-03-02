@@ -2,13 +2,12 @@
 
 language: r
 r:
-  - oldrel
   - release
-  - devel 
 before_install:
+  - sudo apt-get install -y libmagick++-dev
+  - sudo add-apt-repository -y ppa:opencpu/imagemagick
   - sudo apt-get update
-  - sudo apt-get install -y libmagick++-dev 
-  - sudo add-apt-repository -y ppa:opencpu/imagemagick         
+  - sudo apt-get install -y libmagick++-dev             
 r_packages:
   - covr
 addons:
@@ -33,4 +32,3 @@ cache: packages
 after_success:
   - Rscript -e 'covr::coveralls()'
   - Rscript -e 'covr::codecov()'
-
