@@ -2,9 +2,13 @@ Package: MtreeRing
 Type: Package
 Title: A Shiny Application for Automatic Measurements of Tree-Ring Widths on Digital Images
 Version: 1.2
-Author: Jingning Shi, Wei Xiang
+Authors@R: c(person("Jingning", "Shi", role = c("aut", "cre"),
+                    email = "snow940220@bjfu.edu.cn"),
+             person("Wei", "Xiang", role = "aut"))
+Author: Jingning Shi [aut, cre], Wei Xiang [aut]
 Date: 2019-03-01
 Maintainer: Jingning Shi <snow940220@bjfu.edu.cn>
+Suggests: testthat
 Depends: R (>= 3.3.0), magrittr (>= 1.5)
 Imports: png, jpeg, tiff, bmp, magick, imager, dplR, spatstat, measuRing, shiny, dplyr, shinydashboard, shinyWidgets
 Description: Use morphological image processing and edge detection algorithms to automatically measure tree ring widths on digital images. Users can also manually mark tree rings on species with complex anatomical structures. The arcs of inner-rings and angles of successive inclined ring boundaries are used to correct ring-width series. The package provides a Shiny-based application, allowing R beginners to easily analyze tree ring images and export ring-width series in standard file formats.
@@ -13,3 +17,5 @@ LazyData: TRUE
 NeedsCompilation: no
 Repository: CRAN
 Encoding: UTF-8
+URL: https://github.com/JingningShi/MtreeRing
+BugReports: https://github.com/JingningShi/MtreeRing/issues
