@@ -8,6 +8,8 @@ before_install:
   - sudo add-apt-repository -y ppa:opencpu/imagemagick
   - sudo apt-get update
   - sudo apt-get install -y libmagick++-dev             
+r_packages:
+  - covr
 addons:
   apt:
     packages:
@@ -29,3 +31,5 @@ cache: packages
 
 after_success:
   - Rscript -e 'covr::coveralls()'
+  - Rscript -e 'covr::codecov()'
+
