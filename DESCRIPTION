@@ -6,7 +6,6 @@ Authors@R: c(person("Jingning", "Shi", role = c("aut", "cre"),
                     email = "snow940220@bjfu.edu.cn"),
              person("Wei", "Xiang", role = "aut"))
 Author: Jingning Shi [aut, cre], Wei Xiang [aut]
-Date: 2019-03-01
 Maintainer: Jingning Shi <snow940220@bjfu.edu.cn>
 Suggests: testthat, knitr
 Depends: R (>= 3.3.0), magrittr (>= 1.5)
