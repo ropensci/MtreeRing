@@ -48,8 +48,8 @@ nearPith <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
     path.x <- c(p1$x, p2$x)
     path.y <- c(p1$y, p2$y)
     path.xy <- lm(path.y ~ path.x + 1)
-    a = coef(path.xy)[1]
-    b = coef(path.xy)[2]
+    a <- coef(path.xy)[1]
+    b <- coef(path.xy)[2]
     abline(a = a, b = b, lwd = 2, lty = 2, col = color)
     text.line <- 2 + text.line
     mtext(paste0('Step ', step.number, ' is already done.'), side = 1, 

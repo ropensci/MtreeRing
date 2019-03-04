@@ -64,7 +64,7 @@ createServer <- function(input, output, session)
         covered.c <- sort(df.color[adj.c, 1])
         covered.c <- covered.c[-length(covered.c)]
         for (j in covered.c) {
-          cl = which(water.c3 == j, arr.ind = T)
+          cl <- which(water.c3 == j, arr.ind = T)
           water.c3[cl] <- max.c
           df.color[which(df.color == j, arr.ind = T)] <- max.c
         }

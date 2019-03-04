@@ -2,10 +2,11 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                        method = 'canny', incline = FALSE, sample.yr = NULL, 
                        watershed.threshold = 'auto', watershed.adjust = 0.8, 
                        struc.ele1 = NULL, struc.ele2 = NULL, 
-                       marker.correction = FALSE, default.canny = TRUE, canny.t1, 
-                       canny.t2, canny.smoothing = 2, canny.adjust = 1.4, 
-                       path.dis = 1, origin = 0, border.color = 'black',
-                       border.type = 16, label.color = 'black', label.cex = 1.2)
+                       marker.correction = FALSE, default.canny = TRUE, 
+                       canny.t1, canny.t2, canny.smoothing = 2, 
+                       canny.adjust = 1.4, path.dis = 1, origin = 0, 
+                       border.color = 'black', border.type = 16, 
+                       label.color = 'black', label.cex = 1.2)
 {
   if (!is.numeric(seg)) {
     stop("The argument 'seg' should be a numeric vector of length one")
@@ -229,7 +230,8 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     list(x.dpi = x.dpi, RGB = RGB, dn = device.number, seg.dn = seg.dn,
          seg = seg, incline = incline, py = py, py2 = py2, py3 = py3,
          px2 = px2, px3 = px3, sample.yr = sample.yr, path.dis = path.dis, 
-         bt = border.type, bc = border.color, lc = label.color, lce = label.cex, 
+         bt = border.type, bc = border.color, 
+         lc = label.color, lce = label.cex, 
          x.left = x.left, x.right = x.right, img.name = img.name)
     )
   if (incline) 

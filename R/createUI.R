@@ -208,7 +208,8 @@ page2.1 <- fluidRow(
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       prettyCheckbox(
         inputId = "isrgb", 
-        label = div(style = 'color:#000000;font-weight:bolder;', "Default RGB"), 
+        label = div(
+          style = 'color:#000000;font-weight:bolder;', "Default RGB"), 
         shape = "curve", value = T, status = "success"
       ),
       conditionalPanel(
