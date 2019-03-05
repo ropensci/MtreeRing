@@ -4,13 +4,20 @@ test_that("calcRingWidth returns a data.frame", {
   
   path1 <- system.file("001.png", package = "MtreeRing")
   img1 <- imgInput(img = path1, dpi = 1200)
+  dev.off(attributes(img1)$dn)
   
   t1 <- autoDetect(ring.data = img1, auto.path = T,
                    method = 'watershed', incline = T)
-  dev.off()
+  dn <- attributes(t1)$seg.dn
+  sapply(dn, dev.off)
   t2 <- autoDetect(ring.data = img1, auto.path = T, 
                    method = 'canny', incline = F)
-  dev.off()
+  dn <- attributes(t2)$seg.dn
+  sapply(dn, dev.off)  
+  
+  t5 <- autoDetect(ring.data = img1, auto.path = T, manual = T, incline = T)
+  dn <- attributes(t5)$seg.dn
+  sapply(dn, dev.off)
   
   rw1 <- calcRingWidth(ring.data = t1, '940220')
   rw2 <- calcRingWidth(ring.data = t2, '940220')
@@ -20,6 +27,7 @@ test_that("calcRingWidth returns a data.frame", {
   expect_equal(nrow(rw1), nrow(rw2))
   expect_true(colnames(rw1) == '940220')
   expect_true(colnames(rw2) == '940220')
+  expect_error(calcRingWidth(t5, '940220'))
 
 
 })
