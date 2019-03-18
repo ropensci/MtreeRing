@@ -11,7 +11,7 @@ test_that("imgInput plots a tree ring image and returns a magick object", {
   ## Read and plot the image:
   img1 <- imgInput(img = path1, dpi = 1200)
   dev.off(attributes(img1)$dn)
-  img2 <- imgInput(img = path2, dpi = 1200)
+  img2 <- imgInput(img = path2, dpi = 2540)
   dev.off(attributes(img2)$dn)
   img3 <- imgInput(img = path3, dpi = 1200)
   dev.off(attributes(img3)$dn)
