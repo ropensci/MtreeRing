@@ -1,3 +1,10 @@
+#' @export
+#' @import dplyr
+#' @importFrom measuRing graySmoothed linearDetect
+#' @importFrom spatstat connected im
+#' @importFrom imager as.cimg cannyEdges erode_rect dilate_rect mclosing_square imgradient watershed threshold
+#' 
+#' 
 autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                        method = 'canny', incline = FALSE, sample.yr = NULL, 
                        watershed.threshold = 'auto', watershed.adjust = 0.8, 

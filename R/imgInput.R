@@ -1,3 +1,33 @@
+#' @title Read and plot a tree-ring image file
+#' @export
+#' @importFrom png readPNG
+#' @importFrom jpeg readJPEG
+#' @importFrom tiff readTIFF
+#' @importFrom bmp read.bmp
+#' @importFrom magrittr "%>%"
+#' @importFrom magick image_crop image_info image_read image_convert image_rotate image_resize
+#' @importFrom grDevices as.raster dev.cur dev.new dev.set dev.off dev.list
+#' @importFrom graphics abline axis layout lines locator mtext par plot points rasterImage segments text title
+#' @description This function can read an image file from the hard disk and plot it in a newly-opened graphical device.
+#' @author Jingning Shi
+#' @param img A character string indicating the path of the image file. Supported formats include png, tiff, jpg and bmp.
+#' @param dpi An integer specifying the dpi of the image file. A minimum of 300 dpi is required when running automatic detection.
+#' @param RGB A numeric vector of length 3 giving the weight of RGB color channels.
+#' @param rotate An integer specifying how many degrees to rotate (clockwise). It requires one of the following values: \code{0}, \code{90}, \code{180} or \code{270}.
+#' @param magick A logical value. If \code{TRUE}, the package \code{magick} is used to read images whose file sizes are over 10MB.
+#' @return A magick image object containing the image data.
+#' @details 
+#' Proper image preparation has a great influence on the measurement of ring widths. A tree-ring image should not contain irrelevant or redundant features, such as wooden mounts where cores are glued. The larger the file size of an image, the slower the image processing operation will be.
+#' 
+#' Pith side of a tree-ring sample should be placed on the right side of the graphical window. Use the argument \code{rotate} to change its position.
+#' 
+#' It is highly recommended to use the default value \code{magick = TRUE}, because the package \code{magick} can significantly reduce the memory usage.
+#' @examples
+#' img.path <- system.file("001.png", package = "MtreeRing")
+#' 
+#' ## Read and plot the image:
+#' t1 <- imgInput(img = img.path, dpi = 1200)
+
 imgInput <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), 
                      rotate = 0, magick = TRUE)
 {
@@ -70,7 +100,7 @@ imgInput <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
   axis(1, col = "grey", cex.axis = 1)
   axis(2, col = "grey", cex.axis = 1)
   rasterImage(as.raster(tdata.copy), xleft, ybottom, 
-              xright, ytop, interpolate = FALSE)
+              xright, ytop, interpolate = TRUE)
   rm(tdata.copy)
   gc()
   return(tdata)

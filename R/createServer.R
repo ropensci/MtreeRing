@@ -1,3 +1,7 @@
+#' @importFrom utils write.csv
+#' @importFrom dplR write.rwl
+
+
 createServer <- function(input, output, session) 
 {
   f.morphological <- function(seg.data, struc.ele1, struc.ele2, x.dpi) {

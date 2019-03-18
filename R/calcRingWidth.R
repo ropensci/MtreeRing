@@ -1,3 +1,24 @@
+#' @title Generate a ring-width series
+#' @export
+#' @description This function can calculate the ring-width series according to detected ring borders.
+#' @author Jingning Shi
+#' @param ring.data A matrix or array produced by \code{autoDetect} or \code{visualSelect}.
+#' @param seriesID A character string specifying the column name of the ring-width series.
+#' @return A data frame. The series ID is the column name and years are row name.
+#' @examples
+#' img.path <- system.file("001.png", package = "MtreeRing")
+#' 
+#' ## Read and plot the image:
+#' t1 <- imgInput(img = img.path, dpi = 1200)
+#'
+#' ## Split a long core sample into 3 pieces to
+#' ## get better display performance and use the
+#' ## watershed algorithm to detect ring borders:
+#' t2 <- autoDetect(ring.data = t1, seg = 3, method = 'watershed')
+#'
+#' ## Calculate ring widths from the attribute list of t2:
+#' rw.df <- calcRingWidth(ring.data = t2, seriesID = "940220")
+
 calcRingWidth <- function(ring.data, seriesID)
 {
   rd.attr <- attributes(ring.data)

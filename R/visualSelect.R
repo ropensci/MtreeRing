@@ -1,3 +1,6 @@
+#' @export
+
+
 visualSelect <- function(ring.data, del = NULL, del.u = NULL, 
                          del.l = NULL, add = FALSE)
 {

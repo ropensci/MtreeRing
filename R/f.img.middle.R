@@ -19,5 +19,5 @@ f.img.middle <- function(ring.data, x.left, x.right,
                assign('plot.data',ring.data[, x.range]), 
                assign('plot.data',ring.data[, x.range, ]))
   rasterImage(plot.data, x.left, ybottom, x.right,
-              ybottom + ytop, interpolate = FALSE)
+              ybottom + ytop, interpolate = TRUE)
 }
