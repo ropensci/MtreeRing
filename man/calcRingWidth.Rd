@@ -7,15 +7,19 @@
 calcRingWidth(ring.data, seriesID)
 }
 \arguments{
-\item{ring.data}{A matrix or array produced by \code{autoDetect} or \code{visualSelect}.}
+\item{ring.data}{A matrix or array produced by \code{autoDetect} 
+or \code{visualSelect}.}
 
-\item{seriesID}{A character string specifying the column name of the ring-width series.}
+\item{seriesID}{A character string specifying the column name of 
+the ring-width series.}
 }
 \value{
-A data frame. The series ID is the column name and years are row name.
+A data frame. The series ID is the column name 
+and years are row name.
 }
 \description{
-This function can calculate the ring-width series according to detected ring borders.
+This function can calculate ring widths according to 
+coordinates of detected ring borders.
 }
 \examples{
 img.path <- system.file("001.png", package = "MtreeRing")

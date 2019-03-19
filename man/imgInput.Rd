@@ -8,28 +8,39 @@ imgInput(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), rotate = 0,
   magick = TRUE)
 }
 \arguments{
-\item{img}{A character string indicating the path of the image file. Supported formats include png, tiff, jpg and bmp.}
+\item{img}{A character string indicating the path of the image file. 
+Supported formats include png, tiff, jpg and bmp.}
 
-\item{dpi}{An integer specifying the dpi of the image file. A minimum of 300 dpi is required when running automatic detection.}
+\item{dpi}{An integer specifying the dpi of the image file. A minimum of 
+300 dpi is required when running automatic detection.}
 
-\item{RGB}{A numeric vector of length 3 giving the weight of RGB color channels.}
+\item{RGB}{A numeric vector of length 3 giving the weight of RGB channels.}
 
-\item{rotate}{An integer specifying how many degrees to rotate (clockwise). It requires one of the following values: \code{0}, \code{90}, \code{180} or \code{270}.}
+\item{rotate}{An integer specifying how many degrees to rotate (clockwise). 
+It requires one of the following values:
+\code{0}, \code{90}, \code{180} or \code{270}.}
 
-\item{magick}{A logical value. If \code{TRUE}, the package \code{magick} is used to read images whose file sizes are over 10MB.}
+\item{magick}{A logical value. If \code{TRUE}, the package \code{magick} 
+is used to read the image file whose size is over 10MB.}
 }
 \value{
 A magick image object containing the image data.
 }
 \description{
-This function can read an image file from the hard disk and plot it in a newly-opened graphical device.
+This function can read an image file from the hard disk and 
+plot it in a newly-opened graphical device.
 }
 \details{
-Proper image preparation has a great influence on the measurement of ring widths. A tree-ring image should not contain irrelevant or redundant features, such as wooden mounts where cores are glued. The larger the file size of an image, the slower the image processing operation will be.
+Proper image preparation has a great influence on the measurement of 
+ring widths. A tree-ring image should not contain irrelevant or redundant 
+features, such as wooden mounts where cores are glued. The larger the file 
+size of an image, the slower the image processing operation will be.
 
-Pith side of a tree-ring sample should be placed on the right side of the graphical window. Use the argument \code{rotate} to change its position.
+\bold{Pith side} of the sample should be placed on the \bold{right side} of 
+the graphical window. Use the argument \code{rotate} to change its position.
 
-It is highly recommended to use the default value \code{magick = TRUE}, because the package \code{magick} can significantly reduce the memory usage.
+It is highly recommended to use the default value \code{magick = TRUE}, 
+because the package \code{magick} can significantly reduce the memory usage.
 }
 \examples{
 img.path <- system.file("001.png", package = "MtreeRing")
