@@ -31,5 +31,4 @@ addons:
 cache: packages
 
 after_success:
-  - Rscript -e 'covr::coveralls()'
-  - Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov(function_exclusions='createServer')'
