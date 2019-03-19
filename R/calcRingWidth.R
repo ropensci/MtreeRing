@@ -1,10 +1,14 @@
 #' @title Generate a ring-width series
 #' @export
-#' @description This function can calculate the ring-width series according to detected ring borders.
+#' @description This function can calculate ring widths according to 
+#' coordinates of detected ring borders.
 #' @author Jingning Shi
-#' @param ring.data A matrix or array produced by \code{autoDetect} or \code{visualSelect}.
-#' @param seriesID A character string specifying the column name of the ring-width series.
-#' @return A data frame. The series ID is the column name and years are row name.
+#' @param ring.data A matrix or array produced by \code{autoDetect} 
+#' or \code{visualSelect}.
+#' @param seriesID A character string specifying the column name of 
+#' the ring-width series.
+#' @return A data frame. The series ID is the column name 
+#' and years are row name.
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
