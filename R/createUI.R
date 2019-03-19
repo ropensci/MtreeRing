@@ -1,6 +1,14 @@
-#' @import shiny
-#' @import shinydashboard
-#' @import shinyWidgets
+#' @importFrom shiny actionButton checkboxInput div fileInput conditionalPanel
+#' downloadButton downloadHandler helpText icon numericInput observeEvent
+#' plotOutput reactiveValues renderPlot renderTable selectInput shinyApp
+#' sliderInput tableOutput tabPanel textInput updateActionButton brushOpts
+#' dblclickOpts column
+#' updateCheckboxInput updateTextInput hr br fluidRow
+#' @importFrom shinydashboard dashboardHeader dashboardSidebar dashboardBody
+#' dashboardPage sidebarMenu tabBox tabItem tabItems menuItem box
+#' @importFrom  shinyWidgets prettySwitch prettyCheckbox prettyRadioButtons
+#' radioGroupButtons sendSweetAlert updatePrettySwitch updatePrettyCheckbox
+#' updatePrettyRadioButtons useSweetAlert colorSelectorInput
 
 createUI <- function()
 {

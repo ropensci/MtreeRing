@@ -1,5 +1,5 @@
 #' @export
-#' @import dplyr
+#' @importFrom dplyr filter group_by select summarize
 #' @importFrom measuRing graySmoothed linearDetect
 #' @importFrom spatstat connected im
 #' @importFrom imager as.cimg cannyEdges dilate_rect erode_rect imgradient 
