@@ -110,7 +110,7 @@ To create the sub-image and the path, follow these steps.
   
   If \code{partial.rings = FALSE}, the left and right boundaries of the 
   original image will be used directly as the left and right edges of 
-  the rectangle (i.e., skip this step).
+  the rectangle (i.e., skip the step 1).
   
   \item
   Step 2. Select the top and bottom edges of the rectangle
