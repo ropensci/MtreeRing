@@ -9,15 +9,15 @@ test_that("calcRingWidth returns a data.frame", {
   t1 <- autoDetect(ring.data = img1, auto.path = T,
                    method = 'watershed', incline = T)
   dn <- attributes(t1)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t2 <- autoDetect(ring.data = img1, auto.path = T, 
                    method = 'canny', incline = F)
   dn <- attributes(t2)$seg.dn
-  sapply(dn, dev.off)  
+  apply(matrix(dn, nrow = 1), 2, dev.off)    
   
   t5 <- autoDetect(ring.data = img1, auto.path = T, manual = T, incline = T)
   dn <- attributes(t5)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   
   rw1 <- calcRingWidth(ring.data = t1, '940220')
   rw2 <- calcRingWidth(ring.data = t2, '940220')

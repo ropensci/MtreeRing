@@ -9,18 +9,18 @@ test_that("visualSelect", {
   t1 <- autoDetect(ring.data = img1, auto.path = T, seg = 3,
                    method = 'watershed', incline = T)
   dn <- attributes(t1)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)
   t2 <- autoDetect(ring.data = img1, auto.path = T, seg = 3,
                    method = 'watershed', incline = F)
   dn <- attributes(t2)$seg.dn
-  sapply(dn, dev.off)  
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   
   t3 <- visualSelect(ring.data = t1, del.u = 12:18, del.l = 19:25)
   dn <- attributes(t3)$seg.dn
-  sapply(dn, dev.off)  
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t4 <- visualSelect(ring.data = t2, del = 12:25)
   dn <- attributes(t4)$seg.dn
-  sapply(dn, dev.off)  
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   
   expect_is(t1, "array")
   expect_is(t2, "array")

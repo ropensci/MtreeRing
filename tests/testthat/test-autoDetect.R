@@ -8,24 +8,24 @@ test_that("autoDetect returns an array", {
   
   t1 <- autoDetect(ring.data = img1, auto.path = T, method = 'watershed')
   dn <- attributes(t1)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t2 <- autoDetect(ring.data = img1, seg = 3, auto.path = T, method = 'canny')
   dn <- attributes(t2)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t21 <- autoDetect(ring.data = img1, seg = 3, auto.path = T, 
            method = 'canny', canny.smoothing = 1, 
            canny.t1 = 0.3, canny.t2 = 0.2)
   dn <- attributes(t21)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t3 <- autoDetect(ring.data = img1, auto.path = T, method = 'lineardetect')
   dn <- attributes(t3)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t4 <- autoDetect(ring.data = img1, auto.path = T, manual = T)
   dn <- attributes(t4)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   t5 <- autoDetect(ring.data = img1, auto.path = T, manual = T, incline = T)
   dn <- attributes(t5)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   
   path2 <- system.file("002.png", package = "MtreeRing")
   img2 <- imgInput(img = path2, dpi = 1200)
@@ -34,7 +34,7 @@ test_that("autoDetect returns an array", {
   t6 <- autoDetect(ring.data = img2, marker.correction = T, 
           method = 'watershed', struc.ele1 = c(4,4), struc.ele2 = c(15,15))
   dn <- attributes(t6)$seg.dn
-  sapply(dn, dev.off)
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   
   
   expect_is(t1, "array")
