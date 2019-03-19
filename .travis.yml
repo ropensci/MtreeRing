@@ -5,9 +5,10 @@ r:
   - release
   - devel 
 before_install:
-  - sudo apt-get update
-  - sudo add-apt-repository -y ppa:opencpu/imagemagick
   - sudo apt-get install -y libmagick++-dev
+  - sudo add-apt-repository -y ppa:opencpu/imagemagick
+  - sudo apt-get update
+  - sudo apt-get install -y libmagick++-dev         
 r_packages:
   - covr
 addons:
