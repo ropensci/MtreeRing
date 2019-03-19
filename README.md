@@ -14,7 +14,7 @@ MtreeRing
 [![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/MtreeRing?color=orange)](https://CRAN.R-project.org/package=MtreeRing)
-[![codecov](https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/JingningShi/MtreeRing)
+<!--[![codecov](https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/JingningShi/MtreeRing)-->
 
 
 `MtreeRing` is a tool for automatically measuring tree-ring width using image processing techniques.
