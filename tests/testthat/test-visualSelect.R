@@ -21,6 +21,9 @@ test_that("visualSelect", {
   t4 <- visualSelect(ring.data = t2, del = 12:25)
   dn <- attributes(t4)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)  
+  # t1 <- autoDetect(ring.data = img1, auto.path = T, seg = 3,
+  #   method = 'watershed', incline = T)
+  # t5 <- visualSelect(ring.data = t1, add = T)
   
   expect_is(t1, "array")
   expect_is(t2, "array")

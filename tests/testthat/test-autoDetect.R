@@ -35,8 +35,7 @@ test_that("autoDetect returns an array", {
           method = 'watershed', struc.ele1 = c(4,4), struc.ele2 = c(15,15))
   dn <- attributes(t6)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)  
-  
-  
+
   expect_is(t1, "array")
   expect_is(t2, "array")
   expect_is(t3, "array")
