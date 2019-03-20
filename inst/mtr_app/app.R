@@ -16,6 +16,7 @@ library(measuRing)
 library(dplyr)
 
 
+# Run the application
 createUI <- function()
 {
   shiny.title <- dashboardHeader(title = 'MtreeRing')
@@ -2151,6 +2152,6 @@ createServer <- function(input, output, session)
   )
 }
 
+shinyApp(ui = createUI(), server = createServer,
+  options = list(launch.browser = T))
 
-# Run the application
-shinyApp(ui = createUI(), server = createServer)
