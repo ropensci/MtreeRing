@@ -1,0 +1,7 @@
+app <- ShinyDriver$new("../")
+app$snapshotInit("upload_image")
+app$setInputs(sidebarCollapsed = FALSE)
+app$setInputs(inmethod = TRUE)
+app$setInputs(`enter.path` = system.file('001.png', package = 'MtreeRing'))
+app$setInputs(buttoninputimage = "click")
+app$snapshot()
