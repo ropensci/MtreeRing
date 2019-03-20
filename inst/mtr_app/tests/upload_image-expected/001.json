@@ -27,10 +27,10 @@
     "del.l": "",
     "del.u": "",
     "dpi": "",
-    "enter.path": "C:/mypkg/MtreeRing/inst/001.png",
+    "enter.path": "",
     "h.dis": 1,
     "incline": false,
-    "inmethod": true,
+    "inmethod": false,
     "isrgb": true,
     "label.cex": 1,
     "label.color": "black",
@@ -45,7 +45,20 @@
     "rotatede": "rotate0",
     "rwl.name": "",
     "sample.yr": "",
-    "select.file": null,
+    "selectfile": {
+      "name": [
+        "001.png"
+      ],
+      "size": [
+        712317
+      ],
+      "type": [
+        "image/png"
+      ],
+      "datapath": [
+        "0.png"
+      ]
+    },
     "showcropp": false,
     "sidebarCollapsed": false,
     "sidebarItemExpanded": null,

@@ -45,7 +45,7 @@ createUI <- function()
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       conditionalPanel(
         condition = '!input.inmethod',
-        fileInput('select.file', 'Choose an image file',
+        fileInput('selectfile', 'Choose an image file',
           buttonLabel = 'Browse...', width = '80%')
       ),
       prettySwitch(inputId = "magick.switch", label = "Magick ON",
@@ -1005,7 +1005,7 @@ createServer <- function(input, output, session)
   })
   observeEvent(input$buttonrotate, {
     if (!input$inmethod)
-      img <- input$select.file["datapath"] %>% as.character
+      img <- input$selectfile["datapath"] %>% as.character
     if (input$inmethod)
       img <- input$enter.path
     img.check1 <- ifelse(length(img) >= 1, TRUE, FALSE)
@@ -1055,7 +1055,7 @@ createServer <- function(input, output, session)
   observeEvent(input$buttoninputimage, {
     magick.switch <- input$magick.switch
     if (!input$inmethod) {
-      imgf <- input$select.file
+      imgf <- input$selectfile
       if (is.null(imgf)) {
         err.text <- paste('The image file has not been uploaded')
         sendSweetAlert(
