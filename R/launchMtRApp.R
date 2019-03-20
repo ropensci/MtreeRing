@@ -1,3 +1,16 @@
+#' @importFrom shiny actionButton checkboxInput div fileInput conditionalPanel
+#' downloadButton downloadHandler helpText icon numericInput observeEvent
+#' plotOutput reactiveValues renderPlot renderTable selectInput shinyApp
+#' sliderInput tableOutput tabPanel textInput updateActionButton brushOpts
+#' dblclickOpts column
+#' updateCheckboxInput updateTextInput hr br fluidRow
+#' @importFrom shinydashboard dashboardHeader dashboardSidebar dashboardBody
+#' dashboardPage sidebarMenu tabBox tabItem tabItems menuItem box
+#' @importFrom  shinyWidgets prettySwitch prettyCheckbox prettyRadioButtons
+#' radioGroupButtons sendSweetAlert updatePrettySwitch updatePrettyCheckbox
+#' updatePrettyRadioButtons useSweetAlert colorSelectorInput
+#' @importFrom utils write.csv
+#' @importFrom dplR write.rwl
 #' @title Run Shiny-based Application
 #' @description Run a Shiny-based application within the system's default 
 #' web browser.
@@ -9,5 +22,6 @@
 
 
 launchMtRApp <- function() {
-  shinyApp(createUI(), createServer, options = list(launch.browser = T))
+  app_dir <- system.file('mtr_app', package = 'MtreeRing')
+  shinyAppDir(app_dir, options = list(launch.browser = T))
 }
