@@ -19,11 +19,19 @@ test_that("imgInput plots a tree ring image and returns a magick object", {
   dev.off(attributes(img4)$dn)
   img5 <- imgInput(img = path5, dpi = 1200)
   dev.off(attributes(img5)$dn)
+  img6 <- imgInput(img = path5, dpi = 1200, rotate = 180)
+  dev.off(attributes(img5)$dn)
   
   expect_is(img1, "magick-image")
   expect_is(img2, "magick-image")
   expect_is(img3, "magick-image")
   expect_is(img4, "magick-image")
   expect_is(img5, "magick-image")
-
+  expect_is(img6, "magick-image")
+  expect_error(imgInput(img = path1), 
+    'Please provide the dpi value of the image')
+  
+  expect_error(imgInput(img = path1, dpi = 1200, rotate = 88),
+    'The argument "rotate" should be one of the following integers: 0, 90, 180 or 270')
+  
 })

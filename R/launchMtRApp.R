@@ -2,7 +2,7 @@
 #' downloadButton downloadHandler helpText icon numericInput observeEvent
 #' plotOutput reactiveValues renderPlot renderTable selectInput shinyApp
 #' sliderInput tableOutput tabPanel textInput updateActionButton brushOpts
-#' dblclickOpts column
+#' dblclickOpts column shinyAppDir
 #' updateCheckboxInput updateTextInput hr br fluidRow
 #' @importFrom shinydashboard dashboardHeader dashboardSidebar dashboardBody
 #' dashboardPage sidebarMenu tabBox tabItem tabItems menuItem box

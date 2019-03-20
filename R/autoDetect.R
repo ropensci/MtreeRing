@@ -176,98 +176,16 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   rd.col <- dimt[1]
   rd.row <- dimt[2]
   RGB <- attributes(ring.data)$RGB
-  if (!auto.path) {
-    text.line <- 4
-    step.number <- 1
-    text.s1 <- paste0('Step ', step.number, ': Select the left and',
-                      ' right edges of the rectangular sub-image. ',
-                      'Click the left mouse button to add each edge.')
-    mtext(text.s1, side = 1, line = text.line, adj = 0)
-    step2 <- locator(n = 1, type = 'n')
-    px2 <- round(step2$x)
-    if (px2 <= 0) px2 <- 1
-    if (px2 >= rd.col) px2 <- rd.col
-    lines(c(px2, px2), c(1, rd.row), lty = 2, lwd = 2, col = label.color)
-    step3 <- locator(n = 1, type = 'n')
-    px3 <- round(step3$x)
-    if (px3 <= 0) px3 <- 1
-    if (px3 >= rd.col) px3 <- rd.col
-    lines(c(px3, px3), c(1, rd.row), lty = 2, lwd = 2, col = label.color)
-    px.sort <- sort(c(px2, px3))
-    px2 <- px.sort[1]
-    px3 <- px.sort[2]
-    text.line <- 2 + text.line
-    mtext(paste('Step', step.number, 'has already done.'),
-          side = 1, line = text.line, adj = 0, col = 'blue')
-    text.line <- 2 + text.line
-    step.number <- 1 + step.number
-    text.s2 <- paste0('Step ', step.number, ': Select the top and ',
-                      'bottom edges of the rectangular sub-image. ',
-                      'Click the left mouse button to add each edge.')
-    mtext(text.s2, side = 1, line = text.line, adj = 0)
-    step4 <- locator(n = 1, type = 'n')
-    py2 <- round(step4$y)
-    if (py2 <= 0) py2 <- 0
-    if (py2 >= rd.row) py2 <- rd.row - 1
-    lines(c(px2, px3), c(py2, py2), lty = 2, lwd = 2, col = label.color)
-    step5 <- locator(n = 1, type = 'n')
-    py3 <- round(step5$y)
-    if (py3 <= 0) py3 <- 0
-    if (py3 >= rd.row) py3 <- rd.row - 1
-    lines(c(px2, px3), c(py3, py3), lty = 2, lwd = 2, col = label.color)
-    py.sort <- sort(c(py2, py3))
-    py2 <- py.sort[1]
-    py3 <- py.sort[2]
-    if (incline) {
-      if (path.dis * dp >= (py3 - py2))
-        stop('Please increase the width of the rectangular sub-image',
-             ' or decrease the value of the argument \'path.dis\'')
-    }
-    text.line <- 2 + text.line
-    mtext(paste0('Step ', step.number, ' has already done '),
-          side = 1, line = text.line, adj = 0, col = 'blue')
-    text.line <- 2 + text.line
-    step.number <- 1 + step.number
-    if (method != 'lineardetect') {
-      mtext(paste0('Step ', step.number, ': Add a horizontal ',
-                   'path by left-clicking on the sub-image.'),
-            side = 1, line = text.line, adj = 0)
-      step1 <- locator(n = 1, type = 'n')
-      py <- round(step1$y) 
-      if (py <= py2 | py >= py3)
-        stop('The y-position of the path is out of range')
-      if (incline) {  
-        number.of.pixels <- round((path.dis / 2) * dp)
-        py.upper <- py + number.of.pixels
-        if (py.upper >= py3)
-          stop('The y-position of the upper path is out of range')
-        abline(h = py.upper, lty = 2, lwd = 2, col = label.color)
-        py.lower <- py - number.of.pixels
-        if (py.lower <= py2)
-          stop('The y-position of the lower path is out of range')
-        abline(h = py.lower, lty = 2, lwd = 2, col = label.color)
-        abline(h = py, lty = 1, lwd = 2, col = label.color)
-      } else { 
-        abline(h = py, lty = 1, lwd = 2, col = label.color)
-      }
-    } else {
-      py <- (py3 + py2) / 2 %>% round
-    }
-  } else {
-    px2 <- 1
-    px3 <- rd.col
-    py2 <- 0
-    py3 <- rd.row - 1
-    py <- (py3 + py2) / 2 %>% round
-    if (incline) {  
-      number.of.pixels <- round((path.dis / 2) * dp)
-      py.upper <- py + number.of.pixels
-      if (py.upper >= py3) 
-        stop('The y-position of the upper path is out of range')
-      py.lower <- py - number.of.pixels
-      if (py.lower <= py2) 
-        stop('The y-position of the lower path is out of range')
-    }
+  xy.position <- create_path(auto.path, method, incline, path.dis,
+                             dp, rd.col, rd.row, label.color)
+  px2 <- xy.position[1]
+  px3 <- xy.position[2]
+  py2 <- xy.position[3]
+  py3 <- xy.position[4]
+  py <- xy.position[5]
+  if (incline) {
+    py.upper <- xy.position[6]
+    py.lower <- xy.position[7]
   }
   img.range <- paste0(as.character(px3 - px2 + 1), 'x',
                       as.character(py3 - py2 + 1), '+',
@@ -411,4 +329,107 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     }
   }
   return(rd.m.array)
+}
+
+draw_border1 <- function(rd.row, rd.col, label.color) {
+  step <- locator(n = 1, type = 'n')
+  px <- round(step$x)
+  if (px <= 0) px <- 1
+  if (px >= rd.col) px <- rd.col
+  lines(c(px, px), c(1, rd.row), lty = 2, lwd = 2, col = label.color)
+  return(px)
+}
+
+draw_border2 <- function(rd.row, rd.col, px2, px3, label.color) {
+  step <- locator(n = 1, type = 'n')
+  py <- round(step$y)
+  if (py <= 0) py <- 0
+  if (py >= rd.row) py <- rd.row - 1
+  lines(c(px2, px3), c(py, py), lty = 2, lwd = 2, col = label.color)
+  return(py)
+}
+
+create_path <- function(auto.path, method, incline, path.dis,
+                        dp, rd.col, rd.row, label.color) 
+{
+  coordinate <- vector()
+  if (auto.path) {
+    py <- rd.row / 2 %>% round
+    coordinate <- c(coordinate, 1, rd.col, 0, rd.row - 1, py)
+    if (incline) {  
+      number.of.pixels <- round((path.dis / 2) * dp)
+      py.upper <- py + number.of.pixels
+      if (py.upper >= rd.row - 1) 
+        stop('The y-position of the upper path is out of range')
+      py.lower <- py - number.of.pixels
+      if (py.lower <= 0) 
+        stop('The y-position of the lower path is out of range')
+      coordinate <- c(coordinate, py.upper, py.lower)
+    }
+    return(coordinate)
+  }
+  text.line <- 4
+  step.number <- 1
+  text.s1 <- paste0('Step ', step.number, ': Select the left and right edges',
+    ' of the sub-image. Click the left mouse button to add each edge.')
+  mtext(text.s1, side = 1, line = text.line, adj = 0)
+  px2 <- draw_border1(rd.row, rd.col, label.color)
+  px3 <- draw_border1(rd.row, rd.col, label.color)
+  cpx <- c(px2, px3)
+  px2 <- min(cpx)
+  px3 <- max(cpx)
+  coordinate <- c(coordinate, px2, px3)
+  text.line <- 2 + text.line
+  mtext(paste('Step', step.number, 'has already done.'),
+    side = 1, line = text.line, adj = 0, col = 'blue')
+  text.line <- 2 + text.line
+  step.number <- 1 + step.number
+  text.s2 <- paste0('Step ', step.number, ': Select the top and bottom edges',
+    ' of the sub-image. Click the left mouse button to add each edge.')
+  mtext(text.s2, side = 1, line = text.line, adj = 0)
+  py2 <- draw_border2(rd.row, rd.col, px2, px3, label.color)
+  py3 <- draw_border2(rd.row, rd.col, px2, px3, label.color)
+  cpy <- c(py2, py3)
+  py2 <- min(cpy)
+  py3 <- max(cpy)
+  coordinate <- c(coordinate, py2, py3)
+  if (incline) {
+    if (path.dis * dp >= (py3 - py2))
+      stop('Please increase the width of the sub-image or ',
+        'decrease the value of the argument \'path.dis\'')
+  }
+  text.line <- 2 + text.line
+  mtext(paste0('Step ', step.number, ' has already done '),
+    side = 1, line = text.line, adj = 0, col = 'blue')
+  text.line <- 2 + text.line
+  step.number <- 1 + step.number
+  if (method != 'lineardetect') {
+    mtext(paste0('Step ', step.number, ': Add a horizontal ',
+      'path by left-clicking on the sub-image.'),
+      side = 1, line = text.line, adj = 0)
+    step1 <- locator(n = 1, type = 'n')
+    py <- round(step1$y)
+    coordinate <- c(coordinate, py)
+    if (py <= py2 | py >= py3)
+      stop('The y-position of the path is out of range')
+    if (incline) {  
+      number.of.pixels <- round((path.dis / 2) * dp)
+      py.upper <- py + number.of.pixels
+      if (py.upper >= py3)
+        stop('The y-position of the upper path is out of range')
+      abline(h = py.upper, lty = 2, lwd = 2, col = label.color)
+      py.lower <- py - number.of.pixels
+      if (py.lower <= py2)
+        stop('The y-position of the lower path is out of range')
+      abline(h = py.lower, lty = 2, lwd = 2, col = label.color)
+      abline(h = py, lty = 1, lwd = 2, col = label.color)
+      coordinate <- c(coordinate, py.upper, py.lower)
+    } else { 
+      abline(h = py, lty = 1, lwd = 2, col = label.color)
+    }
+  } else {
+    py <- (py3 + py2) / 2 %>% round
+    coordinate <- c(coordinate, py)
+  }
+  return(coordinate)
 }

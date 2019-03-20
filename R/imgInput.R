@@ -46,7 +46,7 @@ imgInput <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
 {
   check.degree <- rotate %in% c(0, 90, 180, 270, 360) 
   if (!check.degree)
-    stop(paste('The argument \'rotate\' should be one of',
+    stop(paste('The argument "rotate" should be one of',
                  'the following integers: 0, 90, 180 or 270'))
   if (is.null(dpi))
     stop('Please provide the dpi value of the image')
