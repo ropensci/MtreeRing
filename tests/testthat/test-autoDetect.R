@@ -63,6 +63,12 @@ test_that("autoDetect returns an array", {
     'The linear detection can only create one path')
   expect_error(autoDetect(img1, method = 'watershed', watershed.threshold = 1), 
     'Ring border was not detected')
+  expect_error(autoDetect(img1, seg = 'not a numeric'))
+  expect_error(autoDetect(img1, method = c('two', 'methods')))
+  expect_error(autoDetect(img1, method = 1))
+  img1 <- imgInput(img = path1, dpi = 200)
+  dev.off(attributes(img1)$dn)
+  expect_error(autoDetect(img1, manual = F))
   
 })
 

@@ -31,7 +31,6 @@ test_that("imgInput plots a tree ring image and returns a magick object", {
   expect_error(imgInput(img = path1), 
     'Please provide the dpi value of the image')
   
-  expect_error(imgInput(img = path1, dpi = 1200, rotate = 88),
-    'The argument "rotate" should be one of the following integers: 0, 90, 180 or 270')
+  expect_error(imgInput(img = path1, dpi = 1200, rotate = 88))
   
 })
