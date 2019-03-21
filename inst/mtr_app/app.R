@@ -25,7 +25,7 @@ createUI <- function()
       menuItem('Image Loading',tabName = 'input_pre', 
         icon = icon('folder-open', lib = 'font-awesome')),
       menuItem('Measurement',tabName = 'mea_arg', 
-        icon = icon('gear', lib = 'font-awesome'))
+        icon = icon('gear', lib = 'font-awesome'), selected = TRUE)
     )
   )
   page1 <- fluidRow(
@@ -2151,7 +2151,7 @@ createServer <- function(input, output, session)
     }, contentType = "rwl"
   )
 }
-
+options(shiny.testmode = TRUE)
 shinyApp(ui = createUI(), server = createServer,
-  options = list(launch.browser = T, test.mode = T))
+  options = list(launch.browser = T))
 
