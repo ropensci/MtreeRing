@@ -20,7 +20,7 @@ test_that("imgInput plots a tree ring image and returns a magick object", {
   img5 <- imgInput(img = path5, dpi = 1200)
   dev.off(attributes(img5)$dn)
   img6 <- imgInput(img = path5, dpi = 1200, rotate = 180)
-  dev.off(attributes(img5)$dn)
+  dev.off(attributes(img6)$dn)
   
   expect_is(img1, "magick-image")
   expect_is(img2, "magick-image")
@@ -30,7 +30,19 @@ test_that("imgInput plots a tree ring image and returns a magick object", {
   expect_is(img6, "magick-image")
   expect_error(imgInput(img = path1), 
     'Please provide the dpi value of the image')
-  
   expect_error(imgInput(img = path1, dpi = 1200, rotate = 88))
+  
+  # magick test
+  img7 <- imgInput(
+"https://github.com/JingningShi/GifRepo/raw/master/figures/magick_test_1.jpg", 
+    dpi = 1200)
+  dev.off(attributes(img7)$dn)
+  expect_is(img7, "magick-image")
+  
+  img8 <- imgInput(
+    "https://github.com/JingningShi/GifRepo/raw/master/figures/magick_test_2.jpg", 
+    dpi = 1200)
+  dev.off(attributes(img8)$dn)
+  expect_is(img8, "magick-image")
   
 })
