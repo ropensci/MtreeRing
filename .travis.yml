@@ -7,8 +7,7 @@ r:
 before_install:
   - sudo apt-get install -y libmagick++-dev
   - sudo add-apt-repository -y ppa:opencpu/imagemagick
-  - sudo apt-get update
-  - sudo apt-get install -y libmagick++-dev         
+  
 r_packages:
   - covr
   - mockery
