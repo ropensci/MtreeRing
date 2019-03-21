@@ -45,12 +45,20 @@ test_that("autoDetect returns an array", {
   dn <- attributes(t7)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)
   
+  path3 <- system.file("001gray.png", package = "MtreeRing")
+  img3 <- imgInput(img = path3, dpi = 1200)
+  dev.off(attributes(img2)$dn)
+  t8 <- autoDetect(ring.data = img3, marker.correction = T, 
+    method = 'watershed', struc.ele1 = c(4,4), struc.ele2 = c(15,15))
+  dn <- attributes(t8)$seg.dn
+  apply(matrix(dn, nrow = 1), 2, dev.off)  
   
   expect_is(t1, "array")
   expect_is(t2, "array")
   expect_is(t3, "array")
   expect_is(t6, "array")
   expect_is(t7, "array")
+  expect_is(t8, "matrix")
   expect_true(attributes(t4)$bor.col %>% length == 0)
   expect_null(attributes(t4)$year)
   expect_null(attributes(t4)$sn)
@@ -77,7 +85,7 @@ test_that("mock test", {
   
   library(mockery)
   
-  path1 <- system.file("001.png", package = "MtreeRing")
+  path1 <- system.file("001gray.png", package = "MtreeRing")
   img1 <- imgInput(img = path1, dpi = 1200)
   dn <- attributes(img1)$dn
   apply(matrix(dn, nrow = 1), 2, dev.off)  
@@ -89,7 +97,7 @@ test_that("mock test", {
   dn <- attributes(t8)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)
   
-  expect_is(t8, "array")
+  expect_is(t8, "matrix")
  
 })
 
