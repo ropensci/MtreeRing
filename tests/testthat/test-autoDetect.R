@@ -97,7 +97,7 @@ test_that("mock test", {
   dn <- attributes(t8)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)
   
-  expect_is(t8, "matrix")
+  expect_is(t8, c("matrix", 'array'))
  
 })
 
