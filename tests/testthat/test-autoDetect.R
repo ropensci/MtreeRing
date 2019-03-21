@@ -58,7 +58,7 @@ test_that("autoDetect returns an array", {
   expect_is(t3, "array")
   expect_is(t6, "array")
   expect_is(t7, "array")
-  expect_is(t8, "matrix")
+  expect_is(t8, c("matrix", 'array'))
   expect_true(attributes(t4)$bor.col %>% length == 0)
   expect_null(attributes(t4)$year)
   expect_null(attributes(t4)$sn)
