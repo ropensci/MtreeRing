@@ -47,7 +47,7 @@ test_that("autoDetect returns an array", {
   
   path3 <- system.file("001gray.png", package = "MtreeRing")
   img3 <- imgInput(img = path3, dpi = 1200)
-  dev.off(attributes(img2)$dn)
+  dev.off(attributes(img3)$dn)
   t8 <- autoDetect(ring.data = img3, marker.correction = T, 
     method = 'watershed', struc.ele1 = c(4,4), struc.ele2 = c(15,15))
   dn <- attributes(t8)$seg.dn
