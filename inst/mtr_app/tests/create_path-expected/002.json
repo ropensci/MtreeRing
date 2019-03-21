@@ -4,9 +4,9 @@
     "button_del": 0,
     "button_hide": 0,
     "button_results": 0,
-    "button_run_auto": 1,
+    "button_run_auto": 0,
     "buttoncreatpath": 0,
-    "buttoncreatpath2": 1,
+    "buttoncreatpath2": 0,
     "buttoncrop": 0,
     "buttoninputimage": 1,
     "buttonrcm": 0,
@@ -88,7 +88,7 @@
   },
   "output": {
     "pre.img2": {
-      "src": "[image data sha1: 39954450895b8596ffac8784aa83c9681d5cbfe3]",
+      "src": "[image data sha1: 6dddc2ef19287ec13d8358c3812bcaf222a72ff8]",
       "width": 710,
       "height": 400,
       "coordmap": {
