@@ -56,7 +56,7 @@ createUI <- function()
         style = 'color:#000000;font-size:90%'),
       prettyCheckbox(
         inputId = "inmethod", 
-        label = div(style = 'color:#000000;font-weight: bolder;', 'Image Path'), 
+        label = div(style = 'color:#000000;font-weight: bolder;','Image Path'), 
         shape = "curve", value = F, status = "success"),
       conditionalPanel(
         condition = 'input.inmethod',
@@ -147,8 +147,8 @@ createUI <- function()
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       textInput('tuid', 'Series ID', '', width = '75%'),
       textInput('dpi', 'DPI', '', '75%'),
-      textInput('sample.yr', 'Sampling year', '', '75%'),
-      textInput('m.line', 'Y-coordinate of path', '', '75%'),
+      textInput('sample_yr', 'Sampling year', '', '75%'),
+      textInput('m_line', 'Y-coordinate of path', '', '75%'),
       prettyCheckbox(
         inputId = "incline", 
         label = div(
@@ -675,7 +675,7 @@ createServer <- function(input, output, session)
     border.col <- f.sort(border.col, dp)
     return(border.col)
   }
-  plot.marker <- function(py, incline, dp, sample.yr, h.dis, l.w, 
+  plot.marker <- function(py, incline, dp, sample_yr, h.dis, l.w, 
     bor.color, lab.color, pch, label.cex, 
     df.loc, plot.year, img.name)
   {
@@ -706,7 +706,7 @@ createServer <- function(input, output, session)
           points(bx[up], by.up, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           if (plot.year) {
-            year.u <- c(sample.yr:(sample.yr - lenup + 1))
+            year.u <- c(sample_yr:(sample_yr - lenup + 1))
             text(bx[up], by.up, year.u, adj = c(1.5, 0.5), 
               srt = 90, col = lab.color, cex = label.cex)
             border.num <- 1:lenup
@@ -721,7 +721,7 @@ createServer <- function(input, output, session)
           points(bx[lower], by.lower, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           if (plot.year) {
-            year.l <- c(sample.yr:(sample.yr - lenlo + 1))
+            year.l <- c(sample_yr:(sample_yr - lenlo + 1))
             text(bx[lower], by.lower, year.l, adj = c(1.5, 0.5), 
               srt = 90, col = lab.color, cex = label.cex)
             border.num <- 1:lenlo
@@ -736,7 +736,7 @@ createServer <- function(input, output, session)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           if (plot.year) {
-            year.u <- c(sample.yr:(sample.yr - length(by) + 1))
+            year.u <- c(sample_yr:(sample_yr - length(by) + 1))
             text(bx, by, year.u, adj = c(1.5, 0.5), 
               srt = 90, col = lab.color, cex = label.cex)
             border.num <- 1:lenbx
@@ -747,7 +747,7 @@ createServer <- function(input, output, session)
       }
     }
   }
-  f.rw <- function(outfile, sample.yr, incline, py, dpi, h.dis) {
+  f.rw <- function(outfile, sample_yr, incline, py, dpi, h.dis) {
     df.loc <- outfile
     bx <- df.loc$x[-c(1:2)]
     where.bx <- df.loc$z[-c(1:2)]
@@ -758,7 +758,7 @@ createServer <- function(input, output, session)
       lenbx <- length(bx)
       diff.col.num <- c(NA, diff(bx))
       rw <- round(diff.col.num/dp, 2)
-      years <- c(sample.yr:(sample.yr - lenbx + 1))
+      years <- c(sample_yr:(sample_yr - lenbx + 1))
       df.rw <- data.frame(year = years, column.numbers = bx, ring.width = rw)
     } else { 
       up <- which(where.bx > 0)
@@ -775,7 +775,7 @@ createServer <- function(input, output, session)
         diff.col.num.lower <- c(NA, diff(bx.lower))
         rw.lower <- round(diff.col.num.lower/dp, 2)
       }
-      years <- c(sample.yr:(sample.yr - lenup + 1))
+      years <- c(sample_yr:(sample_yr - lenup + 1))
       mean.bor <- (diff.col.num.lower[-1] + diff.col.num.up[-1])/2
       x.cor <- abs(bx.lower - bx.up)
       x.cor <- x.cor[-length(x.cor)]
@@ -788,14 +788,14 @@ createServer <- function(input, output, session)
     }
     return(df.rw)
   }
-  automatic.det <- function(img, incline, method, h.dis, dpi, m.line, RGB, 
+  automatic.det <- function(img, incline, method, h.dis, dpi, m_line, RGB, 
     x1, x2, y1, y2, arghed, watershed.threshold, 
     watershed.adjust, struc.ele1, struc.ele2, 
     default.canny, canny.t1, canny.t2, canny.adjust, 
     canny.smoothing, origin) 
   {   
     dp <- dpi/25.4
-    py <- round(m.line)
+    py <- round(m_line)
     if (incline) {
       number.of.pixels <- round((h.dis/2) * dp)
       py.upper <- py + number.of.pixels
@@ -1034,7 +1034,7 @@ createServer <- function(input, output, session)
     df.loc$data <- NULL
     df.loc$ID <- NULL
     rw.dataframe$data <- NULL
-    updateTextInput(session, "m.line", value = '',
+    updateTextInput(session, "m_line", value = '',
       label = 'Y-coordinate of the path')
     updatePrettyRadioButtons(
       session = session, inputId = "cropcondition",
@@ -1096,11 +1096,11 @@ createServer <- function(input, output, session)
     df.loc$ID <- NULL
     rw.dataframe$data <- NULL
     #cur.time <- as.character(Sys.time())
-    updateTextInput(session, "m.line", value = '',
+    updateTextInput(session, "m_line", value = '',
       label = 'Y-coordinate of the path')
     updateTextInput(session, "tuid", value = '',
       label = 'Series ID')
-    updateTextInput(session, "sample.yr", value = '',
+    updateTextInput(session, "sample_yr", value = '',
       label = 'Sampling year')
     updateTextInput(session, "dpi", value = '',
       label = 'DPI of the image')
@@ -1145,7 +1145,7 @@ createServer <- function(input, output, session)
     df.loc$ID <- NULL
     rw.dataframe$data <- NULL
     img.file.zoom$data <- NULL
-    updateTextInput(session, "m.line", value = '',
+    updateTextInput(session, "m_line", value = '',
       label = 'Y-coordinate of the path')
     updateTextInput(session, "tuid", value = '', label = 'Series ID')
     if (!is.null(plot1_brush)) {
@@ -1200,7 +1200,7 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    py <- as.numeric(input$m.line)
+    py <- as.numeric(input$m_line)
     if (is.na(py)) {
       err.text <- 'Please enter a valid y-coordinate of the path'
       sendSweetAlert(
@@ -1257,7 +1257,7 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    py <- as.numeric(input$m.line)
+    py <- as.numeric(input$m_line)
     if (is.na(py)) {
       err.text <- 'Please enter a valid y-coordinate of the path'
       sendSweetAlert(
@@ -1501,8 +1501,8 @@ createServer <- function(input, output, session)
   output$pre.img2 <- renderPlot({
     if (is.null(img.file$data)) return()
     imgInput_crop(as.raster(img.file.crop$data))
-    sample.yr <- as.numeric(input$sample.yr)
-    if (is.na(sample.yr)) return()
+    sample_yr <- as.numeric(input$sample_yr)
+    if (is.na(sample_yr)) return()
     pch <- as.numeric(input$pch)
     bor.color <- input$border.color
     lab.color <- input$label.color
@@ -1518,7 +1518,7 @@ createServer <- function(input, output, session)
     py <- plot.arg[2, 1]
     h.dis <- plot.arg[2, 2]
     img.name <- paste('Series ID:', df.loc$ID)
-    plot.marker(py, incline, dp, sample.yr, h.dis, l.w, bor.color, 
+    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color, 
       lab.color, pch, label.cex, f.df.loc, T, img.name)
   })
   output$zoom.img <- renderPlot({
@@ -1526,8 +1526,8 @@ createServer <- function(input, output, session)
     if (is.null(img.file.zoom$data)) return()
     # if (is.null(img.file.zoom.copy$data)) return()
     imgInput_crop(as.raster(img.file.zoom$data))
-    sample.yr <- as.numeric(input$sample.yr)
-    if(is.na(sample.yr)) return()
+    sample_yr <- as.numeric(input$sample_yr)
+    if(is.na(sample_yr)) return()
     pch <- as.numeric(input$pch)
     bor.color <- input$border.color
     lab.color <- input$label.color
@@ -1544,7 +1544,7 @@ createServer <- function(input, output, session)
     py <- plot.arg[2, 1] - plot2_ranges$y[1]
     h.dis <- plot.arg[2, 2]
     img.name <- paste('Series ID:', df.loc$ID)
-    plot.marker(py, incline, dp, sample.yr, h.dis, l.w, bor.color, 
+    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color, 
       lab.color, pch, label.cex, f.df.loc, T, img.name)
   })
   #autoresult <- reactiveValues(data = NULL, text = NULL)
@@ -1581,19 +1581,19 @@ createServer <- function(input, output, session)
     dpi <- plot.arg[1, 1]
     dp <- dpi/25.4
     incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    m.line <- plot.arg[2, 1]
+    m_line <- plot.arg[2, 1]
     h.dis <- plot.arg[2, 2]
-    m.line.upper <- m.line
-    m.line.lower <- m.line
+    m_line.upper <- m_line
+    m_line.lower <- m_line
     if (incline) {
       number.of.pixels <- round((h.dis/2) * dp)
-      m.line.lower <- m.line + number.of.pixels
-      m.line.upper <- m.line - number.of.pixels
+      m_line.lower <- m_line + number.of.pixels
+      m_line.upper <- m_line - number.of.pixels
     }
     img <- img.file.crop$data
     method <- input$method
     linear.warning <- FALSE
-    if (m.line.upper <= y1 | m.line.lower >= y2) {
+    if (m_line.upper <= y1 | m_line.lower >= y2) {
       result.text <- paste('The brushed area does not contain the',
         'path. Please re-brush on the image')
       sendSweetAlert(
@@ -1676,7 +1676,7 @@ createServer <- function(input, output, session)
         watershed.threshold <- input$watershed.threshold
       }
       watershed.adjust <- input$watershed.adjust
-      df.loc$data <- automatic.det(img, incline, method, h.dis, dpi, m.line, 
+      df.loc$data <- automatic.det(img, incline, method, h.dis, dpi, m_line, 
         RGB, x1, x2, y1, y2, plot.arg,
         watershed.threshold, watershed.adjust, 
         struc.ele1, struc.ele2)
@@ -1688,7 +1688,7 @@ createServer <- function(input, output, session)
       canny.adjust <- input$canny.adjust
       canny.smoothing <- input$canny.smoothing
       df.loc$data <- automatic.det(
-        img, incline, method, h.dis, dpi, m.line, RGB, 
+        img, incline, method, h.dis, dpi, m_line, RGB, 
         x1, x2, y1, y2, plot.arg, watershed.threshold, 
         watershed.adjust, struc.ele1, struc.ele2, default.canny,
         canny.t1, canny.t2, canny.adjust, canny.smoothing)
@@ -1696,8 +1696,8 @@ createServer <- function(input, output, session)
     if (method == "lineardetect") {
       origin <- as.numeric(input$origin)
       py.ld <- round((y1 + y2)/2)
-      updateTextInput(session, "m.line", value = as.character(round(py.ld)))
-      f.df.loc <- automatic.det(img, incline, method, h.dis, dpi, m.line, 
+      updateTextInput(session, "m_line", value = as.character(round(py.ld)))
+      f.df.loc <- automatic.det(img, incline, method, h.dis, dpi, m_line, 
         RGB, x1, x2, y1, y2, plot.arg, origin = origin)
       if(incline){
         updateCheckboxInput(session, 'incline', 'Inclined tree rings', F)
@@ -1735,7 +1735,7 @@ createServer <- function(input, output, session)
     plot2_ranges$y <- NULL
     df.loc$data <- NULL
     df.loc$ID <- NULL
-    updateTextInput(session, "m.line", value = '',
+    updateTextInput(session, "m_line", value = '',
       label = 'Y-coordinate of the path')
     rt <- paste('The existing path and borders have been',
       'removed. You need to re-create a path')
@@ -1748,7 +1748,7 @@ createServer <- function(input, output, session)
     plot2_ranges$y <- NULL
     df.loc$data <- NULL
     df.loc$ID <- NULL
-    updateTextInput(session, "m.line", value = '',
+    updateTextInput(session, "m_line", value = '',
       label = 'Y-coordinate of the path')
     rt <- paste('The existing path and borders have been',
       'removed. You need to re-create a path')
@@ -1770,7 +1770,7 @@ createServer <- function(input, output, session)
     dpi <- plot.arg[1, 1]
     dp <- dpi/25.4
     incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    m.line <- plot.arg[2, 1]
+    m_line <- plot.arg[2, 1]
     h.dis <- plot.arg[2, 2]
     if (nrow(f.df.loc) < 3) {
       rt <- 'Ring border was not found along the path'
@@ -1826,8 +1826,8 @@ createServer <- function(input, output, session)
           return()
         }
       }
-      df.u <- data.frame(x = bx.u, y = m.line, z = 1) 
-      df.l <- data.frame(x = bx.l, y = m.line, z = -1)
+      df.u <- data.frame(x = bx.u, y = m_line, z = 1) 
+      df.l <- data.frame(x = bx.l, y = m_line, z = -1)
       df.loc$data <- rbind(plot.arg, df.u, df.l)
       updateTextInput(session, "del.u",
         label = 'Border number in the upper portion',
@@ -1846,7 +1846,7 @@ createServer <- function(input, output, session)
       del <- strsplit(input$del, ",")[[1]] %>% as.numeric
       if (max(del) <= length(bx)) {
         bx <- bx[-del]
-        df <- data.frame(x = bx, y = m.line, z = 0)
+        df <- data.frame(x = bx, y = m_line, z = 0)
         df.loc$data <- rbind(plot.arg, df)
         updateTextInput(session, "del", label = 'Border number', value = '')
       } else {
@@ -1875,8 +1875,8 @@ createServer <- function(input, output, session)
       )
       return()
     } 
-    sample.yr <- as.numeric(input$sample.yr)
-    if (is.na(sample.yr)) {
+    sample_yr <- as.numeric(input$sample_yr)
+    if (is.na(sample_yr)) {
       error.text <- paste('Please check the argument \'Sampling year\' ')
       sendSweetAlert(
         session = session, title = "Error", text = error.text, type = "error"
@@ -1900,7 +1900,7 @@ createServer <- function(input, output, session)
         return()
       }
       if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
-        rw.dataframe$data <- f.rw(df.loc$data, sample.yr, 
+        rw.dataframe$data <- f.rw(df.loc$data, sample_yr, 
           incline, py, dpi, h.dis)
       } else {
         if (any(incline.cond < 2)) {
@@ -1919,7 +1919,7 @@ createServer <- function(input, output, session)
         }
       }   
     } else {
-      rw.dataframe$data <- f.rw(df.loc$data, sample.yr, 
+      rw.dataframe$data <- f.rw(df.loc$data, sample_yr, 
         incline, py, dpi, h.dis)
     } 
   })
@@ -1960,8 +1960,8 @@ createServer <- function(input, output, session)
         )
         return()
       } 
-      sample.yr <- as.numeric(input$sample.yr)
-      if (is.na(sample.yr)) {
+      sample_yr <- as.numeric(input$sample_yr)
+      if (is.na(sample_yr)) {
         error.text <- 'Please check the argument \'Sampling year\''
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
@@ -1993,7 +1993,7 @@ createServer <- function(input, output, session)
           return()
         }
         if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
-          df.rw <- f.rw(df.loc$data, sample.yr, incline, py, dpi, h.dis)
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
           write.csv(df.rw, filename, quote = FALSE, na = '--')
         } else {
           if (any(incline.cond < 2)) {
@@ -2013,7 +2013,7 @@ createServer <- function(input, output, session)
           }
         }
       } else {
-        df.rw <- f.rw(df.loc$data, sample.yr, incline, py, dpi, h.dis)
+        df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
         write.csv(df.rw, filename, quote = FALSE, na = '--')
       } 
     },
@@ -2062,8 +2062,8 @@ createServer <- function(input, output, session)
         )
         return()
       } 
-      sample.yr <- as.numeric(input$sample.yr)
-      if (is.na(sample.yr)) {
+      sample_yr <- as.numeric(input$sample_yr)
+      if (is.na(sample_yr)) {
         error.text <- paste('Please check the argument \'Sampling year\'')
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
@@ -2095,7 +2095,7 @@ createServer <- function(input, output, session)
           return()
         }
         if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
-          df.rw <- f.rw(df.loc$data, sample.yr, incline, py, dpi, h.dis)
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
         } else {
           if (any(incline.cond < 2)) {
             rt <- paste('A minimum of two ring borders on each path',
@@ -2114,7 +2114,7 @@ createServer <- function(input, output, session)
           }
         }
       } else {
-        df.rw <- f.rw(df.loc$data, sample.yr, incline, py, dpi, h.dis)
+        df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
       }
       df.rwl <- data.frame(df.rw$ring.width, row.names = df.rw$year)
       tuprec <- as.numeric(input$tuprec)
@@ -2153,5 +2153,5 @@ createServer <- function(input, output, session)
 }
 
 shinyApp(ui = createUI(), server = createServer,
-  options = list(launch.browser = T))
+  options = list(launch.browser = T, test.mode = T))
 
