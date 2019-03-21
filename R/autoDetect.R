@@ -219,16 +219,7 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   if (is.null(sample.yr))
     sample.yr <- Sys.Date() %>% as.character %>% strtrim(4) %>% as.numeric
   if (!manual) {
-    rd.channel <- dim(rd.m.array)
-    if (length(rd.channel) == 2) {
-      seg.data <- rd.m.array[, ]
-    } else {
-      if (rd.channel[3] == 2)
-        seg.data <- rd.m.array[, , 1]
-      if (rd.channel[3] >= 3) {
-        seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
-      }
-    }
+    seg.data <- convert2gray(rd.m.array, RGB)
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, x.dpi)
       black.hat <- hat(seg.mor, x.dpi, watershed.threshold, watershed.adjust)
@@ -433,3 +424,18 @@ create_path <- function(auto.path, method, incline, path.dis,
   }
   return(coordinate)
 }
+
+convert2gray <- function(rd.m.array, RGB) {
+  rd.channel <- dim(rd.m.array)
+  if (length(rd.channel) == 2) {
+    seg.data <- rd.m.array[, ]
+  } else {
+    if (rd.channel[3] == 2)
+      seg.data <- rd.m.array[, , 1]
+    if (rd.channel[3] >= 3) {
+      seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
+    }
+  }
+  return(seg.data)
+}
+
