@@ -11,9 +11,8 @@ MtreeRing
 <!--我的徽章-->
 [![Build Status](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
-[![cran version](https://www.r-pkg.org/badges/version/MtreeRing)](https://cran.r-project.org/package=MtreeRing)
+[![ROpenSci status](https://badges.ropensci.org/287_status.svg)](https://github.com/ropensci/software-review/issues/287)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
-[![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/MtreeRing?color=orange)](https://CRAN.R-project.org/package=MtreeRing)
 [![codecov](https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/JingningShi/MtreeRing)
 
 
