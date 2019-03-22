@@ -29,7 +29,7 @@
     "dpi": "1200",
     "enter.path": "",
     "h.dis": 1,
-    "incline": false,
+    "incline": true,
     "inmethod": false,
     "isrgb": true,
     "label.cex": 1,
@@ -44,8 +44,8 @@
     "plot2_brush": {
       "xmin": 10,
       "xmax": 2333,
-      "ymin": 60,
-      "ymax": 120
+      "ymin": 40,
+      "ymax": 140
     },
     "plot2_dblclick": null,
     "reset.hdr": 0,
@@ -94,7 +94,7 @@
   },
   "output": {
     "pre.img2": {
-      "src": "[image data sha1: 143553e3ae28e411f23911b1aa55fc1d8e48295e]",
+      "src": "[image data sha1: 629b6c70e932fdc4c72d6fcf5390fb723e99a1e3]",
       "width": 710,
       "height": 400,
       "coordmap": {

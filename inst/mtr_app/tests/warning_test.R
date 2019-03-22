@@ -1,5 +1,7 @@
 app <- ShinyDriver$new("../")
-app$snapshotInit("run_detection")
+app$snapshotInit("warning_test")
+
+## create two paths in this test
 
 app$setInputs(sidebarCollapsed = FALSE)
 # Input 'plot2_brush' was set, but doesn't have an input binding.
@@ -11,8 +13,14 @@ app$setInputs(dpi = "1200")
 app$setInputs(sample_yr = "2015")
 app$setInputs(m_line = "90")
 app$setInputs(method = 'watershed')
+app$setInputs(incline = FALSE)
 app$setInputs(buttoncreatpath2 = "click")
 # Input 'plot2_brush' was set, but doesn't have an input binding.
-app$setInputs(plot2_brush = list(xmin = 10, xmax = 2333, ymin = 60, ymax = 120),allowInputNoBinding_ = TRUE)
+app$setInputs(plot2_brush = list(xmin = 10, xmax = 2333, 
+  ymin =99, ymax = 140),allowInputNoBinding_ = TRUE)
 app$setInputs(button_run_auto = "click")
+app$snapshot()
+app$setInputs(incline = TRUE)
+app$snapshot()
+app$setInputs(button_results = "click")
 app$snapshot()
