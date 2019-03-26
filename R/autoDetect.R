@@ -193,29 +193,10 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                       as.character(rd.row - py3 - 1))
   img.crop <- image_crop(ring.data, img.range)
   rd.martix <- img.crop[[1]]
-  rd.channel <- dim(rd.martix)[1]
-  hex2dec <- function(rd.martix) apply(rd.martix, 1, as.numeric)
-  if (rd.channel == 1) {
-    rd.m.array <- hex2dec(rd.martix[1, , ])
-  } else {
-    rd.m.array <- array(0, dim = rev(dim(rd.martix)))
-    for (i in 1:rd.channel) {
-      rd.m.array[, , i] <- hex2dec(rd.martix[i, , ])
-    }
-  }
-  rd.m.array <- rd.m.array/255
-  if (seg == 1) {
-    x.left <- px2
-    x.right <- px3
-  } else {
-    tot.col <- (px3 - px2) + 1
-    x.left <- px2
-    for (i in 2:seg) {
-      x.left[i] <- x.left[i - 1] + tot.col %/% seg
-    }
-    x.right <- x.left[-1] - 1
-    x.right[seg] <- px3
-  }  
+  rd.m.array <- magick2array(rd.martix)
+  colInd <- columnIndices(px2, px3, seg)
+  x.left <- colInd$left
+  x.right <- colInd$right
   if (is.null(sample.yr))
     sample.yr <- Sys.Date() %>% as.character %>% strtrim(4) %>% as.numeric
   if (!manual) {
@@ -439,3 +420,32 @@ convert2gray <- function(rd.m.array, RGB) {
   return(seg.data)
 }
 
+magick2array <- function(rd.martix) {
+  rd.channel <- dim(rd.martix)[1]
+  hex2dec <- function(rd.martix) apply(rd.martix, 1, as.numeric)
+  if (rd.channel == 1) {
+    rd.m.array <- hex2dec(rd.martix[1, , ])
+  } else {
+    rd.m.array <- array(0, dim = rev(dim(rd.martix)))
+    for (i in 1:rd.channel) {
+      rd.m.array[, , i] <- hex2dec(rd.martix[i, , ])
+    }
+  }
+  rd.m.array <- rd.m.array/255
+}
+
+columnIndices <- function(px2, px3, seg) {
+  if (seg == 1) {
+    x.left <- px2
+    x.right <- px3
+  } else {
+    tot.col <- (px3 - px2) + 1
+    x.left <- px2
+    for (i in 2:seg) {
+      x.left[i] <- x.left[i - 1] + tot.col %/% seg
+    }
+    x.right <- x.left[-1] - 1
+    x.right[seg] <- px3
+  } 
+  list(left = x.left, right = x.right)
+}
