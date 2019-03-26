@@ -141,15 +141,12 @@ visualSelect <- function(ring.data, del = NULL, del.u = NULL,
     if (incline) {
       bor.l <- c(bor.l, add.l) %>% sort
       bor.u <- c(bor.u, add.u) %>% sort
-    } else {
-      bor.col <- c(bor.col, add.bor) %>% sort
-    }
-    if (incline) {
       img.attr <- f.plot.double(ring.data, bor.u, bor.l, x.left, x.right, 
         seg, py.upper, py.lower, dp, sample.yr, 
         py2, nrow(ring.data), py, seg.name, 
         border.type,border.color, label.color, label.cex)
     } else {
+      bor.col <- c(bor.col, add.bor) %>% sort
       img.attr <- f.plot.single(ring.data, bor.col, x.left, x.right, seg, dp, 
         sample.yr, py2, nrow(ring.data), py, seg.name, 
         border.type, border.color, label.color, label.cex)
