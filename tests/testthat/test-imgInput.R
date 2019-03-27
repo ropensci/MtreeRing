@@ -36,25 +36,21 @@ test_that("imgInput plots a tree ring image and returns a magick object", {
 })
 
 test_that("mock test", {
-  
+  path2 <- system.file("001.tif", package = "MtreeRing")
   library(mockery)
   mock1 <- mock(20*1024^2, cycle = T)
   stub(imgInput, 'file.size', mock1)
-  img1 <- imgInput(
-"https://github.com/JingningShi/GifRepo/raw/master/figures/magick_test_2.jpg", 
-    dpi = 1200)
+  img1 <- imgInput(path2, dpi = 1200)
   dev.off(attributes(img1)$dn)
   expect_is(img1, "magick-image")
 })
 
 test_that("mock test", {
-  
+  path5 <- system.file("001gray.png", package = "MtreeRing")
   library(mockery)
   mock1 <- mock(20*1024^2, cycle = T)
   stub(imgInput, 'file.size', mock1)
-  img1 <- imgInput(
-"https://github.com/JingningShi/GifRepo/raw/master/figures/magick_test_1.jpg", 
-    dpi = 1200)
+  img1 <- imgInput(path5, dpi = 1200)
   dev.off(attributes(img1)$dn)
   expect_is(img1, "magick-image")
 })
