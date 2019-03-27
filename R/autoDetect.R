@@ -156,12 +156,10 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                        border.color = 'black', border.type = 16, 
                        label.color = 'black', label.cex = 1.2)
 {
-  if (!is.numeric(seg)) {
+  if (!is.numeric(seg))
     stop("The argument 'seg' should be a numeric vector of length one")
-  }
-  if (!is.character(method)) {
+  if (!is.character(method))
     stop("The argument 'method' should be a character vector of length one")
-  }
   if (length(method) >= 2) 
     stop("The argument 'method' should be a character vector of length one")
   if (method == "lineardetect" & incline) 
@@ -222,16 +220,13 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
       attributes(seg.data)['image'] <- 'img'
       smoothed <- graySmoothed(seg.data, ppi = x.dpi, rgb = RGB)
       bor.col <- linearDetect(smoothed, origin = origin)
+      bor.col <- bor.col + px2 - 1
     }
     if (incline) {
       bor.l <- f.border(seg.data, py3 - py.lower, dp) + px2 - 1
       bor.u <- f.border(seg.data, py3 - py.upper, dp) + px2 - 1
     } else {
-      if (method == 'lineardetect') {
-        bor.col <- bor.col + px2 - 1
-      } else {
-        bor.col <- f.border(seg.data, py3 - py, dp) + px2 - 1
-      }
+      bor.col <- f.border(seg.data, py3 - py, dp) + px2 - 1
     }
   }
   img.name <- attributes(ring.data)$img.name
@@ -252,8 +247,8 @@ autoDetect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     seg.dn <- vector(length = 0)
     for (i in 1:seg) {
       dev.new()
-      f.img.middle(rd.m.array, x.left[i], x.right[i], 
-                   py2, nrow(rd.m.array), x.left[1], F)
+      f.img(rd.m.array, x.left[i], x.right[i], 
+            py2, nrow(rd.m.array), x.left[1], F)
       seg.dn[i] <- dev.cur() %>% as.numeric
       title(main = seg.name[i], cex.main = 1.5, line = -1)
       abline(h = py, lty = 2, col = label.color)
