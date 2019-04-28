@@ -1,92 +1,92 @@
 #' @title Calibrate ring-width series
 #' @export
 #' @importFrom stats coef lm
-#' @description This function can calibrate the ring-width series 
+#' @description This function can calibrate the ring-width series
 #' using arcs of inner rings.
 #' @author Jingning Shi
 #' @param ring.data A magick image object produced by \code{imgInput}.
-#' @param inner.arc A logical value indicating whether to calibrate the 
+#' @param inner.arc A logical value indicating whether to calibrate the
 #' ring-width series using the arcs of inner rings. See details below.
-#' @param last.yr \code{NULL} or an integer giving the year of formation 
-#' of the left-most ring. If \code{NULL}, borders numbers (starting from 1) 
+#' @param last.yr \code{NULL} or an integer giving the year of formation
+#' of the left-most ring. If \code{NULL}, borders numbers (starting from 1)
 #' are used instead of the year.
 #' @param color Color for labels.
-#' @param border.type Symbol for ring borders. See \code{pch} in 
+#' @param border.type Symbol for ring borders. See \code{pch} in
 #' \code{\link{points}} for possible values and their shapes.
 #' @param label.cex The magnification to be used for years and ring numbers.
 #' @return A data frame of the calibrated ring-width series.
-#' @details 
-#' This function allows the user to create a path, and manually mark 
-#' ring borders by clicking on the graphical window.  
+#' @details
+#' This function allows the user to create a path, and manually mark
+#' ring borders by clicking on the graphical window.
 #' \itemize{
 #' \item
-#' If \code{inner.arc = TRUE}, the ring-width series is calibrated using arcs 
+#' If \code{inner.arc = TRUE}, the ring-width series is calibrated using arcs
 #' of inner rings (Duncan, 1989).
-#'  
+#'
 #' First, the user can click the left mouse button to add a horizontal path.
-#' The path should traverse an appropriate arc (read the reference below for 
+#' The path should traverse an appropriate arc (read the reference below for
 #' more details). Then, the user can add three points to the selected arc by
-#' left-clicking. The first point should be placed on the left endpoint of 
-#' the arc, and the second point is placed on the right endpoint. 
-#' 
-#' After two endpoints are added, a vertical dashed line will be plotted 
-#' automatically according to the (x,y) positions of endpoints you just added. 
-#' The third points should be placed on the intersection of the vertical 
-#' dashed line and the selected arc. 
-#' 
+#' left-clicking. The first point should be placed on the left endpoint of
+#' the arc, and the second point is placed on the right endpoint.
+#'
+#' After two endpoints are added, a vertical dashed line will be plotted
+#' automatically according to the (x,y) positions of endpoints you just added.
+#' The third points should be placed on the intersection of the vertical
+#' dashed line and the selected arc.
+#'
 #' Finally, the user is prompted to visually mark ring borders along the path.
 #' The termination of visual selection is similar to \code{visualSelect}.
-#' Note that the left endpoint of the arc will be considered as the last 
+#' Note that the left endpoint of the arc will be considered as the last
 #' ring border without the need to mark it.
-#' 
+#'
 #' The ring-width series are corrected using formulas proposed by Duncan (1989).
-#' 
+#'
 #' \item
-#' If \code{inner.arc = FALSE}, the user can create a path which matches 
-#' the direction of wood growth. 
-#' 
-#' First, the user can add two points by left-clicking on the image. 
-#' A path passing through these two points will be plotted. The path should 
+#' If \code{inner.arc = FALSE}, the user can create a path which matches
+#' the direction of wood growth.
+#'
+#' First, the user can add two points by left-clicking on the image.
+#' A path passing through these two points will be plotted. The path should
 #' follow the rays from bark to pith.
-#' 
-#' Then, the user can visually mark ring borders along the path. 
+#'
+#' Then, the user can visually mark ring borders along the path.
 #' The termination of visual selection is similar to \code{visualSelect}.
 #' }
-#' 
-#' @references 
-#' Duncan R. (1989) 
-#' An evaluation of errors in tree age estimates based on increment cores 
+#'
+#' @references
+#' Duncan R. (1989)
+#' An evaluation of errors in tree age estimates based on increment cores
 #' in Kahikatea (Dacrycarpus dacrydiodes).
 #' \emph{New Zealand Natural Sciences}
 #' \bold{16(4)}, 1-37.
-#' 
-#' @examples 
+#'
+#' @examples
 #' img.path <- system.file("arc.png", package = "MtreeRing")
-#' 
+#'
 #' ## Read and plot the image:
 #' t1 <- imgInput(img = img.path, dpi = 1200)
 #'
 #' ## Use the arcs of inner rings to calibrate ring-width series:
 #' \donttest{t2 <- nearPith(ring.data = t1, inner.arc = TRUE, last.yr = 2016)}
-#' 
+#'
 #' ## Try another method to measure ring widths:
 #' \donttest{t3 <- nearPith(ring.data = t1, inner.arc = FALSE, last.yr = 2016)}
 
 
-nearPith <- function(ring.data, inner.arc = TRUE, last.yr = NULL, 
+nearPith <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
                      color = 'black', border.type = 16, label.cex = 1.5)
 {
-  img.name <- attributes(ring.data)$img.name  
+  img.name <- attributes(ring.data)$img.name
   device.number <- attributes(ring.data)$dn
   x.dpi <- attributes(ring.data)$x.dpi
-  dp <- x.dpi / 25.4 
+  dp <- x.dpi / 25.4
   dev.set(device.number)
   dimt <- attributes(ring.data)$dimt
   pos <- add_path(inner.arc, border.type, color, label.cex)
   text.line <- pos$t
   step.number <- pos$s
   text.line <- 2 + text.line
-  mtext(text = 'Please mark ring boundaries along the user-defined path', 
+  mtext(text = 'Please mark ring boundaries along the user-defined path',
         side = 1, line = text.line, adj = 0)
   bor.xy <- locator(type = 'p', pch = border.type, col = color, cex = label.cex)
   order.x <- order(bor.xy$x)
@@ -103,11 +103,11 @@ nearPith <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
   lenbx <- length(bor.x)
   if (is.null(last.yr)) {
     yr.list <- 1:lenbx
-    text(bor.x, bor.y, yr.list, adj = c(2, 2), 
+    text(bor.x, bor.y, yr.list, adj = c(2, 2),
          col = color, cex = label.cex)
   } else {
       yr.list <- last.yr:(last.yr - lenbx + 1)
-      text(bor.x, bor.y, yr.list, adj = c(1.25, 0.25), 
+      text(bor.x, bor.y, yr.list, adj = c(1.25, 0.25),
            col = color, cex = label.cex, srt = 90)
   }
 
@@ -115,19 +115,19 @@ nearPith <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
     l <- abs(arc.a$x - arc.b$x)
     h <- abs(arc.c$y - py)
     miss.r <- l^2/(8 * h) - h/2
-    d <- bor.distance(bor.x, rep(0, lenbx)) 
+    d <- bor.distance(bor.x, rep(0, lenbx))
     d.cum <- c(d, l/2) %>% rev %>% cumsum
-    r.list <- sqrt(d.cum^2 + miss.r^2) 
+    r.list <- sqrt(d.cum^2 + miss.r^2)
     diff.r <- diff(r.list) %>% rev
     d <- c(d/dp) %>% round(digits = 2)
     diff.r <- c(diff.r/dp) %>% round(digits = 2)
     if (is.null(last.yr)) {
-        df.pith <- data.frame(border.number = yr.list[-1], 
-                             original.width = d, 
+        df.pith <- data.frame(border.number = yr.list[-1],
+                             original.width = d,
                             corrected.width = diff.r)
     } else {
-        df.pith <- data.frame(year = yr.list[-1], 
-                              original.width = d, 
+        df.pith <- data.frame(year = yr.list[-1],
+                              original.width = d,
                               corrected.width = diff.r)
     }
   } else {
@@ -149,30 +149,30 @@ add_path <- function(inner.arc, border.type, color, label.cex) {
   step.number <- 1
   if (inner.arc) {
     mtext(paste0('Step ', step.number, ': Click the left ',
-      'mouse button to add a horizontal path.'), 
+      'mouse button to add a horizontal path.'),
       side = 1, line = text.line, adj = 0)
     step1 <- locator(n = 1, type = "n")
-    py <- round(step1$y) 
+    py <- round(step1$y)
     abline(h = py, lty = 2, lwd = 2, col = color)
     text.line <- 2 + text.line
-    mtext(paste0("Step ", step.number, " is already done."), side = 1, 
+    mtext(paste0("Step ", step.number, " completed."), side = 1,
       line = text.line, adj = 0, col = "blue")
     text.line <- 2 + text.line
     step.number <- 1 + step.number
     mtext(paste0('Step ', step.number, ' : Click the left mouse button',
-      ' to add three points on the arc you select.'), 
+      ' to add three points on the arc you select.'),
       side = 1, line = text.line, adj = 0)
     ##arc
     arc.position <- mark_arc(py, border.type, color, label.cex)
     coordinate <- c(coordinate, list(arc = arc.position, p = py))
     text.line <- 2 + text.line
-    mtext(paste0("Step ", step.number, " is already done "), side = 1, 
+    mtext(paste0("Step ", step.number, " completed."), side = 1,
       line = text.line, adj = 0, col = "blue")
-  }  
+  }
   if (!inner.arc) {
-    mtext(paste0('Step ', step.number, ' :Click the left mouse button to add ', 
+    mtext(paste0('Step ', step.number, ' :Click the left mouse button to add ',
       'two points. A straight line passing through ',
-      'these two points will be added to the image.'), 
+      'these two points will be added to the image.'),
       side = 1, line = text.line, adj = 0)
     path.position <- inclined_path(border.type, color, label.cex)
     path.xy <- lm(path.position$y ~ path.position$x + 1)
@@ -180,9 +180,9 @@ add_path <- function(inner.arc, border.type, color, label.cex) {
     b <- coef(path.xy)[2]
     abline(a = a, b = b, lwd = 2, lty = 2, col = color)
     text.line <- 2 + text.line
-    mtext(paste0('Step ', step.number, ' is already done.'), side = 1, 
+    mtext(paste0('Step ', step.number, ' completed.'), side = 1,
       line = text.line, adj = 0, col = 'blue')
-  }  
+  }
   coordinate <- c(coordinate, list(t = text.line, s = step.number))
 }
 

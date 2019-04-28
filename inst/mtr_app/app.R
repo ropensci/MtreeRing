@@ -22,15 +22,15 @@ createUI <- function()
   shiny.title <- dashboardHeader(title = 'MtreeRing')
   shiny.sider <- dashboardSidebar(
     sidebarMenu(
-      menuItem('Image Loading',tabName = 'input_pre', 
+      menuItem('Image Loading',tabName = 'input_pre',
         icon = icon('folder-open', lib = 'font-awesome')),
-      menuItem('Measurement',tabName = 'mea_arg', 
+      menuItem('Measurement',tabName = 'mea_arg',
         icon = icon('gear', lib = 'font-awesome'), selected = TRUE)
     )
   )
   page1 <- fluidRow(
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%; 
+      title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Preview'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
       plotOutput('pre.img',
@@ -39,7 +39,7 @@ createUI <- function()
           opacity = 0.25,
           resetOnNew = TRUE)
       )
-      ), 
+      ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Upload'),
@@ -55,8 +55,8 @@ createUI <- function()
         ' formats include png, jpg, tif and bmp.',
         style = 'color:#000000;font-size:90%'),
       prettyCheckbox(
-        inputId = "inmethod", 
-        label = div(style = 'color:#000000;font-weight: bolder;','Image Path'), 
+        inputId = "inmethod",
+        label = div(style = 'color:#000000;font-weight: bolder;','Image Path'),
         shape = "curve", value = F, status = "success"),
       conditionalPanel(
         condition = 'input.inmethod',
@@ -108,20 +108,20 @@ createUI <- function()
         status = "danger", shape = "square",
         fill = FALSE, inline = FALSE),
       prettyCheckbox(
-        inputId = "showcropp", 
+        inputId = "showcropp",
         label = div(style = 'color:#000000;font-weight: bolder;', 'Show Help'),
         shape = "curve", value = F, status = "success"
       ),
       conditionalPanel(
         condition = 'input.showcropp',
         helpText(
-          "The operation \"brush\" allows users to create a transparent ", 
-          "rectangle on the image and drag it around. For cores scanned ", 
-          "side by side, the user can choose a core of interest by brushing.", 
+          "The operation \"brush\" allows users to create a transparent ",
+          "rectangle on the image and drag it around. For cores scanned ",
+          "side by side, the user can choose a core of interest by brushing.",
           style = 'color:#000000;text-align:justify;'),
         helpText(
           "After brushing, click on the button \"Crop\" to create a",
-          " cropped area. The measurement will be performed within", 
+          " cropped area. The measurement will be performed within",
           " this area, rather than the whole (uncropped) image.",
           style = 'color:#000000;text-align:justify;'),
         helpText(
@@ -130,7 +130,7 @@ createUI <- function()
           "click on the outer region of the rectangle (this will make the",
           " rectangle disappear) and then click on the button \"Cancel\".",
           style = 'color:#FF0000;text-align:justify;')
-      ),  
+      ),
       hr(),
       actionButton(
         'buttoncrop', 'Crop',
@@ -150,70 +150,70 @@ createUI <- function()
       textInput('sample_yr', 'Sampling year', '', '75%'),
       textInput('m_line', 'Y-coordinate of path', '', '75%'),
       prettyCheckbox(
-        inputId = "incline", 
+        inputId = "incline",
         label = div(
-          style = 'color:#000000;font-weight: bolder;', 'Inclined tree rings'), 
+          style = 'color:#000000;font-weight: bolder;', 'Inclined tree rings'),
         shape = "curve", value = F, status = "success"
       ),
       conditionalPanel(
         condition = 'input.incline',
-        numericInput('h.dis', 'Distance between paths (mm)', 
+        numericInput('h.dis', 'Distance between paths (mm)',
           1, 0.1, 30, 0.1, width = '75%')
       ),
       br(),
       radioGroupButtons(
-        inputId = "measuremethod", 
+        inputId = "measuremethod",
         label = 'Measurement mode',
         status = "btn btn-primary btn-md",
         #individual = T,
         size = 'normal',
         selected = 'auto',
         choiceNames = list(
-          div(style = 'color:#FFFFFF;font-weight: bolder;', 'Manual'), 
+          div(style = 'color:#FFFFFF;font-weight: bolder;', 'Manual'),
           div(style = 'color:#FFFFFF;font-weight: bolder;', 'Automation')),
         choiceValues = list('manual', 'auto'),
-        width = '100%') 
+        width = '100%')
       ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Options'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
-      sliderInput('linelwd', 'Path width', 
+      sliderInput('linelwd', 'Path width',
         0.2, 3, 1, 0.1, width = '80%'),
       sliderInput('label.cex', 'Magnification for labels',
         0.2, 3, 1, 0.1, width = '80%'),
       radioGroupButtons(
-        inputId = "pch", 
+        inputId = "pch",
         label = 'Symbol for borders', status = "btn btn-primary btn-md",
         size = 'sm',
         choiceNames = list(
           div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('circle', 'fa-lg')), 
+            icon('circle', 'fa-lg')),
           div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('circle', 'fa-1x')), 
+            icon('circle', 'fa-1x')),
           div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('circle-o', 'fa-1x')), 
+            icon('circle-o', 'fa-1x')),
           div(style = 'color:#FFFFFF;font-weight: bolder;',
             icon('times', 'fa-1x')),
           div(style = 'color:#FFFFFF;font-weight: bolder;',
             icon('plus', 'fa-1x'))
         ),
-        selected = '20', 
+        selected = '20',
         choiceValues = list('19', '20', '1', '4', '3'),
         width = '100%'
       ),
       colorSelectorInput(
         inputId = "border.color", label = "Color for borders",
-        choices = c("black", "gray", "white", "red", "#FF6000", 
-          "#FFBF00", "#DFFF00", "#80FF00", "#20FF00", 
+        choices = c("black", "gray", "white", "red", "#FF6000",
+          "#FFBF00", "#DFFF00", "#80FF00", "#20FF00",
           "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
           "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
         selected = '#20FF00', mode = "radio", display_label = FALSE, ncol = 9
       ),
       colorSelectorInput(
         inputId = "label.color", label = "Color for labels",
-        choices = c("black", "gray", "white", "red", "#FF6000", 
-          "#FFBF00", "#DFFF00", "#80FF00", "#20FF00", 
+        choices = c("black", "gray", "white", "red", "#FF6000",
+          "#FFBF00", "#DFFF00", "#80FF00", "#20FF00",
           "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
           "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
         selected = 'black', mode = "radio", display_label = FALSE, ncol = 9
@@ -226,9 +226,9 @@ createUI <- function()
           font-weight: bolder', 'Options'),
         width = 4, status = 'primary', solidHeader = T, collapsible = T,
         prettyCheckbox(
-          inputId = "isrgb", 
+          inputId = "isrgb",
           label = div(
-            style = 'color:#000000;font-weight:bolder;', "Default RGB"), 
+            style = 'color:#000000;font-weight:bolder;', "Default RGB"),
           shape = "curve", value = T, status = "success"
         ),
         conditionalPanel(
@@ -254,7 +254,7 @@ createUI <- function()
             div(style = 'color:#FFFFFF;font-weight: bolder;font-size:80%',
               'measuRing')
           ),
-          choiceValues = list('watershed', 'canny', 'lineardetect'), 
+          choiceValues = list('watershed', 'canny', 'lineardetect'),
           width = '100%'
         ),
         conditionalPanel(
@@ -280,10 +280,10 @@ createUI <- function()
         conditionalPanel(
           condition = 'input.method=="canny"',
           prettyCheckbox(
-            inputId = "defaultcanny", 
+            inputId = "defaultcanny",
             label = div(
               style = 'color:#000000;font-weight: bolder;',
-              "Auto threshold (Recommanded)"), 
+              "Auto threshold (Recommanded)"),
             shape = "curve", value = T, status = "success"),
           conditionalPanel(
             condition = 'input.defaultcanny',
@@ -302,10 +302,10 @@ createUI <- function()
         ),
         conditionalPanel(
           condition = 'input.method!="lineardetect"',
-          prettyCheckbox(inputId = "defaultse", 
+          prettyCheckbox(inputId = "defaultse",
             label = div(
               style = 'color:#000000;font-weight: bolder;',
-              "Default structuring elements"), 
+              "Default structuring elements"),
             shape = "curve", value = T, status = "success"),
           conditionalPanel(
             condition = '!input.defaultse',
@@ -498,11 +498,11 @@ createUI <- function()
           selectInput('tuprec', 'Precision of the rwl file',
             c('0.01' = '0.01', '0.001' = '0.001'),
             selected = '0.01', width = '50%'),
-          helpText(style = 'color:#000000;font-weight: normal;', 
+          helpText(style = 'color:#000000;font-weight: normal;',
             'Units are in mm.'),
           hr(),
           checkboxInput('tuheader', 'Header of the File', F),
-          conditionalPanel(  
+          conditionalPanel(
             condition = 'input.tuheader',
             actionButton(
               'reset.hdr', 'Reset Header',
@@ -512,8 +512,8 @@ createUI <- function()
             )
           ),
           helpText(style = 'color:#000000;font-weight: normal;',
-            'For more details about the header, please', 
-            'read reference manual of the R package dplR.', 
+            'For more details about the header, please',
+            'read reference manual of the R package dplR.',
             'The output file is Tucson format.'),
           hr(),
           #HTML("<p style = 'color:#000000;'><b>RWL</b></p>"),
@@ -524,10 +524,10 @@ createUI <- function()
           )
         )
       ),
-      conditionalPanel(  
+      conditionalPanel(
         condition = 'input.tuheader',
         box(
-          title = 'Header',width = 3, 
+          title = 'Header',width = 3,
           status = 'primary', solidHeader = T, collapsible = T,
           textInput('tuhdr1', 'Site ID', ''),
           textInput('tuhdr2', 'Site Name', ''),
@@ -536,11 +536,11 @@ createUI <- function()
           textInput('tuhdr5', 'Species', ''),
           textInput('tuhdr6', 'Elevation', '')
         )
-      ),   
-      conditionalPanel(  
+      ),
+      conditionalPanel(
         condition = 'input.tuheader',
         box(
-          title = 'Header',width = 3, 
+          title = 'Header',width = 3,
           status = 'primary', solidHeader = T, collapsible = T,
           textInput('tuhdr7', 'Latitude', ''),
           textInput('tuhdr8', 'Longitude', ''),
@@ -549,7 +549,7 @@ createUI <- function()
           textInput('tuhdr11', 'Lead Investigator', ''),
           textInput('tuhdr12', 'Completion Date', '')
         )
-      )   
+      )
   )
   )
   shiny.body <- dashboardBody(
@@ -566,7 +566,7 @@ createUI <- function()
   return(ui)
 }
 
-createServer <- function(input, output, session) 
+createServer <- function(input, output, session)
 {
   f.morphological <- function(seg.data, struc.ele1, struc.ele2, x.dpi) {
     if (is.null(struc.ele1)) {
@@ -589,7 +589,7 @@ createServer <- function(input, output, session)
   hat <- function(seg.mor, x.dpi, watershed.threshold, watershed.adjust) {
     black.hat <- mclosing_square(seg.mor, size = round(x.dpi / 10))
     black.hat <- black.hat - seg.mor
-    black.hat <- threshold(black.hat, thr = watershed.threshold, 
+    black.hat <- threshold(black.hat, thr = watershed.threshold,
       approx = FALSE, adjust = watershed.adjust)
     black.hat <- 1 - black.hat
     black.hat.mat <- black.hat[, , 1, 1]
@@ -613,22 +613,22 @@ createServer <- function(input, output, session)
         color.adjacent <- c(color.adjacent, color.pre)
       }
       max(color.adjacent)
-    }  
-    water.c3 <- cbind(matrix(-1, nrow(water.c2), 1), 
-      matrix(0, nrow(water.c2), 1), 
+    }
+    water.c3 <- cbind(matrix(-1, nrow(water.c2), 1),
+      matrix(0, nrow(water.c2), 1),
       water.c2)
     diff.m <- apply(water.c3, 1, function(x) c(0, diff(x)))
     color.max <- max(water.c2)
-    df.color <- data.frame(color = c(1:color.max), 
+    df.color <- data.frame(color = c(1:color.max),
       adj = rep(NA, times = color.max))
     for (i in 1:color.max) {
       test.c <- color.adj(i, water.c3, diff.m)
       df.color[i, 2] <- test.c
     }
     for (i in -1:color.max) {
-      adj.c <- which(df.color[, 2] == i) 
-      if (length(adj.c) >= 2) {   
-        max.c <- max(df.color[adj.c, 1])  
+      adj.c <- which(df.color[, 2] == i)
+      if (length(adj.c) >= 2) {
+        max.c <- max(df.color[adj.c, 1])
         covered.c <- sort(df.color[adj.c, 1])
         covered.c <- covered.c[-length(covered.c)]
         for (j in covered.c) {
@@ -636,7 +636,7 @@ createServer <- function(input, output, session)
           water.c3[cl] <- max.c
           df.color[which(df.color == j, arr.ind = T)] <- max.c
         }
-      } 
+      }
     }
     return(water.c3[, -c(1, 2)])
   }
@@ -661,7 +661,7 @@ createServer <- function(input, output, session)
     gray.values <- seg.data[py, ]
     diff.gray <- c(0, diff(gray.values, lag = 1))
     col.num <- which(diff.gray != 0)
-    if (length(col.num) == 0) 
+    if (length(col.num) == 0)
       stop("Ring border was not detected")
     return(col.num)
   }
@@ -675,8 +675,8 @@ createServer <- function(input, output, session)
     border.col <- f.sort(border.col, dp)
     return(border.col)
   }
-  plot.marker <- function(py, incline, dp, sample_yr, h.dis, l.w, 
-    bor.color, lab.color, pch, label.cex, 
+  plot.marker <- function(py, incline, dp, sample_yr, h.dis, l.w,
+    bor.color, lab.color, pch, label.cex,
     df.loc, plot.year, img.name)
   {
     title(main = img.name)
@@ -703,14 +703,14 @@ createServer <- function(input, output, session)
         lenup <- length(up)
         if (lenup >= 1) {
           by.up <- rep(py.upper, time = lenup)
-          points(bx[up], by.up, col = bor.color, type = "p", 
+          points(bx[up], by.up, col = bor.color, type = "p",
             pch = pch, cex = label.cex * 0.75)
           if (plot.year) {
             year.u <- c(sample_yr:(sample_yr - lenup + 1))
-            text(bx[up], by.up, year.u, adj = c(1.5, 0.5), 
+            text(bx[up], by.up, year.u, adj = c(1.5, 0.5),
               srt = 90, col = lab.color, cex = label.cex)
             border.num <- 1:lenup
-            text(bx[up], by.up, border.num, adj = c(0.5, -1.25), 
+            text(bx[up], by.up, border.num, adj = c(0.5, -1.25),
               col = lab.color, cex = label.cex)
           }
         }
@@ -718,29 +718,29 @@ createServer <- function(input, output, session)
         lenlo <- length(lower)
         if (lenlo >= 1) {
           by.lower <- rep(py.lower, time = lenlo)
-          points(bx[lower], by.lower, col = bor.color, type = "p", 
+          points(bx[lower], by.lower, col = bor.color, type = "p",
             pch = pch, cex = label.cex * 0.75)
           if (plot.year) {
             year.l <- c(sample_yr:(sample_yr - lenlo + 1))
-            text(bx[lower], by.lower, year.l, adj = c(1.5, 0.5), 
+            text(bx[lower], by.lower, year.l, adj = c(1.5, 0.5),
               srt = 90, col = lab.color, cex = label.cex)
             border.num <- 1:lenlo
-            text(bx[lower], by.lower, border.num, adj = c(0.5, -1.25), 
+            text(bx[lower], by.lower, border.num, adj = c(0.5, -1.25),
               col = lab.color, cex = label.cex)
           }
         }
-      } else { 
+      } else {
         if (length(bx) >= 1) {
           lenbx <- length(bx)
           by <- rep(py, time = lenbx)
-          points(bx, by, col = bor.color, type = "p", 
+          points(bx, by, col = bor.color, type = "p",
             pch = pch, cex = label.cex * 0.75)
           if (plot.year) {
             year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-            text(bx, by, year.u, adj = c(1.5, 0.5), 
+            text(bx, by, year.u, adj = c(1.5, 0.5),
               srt = 90, col = lab.color, cex = label.cex)
             border.num <- 1:lenbx
-            text(bx, by, border.num, adj = c(0.5, -1.25), 
+            text(bx, by, border.num, adj = c(0.5, -1.25),
               col = lab.color, cex = label.cex)
           }
         }
@@ -760,7 +760,7 @@ createServer <- function(input, output, session)
       rw <- round(diff.col.num/dp, 2)
       years <- c(sample_yr:(sample_yr - lenbx + 1))
       df.rw <- data.frame(year = years, column.numbers = bx, ring.width = rw)
-    } else { 
+    } else {
       up <- which(where.bx > 0)
       lenup <- length(up)
       if (lenup >= 1) {
@@ -782,18 +782,18 @@ createServer <- function(input, output, session)
       correct.rw <- mean.bor * cos(atan(x.cor/(dp * h.dis)))
       correct.rw <- c(NA, correct.rw)
       correct.rw <- round(correct.rw/dp, 2)
-      df.rw <- data.frame(year = years, upper.cn = bx.up, upper.rw = rw.up, 
-        lower.cn = bx.lower, lower.rw = rw.lower, 
+      df.rw <- data.frame(year = years, upper.cn = bx.up, upper.rw = rw.up,
+        lower.cn = bx.lower, lower.rw = rw.lower,
         ring.width = correct.rw)
     }
     return(df.rw)
   }
-  automatic.det <- function(img, incline, method, h.dis, dpi, m_line, RGB, 
-    x1, x2, y1, y2, arghed, watershed.threshold, 
-    watershed.adjust, struc.ele1, struc.ele2, 
-    default.canny, canny.t1, canny.t2, canny.adjust, 
-    canny.smoothing, origin) 
-  {   
+  automatic.det <- function(img, incline, method, h.dis, dpi, m_line, RGB,
+    x1, x2, y1, y2, arghed, watershed.threshold,
+    watershed.adjust, struc.ele1, struc.ele2,
+    default.canny, canny.t1, canny.t2, canny.adjust,
+    canny.smoothing, origin)
+  {
     dp <- dpi/25.4
     py <- round(m_line)
     if (incline) {
@@ -808,9 +808,9 @@ createServer <- function(input, output, session)
     if (y1 <= 0) y1 <- 0
     if (x2 >= dimcol) x2 <- dimcol
     if (y2 >= dimrow) y2 <- dimrow - 1
-    img.range <- paste0(as.character(x2 - x1 + 1), 'x', 
+    img.range <- paste0(as.character(x2 - x1 + 1), 'x',
       as.character(y2 - y1 + 1), '+',
-      as.character(x1 - 1), '+', 
+      as.character(x1 - 1), '+',
       as.character(dimrow - y2 - 1))
     img.crop <- image_crop(img, img.range)
     rd.martix <- img.crop[[1]]
@@ -836,26 +836,26 @@ createServer <- function(input, output, session)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
       marker.img <- water.im(black.hat, T)
       seg.data <- watershed.im(marker.img, seg.mor)
-    }  
+    }
     if (method == 'canny') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       if (default.canny) {
-        canny.seg <- cannyEdges(as.cimg(seg.mor), alpha = canny.adjust, 
+        canny.seg <- cannyEdges(as.cimg(seg.mor), alpha = canny.adjust,
           sigma = canny.smoothing)
       } else {
         canny.seg <- cannyEdges(as.cimg(seg.mor), t1=canny.t1, t2=canny.t2,
           alpha = canny.adjust, sigma = canny.smoothing)
       }
       seg.data <- canny.seg[, , 1, 1]
-    } 
+    }
     if (method == 'lineardetect') {
       attributes(seg.data)['image'] <- 'img'
       smoothed <- graySmoothed(seg.data, ppi = dpi, rgb = RGB)
       borders <- linearDetect(smoothed, origin = origin)
       borders <- borders + x1 - 1
       py.ld <- round((y1 + y2)/2)
-      df <- data.frame(x = borders, 
-        y = rep(py.ld, time = length(borders)), 
+      df <- data.frame(x = borders,
+        y = rep(py.ld, time = length(borders)),
         z = rep(0, time = length(borders)))
       df.loc <- rbind(arghed, df)
       return(df.loc)
@@ -878,11 +878,11 @@ createServer <- function(input, output, session)
       df.loc <- rbind(arghed, df)
     }
     return(df.loc)
-  } 
+  }
   readImg <- function(img, img.name, magick.switch = TRUE) {
     img.size <- file.size(img)/1024^2
     options(warn = -1)
-    if(img.size <= 10 | !magick.switch){ 
+    if(img.size <= 10 | !magick.switch){
       if (grepl("\\.tif", img))
         tree.data <- readTIFF(img, native = FALSE, info = TRUE)
       if (grepl("\\.png", img))
@@ -912,7 +912,7 @@ createServer <- function(input, output, session)
     }
     options(warn = 0)
     dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
-    attributes(tdata) <- c(attributes(tdata), 
+    attributes(tdata) <- c(attributes(tdata),
       list(img.name = img.name, dimt = dim.tdata))
     return(tdata)
   }
@@ -926,13 +926,13 @@ createServer <- function(input, output, session)
     xright <- dimcol
     ytop <- dimrow
     par(mar = c(2.5, 2, 2, 0))
-    plot(x = c(xleft, xright), y = c(ybottom, ytop), 
-      xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
-      main = img.name, xlab = "", ylab = "", 
+    plot(x = c(xleft, xright), y = c(ybottom, ytop),
+      xlim = c(xleft, xright), ylim = c(ybottom, ytop),
+      main = img.name, xlab = "", ylab = "",
       type = "n", axes = F, cex.main = 1.2)
     axis(1, col = "grey", cex.axis = 1)
     axis(2, col = "grey", cex.axis = 1)
-    rasterImage(as.raster(tdata.copy), xleft, ybottom, 
+    rasterImage(as.raster(tdata.copy), xleft, ybottom,
       xright, ytop, interpolate = FALSE)
     if (!is.null(plot1_rangesx)) {
       xmin <- plot1_rangesx[1]
@@ -954,15 +954,15 @@ createServer <- function(input, output, session)
     xright <- dimcol
     ytop <- dimrow
     par(mar = c(2.5, 2, 2, 0))
-    plot(x = c(xleft, xright), y = c(ybottom, ytop), 
-      xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
-      main = img.name, xlab = "", ylab = "", 
+    plot(x = c(xleft, xright), y = c(ybottom, ytop),
+      xlim = c(xleft, xright), ylim = c(ybottom, ytop),
+      main = img.name, xlab = "", ylab = "",
       type = "n", axes = F, cex.main = 1.2)
     axis(1, col = "grey", cex.axis = 1)
     axis(2, col = "grey", cex.axis = 1)
-    rasterImage(tdata, xleft, ybottom, 
+    rasterImage(tdata, xleft, ybottom,
       xright, ytop, interpolate = FALSE)
-    return(tdata)  
+    return(tdata)
   }
   rotateImg <- function(tdata, degree) {
     tdata <- image_rotate(tdata, degree)
@@ -1046,10 +1046,10 @@ createServer <- function(input, output, session)
   })
   observeEvent(input$magick.switch, {
     if(input$magick.switch){
-      updatePrettySwitch(session, inputId = 'magick.switch', 
+      updatePrettySwitch(session, inputId = 'magick.switch',
         label = 'Magick ON', value = TRUE)
     } else {
-      updatePrettySwitch(session, inputId = 'magick.switch', 
+      updatePrettySwitch(session, inputId = 'magick.switch',
         label = 'Magick OFF', value = FALSE)
     }
   })
@@ -1120,7 +1120,7 @@ createServer <- function(input, output, session)
     dimrow <- dim.tdata[2]
     if ((dimcol*dimrow) >= 1.2e+07) {
       resize.ratio <- 0.25
-      resize.str <- paste0(round(dimcol*resize.ratio), 'x', 
+      resize.str <- paste0(round(dimcol*resize.ratio), 'x',
         round(dimrow*resize.ratio))
       img.file.copy$data <- image_resize(img.file$data, resize.str)
     } else {
@@ -1161,7 +1161,7 @@ createServer <- function(input, output, session)
       ymin <- plot1_ranges$y[1]
       xmax <- plot1_ranges$x[2]
       ymax <- plot1_ranges$y[2]
-      img.range <- paste0(as.character(xmax-xmin), 'x', 
+      img.range <- paste0(as.character(xmax-xmin), 'x',
         as.character(ymax-ymin), '+',
         as.character(xmin), '+',
         as.character(dimrow-ymax))
@@ -1181,7 +1181,7 @@ createServer <- function(input, output, session)
         choiceNames = 'UNCROPPED', choiceValues = list('a'),
         prettyOptions = list(shape = "curve", status = "danger",
           fill = F, inline = F)
-      ) 
+      )
     }
   })
   output$pre.img <- renderPlot({
@@ -1240,7 +1240,7 @@ createServer <- function(input, output, session)
       sendSweetAlert(
         session = session, title = "Error", text = err.text, type = "error"
       )
-      return() 
+      return()
     }
     f.df.loc <- c(dpi, incline.cond, 0, py, h.dis, 0) %>%
       matrix(byrow = T, nrow = 2) %>%
@@ -1297,7 +1297,7 @@ createServer <- function(input, output, session)
       sendSweetAlert(
         session = session, title = "Error", text = err.text, type = "error"
       )
-      return() 
+      return()
     }
     f.df.loc <- c(dpi, incline.cond, 0, py, h.dis, 0) %>%
       matrix(byrow = T, nrow = 2) %>%
@@ -1329,7 +1329,7 @@ createServer <- function(input, output, session)
       ymin <- plot2_ranges$y[1]
       xmax <- plot2_ranges$x[2]
       ymax <- plot2_ranges$y[2]
-      img.range <- paste0(as.character(xmax - xmin), 'x', 
+      img.range <- paste0(as.character(xmax - xmin), 'x',
         as.character(ymax - ymin), '+',
         as.character(xmin), '+',
         as.character(dimrow - ymax))
@@ -1368,7 +1368,7 @@ createServer <- function(input, output, session)
       ymin <- plot2_ranges$y[1]
       xmax <- plot2_ranges$x[2]
       ymax <- plot2_ranges$y[2]
-      img.range <- paste0(as.character(xmax - xmin), 'x', 
+      img.range <- paste0(as.character(xmax - xmin), 'x',
         as.character(ymax - ymin), '+',
         as.character(xmin), '+',
         as.character(dimrow - ymax))
@@ -1391,7 +1391,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = err.text, type = "error"
       )
       return()
-    } 
+    }
     if (is.null(df.loc$data)) {
       err.text <- paste('You can not add new ring borders',
         'because a path has not been created')
@@ -1399,7 +1399,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = err.text, type = "error"
       )
       return()
-    } 
+    }
     f.df.loc <- df.loc$data
     plot.arg <- f.df.loc[1:2,]
     incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
@@ -1407,7 +1407,7 @@ createServer <- function(input, output, session)
     bor <- input$zoom_dblclick
     bor.x <- bor$x + plot2_ranges$x[1]
     bor.y <- bor$y
-    if (!incline) 
+    if (!incline)
       f.df.loc <- rbind(f.df.loc, list(bor.x, bor.y, 0))
     if (incline) {
       if (bor.y == py) {
@@ -1417,9 +1417,9 @@ createServer <- function(input, output, session)
         )
         return()
       }
-      if (bor.y > py) 
+      if (bor.y > py)
         f.df.loc <- rbind(f.df.loc, list(bor.x, bor.y, 1))
-      if (bor.y < py) 
+      if (bor.y < py)
         f.df.loc <- rbind(f.df.loc, list(bor.x, bor.y, -1))
     }
     df.loc$data <- f.df.loc
@@ -1432,21 +1432,21 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = err.text, type = "error"
       )
       return()
-    } 
+    }
     if (is.null(df.loc$data)) {
       err.text <- 'A path has not been created'
       sendSweetAlert(
         session = session, title = "Error", text = err.text, type = "error"
       )
       return()
-    } 
+    }
     if (nrow(df.loc$data) <= 2) {
       remove.text <- 'Ring border was NOT found along the path'
       sendSweetAlert(
         session = session, title = "Error", text = remove.text, type = "error"
       )
       return()
-    } 
+    }
     xmin <- input$zoom_brush$xmin
     xmax <- input$zoom_brush$xmax
     ymin <- input$zoom_brush$ymin
@@ -1471,7 +1471,7 @@ createServer <- function(input, output, session)
       py.upper <- py + number.of.pixels
       py.lower <- py - number.of.pixels
       which.line <- df.loc$data$z[-c(1:2)][delete.bor]
-      y.value <- ifelse(which.line > 0, 
+      y.value <- ifelse(which.line > 0,
         py.upper - plot2_ranges$y[1],
         py.lower - plot2_ranges$y[1])
       is.contain <- ymin <= y.value & ymax >= y.value
@@ -1518,7 +1518,7 @@ createServer <- function(input, output, session)
     py <- plot.arg[2, 1]
     h.dis <- plot.arg[2, 2]
     img.name <- paste('Series ID:', df.loc$ID)
-    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color, 
+    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color,
       lab.color, pch, label.cex, f.df.loc, T, img.name)
   })
   output$zoom.img <- renderPlot({
@@ -1544,14 +1544,14 @@ createServer <- function(input, output, session)
     py <- plot.arg[2, 1] - plot2_ranges$y[1]
     h.dis <- plot.arg[2, 2]
     img.name <- paste('Series ID:', df.loc$ID)
-    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color, 
+    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color,
       lab.color, pch, label.cex, f.df.loc, T, img.name)
   })
   #autoresult <- reactiveValues(data = NULL, text = NULL)
   #icon.value <- reactiveValues(data = 0)
-  observeEvent(input$button_run_auto, { 
+  observeEvent(input$button_run_auto, {
     if (is.null(input$plot2_brush)) {
-      brush.text <- paste('Please select a part of the image by brushing', 
+      brush.text <- paste('Please select a part of the image by brushing',
         'before running the automatic measurement')
       sendSweetAlert(
         session = session, title = "Error", text = brush.text, type = "error"
@@ -1676,9 +1676,9 @@ createServer <- function(input, output, session)
         watershed.threshold <- input$watershed.threshold
       }
       watershed.adjust <- input$watershed.adjust
-      df.loc$data <- automatic.det(img, incline, method, h.dis, dpi, m_line, 
+      df.loc$data <- automatic.det(img, incline, method, h.dis, dpi, m_line,
         RGB, x1, x2, y1, y2, plot.arg,
-        watershed.threshold, watershed.adjust, 
+        watershed.threshold, watershed.adjust,
         struc.ele1, struc.ele2)
     }
     if (method == "canny") {
@@ -1688,23 +1688,23 @@ createServer <- function(input, output, session)
       canny.adjust <- input$canny.adjust
       canny.smoothing <- input$canny.smoothing
       df.loc$data <- automatic.det(
-        img, incline, method, h.dis, dpi, m_line, RGB, 
-        x1, x2, y1, y2, plot.arg, watershed.threshold, 
+        img, incline, method, h.dis, dpi, m_line, RGB,
+        x1, x2, y1, y2, plot.arg, watershed.threshold,
         watershed.adjust, struc.ele1, struc.ele2, default.canny,
         canny.t1, canny.t2, canny.adjust, canny.smoothing)
-    }   
+    }
     if (method == "lineardetect") {
       origin <- as.numeric(input$origin)
       py.ld <- round((y1 + y2)/2)
       updateTextInput(session, "m_line", value = as.character(round(py.ld)))
-      f.df.loc <- automatic.det(img, incline, method, h.dis, dpi, m_line, 
+      f.df.loc <- automatic.det(img, incline, method, h.dis, dpi, m_line,
         RGB, x1, x2, y1, y2, plot.arg, origin = origin)
       if(incline){
         updateCheckboxInput(session, 'incline', 'Inclined tree rings', F)
         f.df.loc[1, 2] <- FALSE
         linear.warning <- TRUE
       }
-      f.df.loc[2, 1] <- py.ld 
+      f.df.loc[2, 1] <- py.ld
       df.loc$data <- f.df.loc
     }
     number.border <- nrow(df.loc$data) - 2
@@ -1714,11 +1714,11 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = rt, type = "error"
       )
     } else {
-      rt <- paste(number.border, 'boreders were detected')
+      rt <- paste(number.border, 'borders were detected')
       sendSweetAlert(
         session = session, title = "Finished", text = rt, type = "success"
       )
-    }  
+    }
     if (linear.warning) {
       rt <- paste('If you use the linear detection, don\'t',
         'tick the checkbox "Inclined tree rings".',
@@ -1756,7 +1756,7 @@ createServer <- function(input, output, session)
       session = session, title = "Success", text = rt, type = "success"
     )
   })
-  observeEvent(input$button_del, { 
+  observeEvent(input$button_del, {
     if (is.null(df.loc$data)) {
       rt <- paste('You can not remove ring borders because',
         'the path has not been created.')
@@ -1826,7 +1826,7 @@ createServer <- function(input, output, session)
           return()
         }
       }
-      df.u <- data.frame(x = bx.u, y = m_line, z = 1) 
+      df.u <- data.frame(x = bx.u, y = m_line, z = 1)
       df.l <- data.frame(x = bx.l, y = m_line, z = -1)
       df.loc$data <- rbind(plot.arg, df.u, df.l)
       updateTextInput(session, "del.u",
@@ -1835,7 +1835,7 @@ createServer <- function(input, output, session)
       updateTextInput(session, "del.l",
         label = 'Border number in the lower portion',
         value = '')
-    } else { 
+    } else {
       if (input$del == '') {
         rt <- 'Please enter at least one border number'
         sendSweetAlert(
@@ -1857,7 +1857,7 @@ createServer <- function(input, output, session)
         return()
       }
     }
-  }) 
+  })
   rw.dataframe <- reactiveValues(data = NULL)
   observeEvent(input$button_results, {
     if (is.null(df.loc$data)) {
@@ -1866,7 +1866,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = error.text, type = "error"
       )
       return()
-    } 
+    }
     if (nrow(df.loc$data) <= 3) {
       error.text <- paste('A minimum of two ring borders on each path',
         'was required to generate a ring-width series')
@@ -1874,7 +1874,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = error.text, type = "error"
       )
       return()
-    } 
+    }
     sample_yr <- as.numeric(input$sample_yr)
     if (is.na(sample_yr)) {
       error.text <- paste('Please check the argument \'Sampling year\' ')
@@ -1900,7 +1900,7 @@ createServer <- function(input, output, session)
         return()
       }
       if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
-        rw.dataframe$data <- f.rw(df.loc$data, sample_yr, 
+        rw.dataframe$data <- f.rw(df.loc$data, sample_yr,
           incline, py, dpi, h.dis)
       } else {
         if (any(incline.cond < 2)) {
@@ -1917,11 +1917,11 @@ createServer <- function(input, output, session)
             session = session, title = "Error", text = err.text, type = "error"
           )
         }
-      }   
+      }
     } else {
-      rw.dataframe$data <- f.rw(df.loc$data, sample_yr, 
+      rw.dataframe$data <- f.rw(df.loc$data, sample_yr,
         incline, py, dpi, h.dis)
-    } 
+    }
   })
   output$results <- renderTable({
     if (is.null(rw.dataframe$data)) {
@@ -1929,7 +1929,7 @@ createServer <- function(input, output, session)
     } else {
       return(rw.dataframe$data)
     }
-  })   
+  })
   observeEvent(input$button_hide, {
     if (is.null(rw.dataframe$data)) {
       rt <- 'The data frame to be deleted does not exist'
@@ -1937,7 +1937,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = rt, type = "error"
       )
     } else {
-      rw.dataframe$data <- NULL       
+      rw.dataframe$data <- NULL
     }
   })
   output$RingWidth.csv <- downloadHandler(
@@ -1959,7 +1959,7 @@ createServer <- function(input, output, session)
           session = session, title = "Error", text = rt, type = "error"
         )
         return()
-      } 
+      }
       sample_yr <- as.numeric(input$sample_yr)
       if (is.na(sample_yr)) {
         error.text <- 'Please check the argument \'Sampling year\''
@@ -1981,7 +1981,7 @@ createServer <- function(input, output, session)
           session = session, title = "Error", text = error.text, type = "error"
         )
         return()
-      } 
+      }
       if (incline) {
         incline.cond <- df.loc$data$z[-c(1:2)] %>% table %>% as.numeric
         if (length(incline.cond) == 1) {
@@ -2004,7 +2004,7 @@ createServer <- function(input, output, session)
             )
             return()
           } else {
-            rt <- paste("If incline = TRUE, the upper and lower paths", 
+            rt <- paste("If incline = TRUE, the upper and lower paths",
               "should have the same number of ring borders")
             sendSweetAlert(
               session = session, title = "Error", text = rt, type = "error"
@@ -2015,7 +2015,7 @@ createServer <- function(input, output, session)
       } else {
         df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
         write.csv(df.rw, filename, quote = FALSE, na = '--')
-      } 
+      }
     },
     contentType = 'csv'
   )
@@ -2044,7 +2044,7 @@ createServer <- function(input, output, session)
       if (input$rwl.name != '')
         img.name <- input$rwl.name
       return(paste0(img.name, '.rwl'))
-    }, 
+    },
     content = function(filename) {
       seriesID <- df.loc$ID
       miss.id1 <- seriesID == ''
@@ -2061,7 +2061,7 @@ createServer <- function(input, output, session)
           session = session, title = "Error", text = error.text, type = "error"
         )
         return()
-      } 
+      }
       sample_yr <- as.numeric(input$sample_yr)
       if (is.na(sample_yr)) {
         error.text <- paste('Please check the argument \'Sampling year\'')
@@ -2076,7 +2076,7 @@ createServer <- function(input, output, session)
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
         )
-      } 
+      }
       plot.arg <- df.loc$data[1:2, ]
       dpi <- plot.arg[1, 1]
       # dp <- dpi/25.4
@@ -2105,7 +2105,7 @@ createServer <- function(input, output, session)
             )
             return()
           } else {
-            rt <- paste("If incline = TRUE, the upper and lower paths", 
+            rt <- paste("If incline = TRUE, the upper and lower paths",
               "should have the same number of ring borders")
             sendSweetAlert(
               session = session, title = "Error", text = rt, type = "error"
@@ -2134,9 +2134,9 @@ createServer <- function(input, output, session)
       colnames(df.rwl) <- seriesID
       hdr.list<- NULL
       if (tuheader) {
-        hdr <- c(tuhdr1, tuhdr2, tuhdr3, tuhdr4, tuhdr5, tuhdr6, 
+        hdr <- c(tuhdr1, tuhdr2, tuhdr3, tuhdr4, tuhdr5, tuhdr6,
           tuhdr7, tuhdr8, tuhdr9, tuhdr10, tuhdr11, tuhdr12)
-        hdr.name <- c('site.id','site.name', 'spp.code', 'state.country', 
+        hdr.name <- c('site.id','site.name', 'spp.code', 'state.country',
           'spp','elev', 'lat', 'long', 'first.yr', 'last.yr',
           'lead.invs', 'comp.date')
         which.not.empty <- hdr != ''
