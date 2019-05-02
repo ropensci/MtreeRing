@@ -8,11 +8,7 @@ MtreeRing
 **Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
 **License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
-<<<<<<< HEAD
 <!--pkg badges-->
-=======
-<!--my badges-->
->>>>>>> 32fbfe4c15f348d0d435bb196181213a1c8652c6
 [![Build Status](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)
 [![codecov](https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/JingningShi/MtreeRing)
 [![](https://badges.ropensci.org/284_status.svg)](https://github.com/ropensci/software-review/issues/287)
