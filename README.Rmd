@@ -176,5 +176,8 @@ Under such conditions, you can create two paths by setting the argument `incline
 
 The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.
 
+## Code of conduct
+
+Please note that the 'MtreeRing' project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
 
