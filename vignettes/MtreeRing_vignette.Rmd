@@ -15,7 +15,7 @@ vignette: >
 
 ## 1. Read and plot a tree ring image
 
-```{r eval=FALSE}
+```{r}
 library(MtreeRing)
 img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- imgInput(img = img.name, dpi = 1200)
