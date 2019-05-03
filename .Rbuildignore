@@ -3,4 +3,4 @@
 .travis.yml
 vignettes/.*\.md
 ^README\.Rmd$
-
+^appveyor\.yml$
