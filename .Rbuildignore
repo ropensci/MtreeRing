@@ -1,6 +1,5 @@
 ^CODE_OF_CONDUCT\.md$
 ^\.travis\.yml$
 .travis.yml
-vignettes/.*\.md
 ^README\.Rmd$
 ^appveyor\.yml$
