@@ -15,7 +15,7 @@ vignette: >
 
 ## 1. Read and plot a tree ring image
 
-```{r}
+```{r eval=FALSE}
 library(MtreeRing)
 img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- imgInput(img = img.name, dpi = 1200)
@@ -102,7 +102,7 @@ If you are not familiar with R and its command line interface, the shiny-based a
 
 A workflow for the Shiny app can be found in the README file of this package. Most steps are demonstrated with a gif to make the workflow more understandable. Here is a link: https://github.com/JingningShi/MtreeRing.
 
-```{r }
+```{r eval=FALSE}
 launchMtRApp()
 ```
 
