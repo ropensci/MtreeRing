@@ -1,5 +1,5 @@
 # functions for image processing 
-correct.color <- function(water.c2)
+color_correct <- function(water.c2)
 {
   color.adj <- function(i, water.c2, diff.m) {
     color.position <- which(water.c2 == i, arr.ind = T)
@@ -43,7 +43,7 @@ correct.color <- function(water.c2)
   return(water.c3[, -c(1, 2)])
 }
 
-f.morphological <- function(seg.data, struc.ele1, struc.ele2, x.dpi) 
+morphology_process <- function(seg.data, struc.ele1, struc.ele2, x.dpi) 
 {
   if (is.null(struc.ele1)) {
     stru.1 <- x.dpi/400
@@ -74,7 +74,7 @@ hat <- function(seg.mor, x.dpi, watershed.threshold, watershed.adjust)
   return(black.hat.mat)
 }
 
-water.im <- function(black.hat, is.correct)
+conn_calc <- function(black.hat, is.correct)
 {
   water.c <- connected(im(black.hat), background = 0, method = "C")
   f1 <- function(x){
@@ -83,11 +83,11 @@ water.im <- function(black.hat, is.correct)
   }
   water.c2 <- apply(water.c$v, 2, f1)
   if(is.correct)
-    water.c2 <- correct.color(water.c2)
+    water.c2 <- color_correct(water.c2)
   return(water.c2)
 }
 
-watershed.im <- function(water.seg, seg.data)
+watershed_process <- function(water.seg, seg.data)
 {
   normalize <- function(x) return((x - min(x))/(max(x) - min(x)))
   imgra <- imgradient(as.cimg(seg.data), axes = "y", scheme = 2)
@@ -96,14 +96,14 @@ watershed.im <- function(water.seg, seg.data)
   return(watershed.seg)
 }
 
-f.border <- function(seg.data, py, dp)
+border_det <- function(seg.data, py, dp)
 {
-  border.col <- r.det(seg.data, py)
-  border.col <- f.sort(border.col, dp)
+  border.col <- ring_det(seg.data, py)
+  border.col <- ring_sort(border.col, dp)
   return(border.col)
 }
 
-r.det <- function(seg.data, py) {
+ring_det <- function(seg.data, py) {
   gray.values <- seg.data[py, ]
   diff.gray <- c(0, diff(gray.values, lag = 1))
   col.num <- which(diff.gray != 0)
@@ -112,7 +112,7 @@ r.det <- function(seg.data, py) {
   return(col.num)
 }
 
-f.sort <- function(border.col, dp)
+ring_sort <- function(border.col, dp)
 {
   filter.col <- diff(border.col) >= dp/10
   selected.border <- c(border.col[1], border.col[-1][filter.col])

@@ -1,0 +1,140 @@
+{
+  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@type": "SoftwareSourceCode",
+  "identifier": "MtreeRing",
+  "description": "Use morphological image processing and edge detection algorithms to automatically measure tree ring widths on digital images. Users can also manually mark tree rings on species with complex anatomical structures. The arcs of inner-rings and angles of successive inclined ring boundaries are used to correct ring-width series. The package provides a Shiny-based application, allowing R beginners to easily analyze tree ring images and export ring-width series in standard file formats.",
+  "name": "MtreeRing: A Shiny Application for Automatic Measurements of Tree-Ring Widths on Digital Images",
+  "codeRepository": "https://github.com/JingningShi/MtreeRing",
+  "issueTracker": "https://github.com/JingningShi/MtreeRing/issues",
+  "license": "https://spdx.org/licenses/GPL-3.0",
+  "version": "1.2",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "version": "3.5.2",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Jingning",
+      "familyName": "Shi",
+      "email": "snow940220@bjfu.edu.cn"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Wei",
+      "familyName": "Xiang"
+    }
+  ],
+  "contributor": {},
+  "copyrightHolder": {},
+  "funder": {},
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Jingning",
+      "familyName": "Shi",
+      "email": "snow940220@bjfu.edu.cn"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "shinytest",
+      "name": "shinytest"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "mockery",
+      "name": "mockery"
+    }
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "magrittr",
+      "name": "magrittr",
+      "version": ">= 1.5"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "png",
+      "name": "png"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "jpeg",
+      "name": "jpeg"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "tiff",
+      "name": "tiff"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "bmp",
+      "name": "bmp"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "magick",
+      "name": "magick"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "imager",
+      "name": "imager"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "dplR",
+      "name": "dplR"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "spatstat",
+      "name": "spatstat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "measuRing",
+      "name": "measuRing"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "shiny",
+      "name": "shiny"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "shinydashboard",
+      "name": "shinydashboard"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "shinyWidgets",
+      "name": "shinyWidgets"
+    }
+  ],
+  "readme": "https://github.com/JingningShi/MtreeRing/blob/master/README.md",
+  "fileSize": "8526.965KB",
+  "contIntegration": ["https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master", "https://ci.appveyor.com/project/JingningShi/mtreering/branch/master", "https://codecov.io/gh/JingningShi/MtreeRing"]
+}

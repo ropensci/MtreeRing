@@ -1,6 +1,6 @@
 # Functions for plotting detected ring borders and labels
 
-create.label <- function(bor.col, sample.yr, dp)
+label_create <- function(bor.col, sample.yr, dp)
 {
   year.number <- sample.yr:(sample.yr - length(bor.col) + 1)
   border.number <- length(bor.col) %>% seq_len
@@ -11,11 +11,11 @@ create.label <- function(bor.col, sample.yr, dp)
   return(label.list)
 }
 
-split.label <- function(dfrw, x.left, x.right, seg)
+label_split <- function(dfrw, x.left, x.right, seg)
 {
-  bor.list<-list()
-  rw.list<-list()
-  yr.list<-list()
+  bor.list <- list()
+  rw.list <- list()
+  yr.list <- list()
   for (i in 1:seg) {
     bor.range <- which(dfrw[, 1] >= x.left[i] & dfrw[, 1] <= x.right[i])
     df.bor <- dfrw[, 1][bor.range]
@@ -26,17 +26,17 @@ split.label <- function(dfrw, x.left, x.right, seg)
     yr.list <- c(yr.list, list(df.yr))
   }
   split.list <- list(bor.list = bor.list, 
-    rw.list = rw.list, 
-    yr.list = yr.list)
+                      rw.list = rw.list, 
+                      yr.list = yr.list)
   return(split.list)
 }
 
-f.rw.plot <- function(bor.list, rw.list, yr.list, 
-  x.left, x.right, seg.name, location)
+rw_plot <- function(bor.list, rw.list, yr.list, 
+                    x.left, x.right, seg.name, location)
 {
   plot(bor.list, rw.list, xlim = c(x.left, x.right), 
     ylim = c(round(min(rw.list), 1) - 0.3, 
-      round(max(rw.list), 1) + 0.3), 
+             round(max(rw.list), 1) + 0.3), 
     main = "", xlab = "", ylab = "", type = "o", 
     cex = 1, axes = F, lty = 3, pch = 16)
   if (location == 'upper') {
@@ -53,7 +53,8 @@ f.rw.plot <- function(bor.list, rw.list, yr.list,
   title(ylab = "Ring Widths (mm)", cex.lab = 1.2, line = 2.8)
 }
 
-f.img <- function(ring.data, x.left, x.right, ybottom, ytop, x.left1, incline)
+img_plot <- function(ring.data, x.left, x.right, 
+                     ybottom, ytop, x.left1, incline)
 {
   if (incline) {
     plot(0, 0, xlab = "", ylab = "",
@@ -76,22 +77,22 @@ f.img <- function(ring.data, x.left, x.right, ybottom, ytop, x.left1, incline)
     ybottom + ytop, interpolate = TRUE)
 }
 
-f.marker <- function(bor.col, x.left, x.right, ybottom, ytop, py, location,
+marker_plot <- function(bor.col, x.left, x.right, ybottom, ytop, py, location,
   border.type, border.color, label.color, label.cex)
 {
   bor.col <- bor.col[-1]
   bor.range <- bor.col >= x.left & bor.col <= x.right
   selected.bor <- bor.col[bor.range]
   y.loc <- ifelse(location == 'upper', 
-    ybottom + 1.25 * ytop, 
-    ybottom - 0.25 * ytop)
+                  ybottom + 1.25 * ytop, 
+                  ybottom - 0.25 * ytop)
   segments(selected.bor, rep(py, length(selected.bor)), 
     selected.bor, rep(y.loc, length(selected.bor)), 
     col = label.color, lty = 2, lwd = 2, lend = 2)
 }
 
-f.bor.plot <-function(bor.col, x.left, x.right, py, location, sn,
-  border.type, border.color, label.color, label.cex)
+border_plot <- function(bor.col, x.left, x.right, py, location, sn,
+                        border.type, border.color, label.color, label.cex)
 {
   abline(h = py, lty = 2, col = label.color)
   bor.range <- bor.col >= x.left & bor.col <= x.right
@@ -106,13 +107,13 @@ f.bor.plot <-function(bor.col, x.left, x.right, py, location, sn,
   }
 }
 
-f.plot.double <- function(ring.data, bor.u, bor.l, x.left, x.right, 
-  seg, py.upper, py.lower, dp, sample.yr, 
-  ybottom, ytop, py, seg.name, border.type,
-  border.color, label.color, label.cex)
+two_paths_plot <- function(ring.data, bor.u, bor.l, x.left, x.right, 
+                           seg, py.upper, py.lower, dp, sample.yr, 
+                           ybottom, ytop, py, seg.name, border.type,
+                           border.color, label.color, label.cex)
 {
-  label.list.u <- create.label(bor.u, sample.yr, dp)
-  label.list.l <- create.label(bor.l, sample.yr, dp)
+  label.list.u <- label_create(bor.u, sample.yr, dp)
+  label.list.l <- label_create(bor.l, sample.yr, dp)
   dfrw.u <- label.list.u$dfrw
   dfrw.l <- label.list.l$dfrw
   bn.u <- label.list.u$sn
@@ -120,8 +121,8 @@ f.plot.double <- function(ring.data, bor.u, bor.l, x.left, x.right,
   yn.u <- label.list.u$year
   yn.l <- label.list.l$year
   # "lbl" is short for "label"
-  seg.lbl.u <- split.label(dfrw.u, x.left, x.right, seg)
-  seg.lbl.l <- split.label(dfrw.l, x.left, x.right, seg)
+  seg.lbl.u <- label_split(dfrw.u, x.left, x.right, seg)
+  seg.lbl.l <- label_split(dfrw.l, x.left, x.right, seg)
   seg.device.number <- vector(length = 0)  
   for (i in 1:seg) {
     dev.new()
@@ -134,7 +135,7 @@ f.plot.double <- function(ring.data, bor.u, bor.l, x.left, x.right,
     layout(matrix(c(1, 2, 2, 3), 4, 1))
     par(mar = c(1.75, 5, 2, 0), mfg = c(1, 1))
     if (length(bor.list.u != 0)) {
-      f.rw.plot(bor.list.u, rw.list.u, yr.list.u, 
+      rw_plot(bor.list.u, rw.list.u, yr.list.u, 
         x.left[i], x.right[i], seg.name[i], 'upper')
     } else {
       plot(0, 0, type = "p", pch = 4, axes = F, cex = 3, ylab = "", col = "red")
@@ -144,7 +145,7 @@ f.plot.double <- function(ring.data, bor.u, bor.l, x.left, x.right,
     }
     par(mar = c(2, 5, 1.25, 0), mfg = c(3, 1))
     if (length(bor.list.l != 0)) {
-      f.rw.plot(bor.list.l, rw.list.l, yr.list.l, 
+      rw_plot(bor.list.l, rw.list.l, yr.list.l, 
         x.left[i], x.right[i], seg.name[i], 'lower')
     } else {
       plot(0, 0, type = "p", pch = 4, axes = F, cex = 3, ylab = "", col = "red")
@@ -152,30 +153,31 @@ f.plot.double <- function(ring.data, bor.u, bor.l, x.left, x.right,
         adj = c(0.5, -2), cex = 1.2)
     }
     par(mar = c(1.25, 5, 1.25, 0), mfg = c(2, 1))
-    f.img(ring.data, x.left[i], x.right[i], ybottom, ytop, x.left[1], T)
-    f.marker(bor.u, x.left[i], x.right[i], ybottom, ytop, py.upper, 'upper',
+    img_plot(ring.data, x.left[i], x.right[i], ybottom, ytop, x.left[1], T)
+    marker_plot(bor.u, x.left[i], x.right[i], ybottom, ytop, py.upper, 'upper',
       border.type, border.color, label.color, label.cex)
-    f.bor.plot(bor.u, x.left[i], x.right[i], py.upper, 'upper', bn.u,
+    border_plot(bor.u, x.left[i], x.right[i], py.upper, 'upper', bn.u,
       border.type, border.color, label.color, label.cex)
-    f.marker(bor.l, x.left[i], x.right[i], ybottom, ytop, py.lower, 'lower',
+    marker_plot(bor.l, x.left[i], x.right[i], ybottom, ytop, py.lower, 'lower',
       border.type, border.color, label.color, label.cex)
-    f.bor.plot(bor.l, x.left[i], x.right[i], py.lower, 'lower', bn.l,
+    border_plot(bor.l, x.left[i], x.right[i], py.lower, 'lower', bn.l,
       border.type, border.color, label.color, label.cex)
     seg.device.number[i] <- as.numeric(dev.cur())
   } 
   img.attribute <- list(seg.dn = seg.device.number, yn.u = yn.u, 
-    yn.l = yn.l, bn.u = bn.u, bn.l = bn.l)
+                        yn.l = yn.l, bn.u = bn.u, bn.l = bn.l)
+  return(img.attribute)
 }
 
-f.plot.single <- function(ring.data, bor.col, x.left, x.right, seg,
-  dp, sample.yr, ybottom, ytop, py, seg.name,
-  border.type, border.color, label.color, label.cex)
+single_path_plot <- function(ring.data, bor.col, x.left, x.right, seg,
+                             dp, sample.yr, ybottom, ytop, py, seg.name,
+                             border.type, border.color, label.color, label.cex)
 {
-  label.list <- create.label(bor.col, sample.yr, dp)
+  label.list <- label_create(bor.col, sample.yr, dp)
   dfrw <- label.list$dfrw
   border.number <- label.list$sn
   year.number <- label.list$year
-  segmented.label.list <- split.label(dfrw, x.left, x.right, seg)
+  segmented.label.list <- label_split(dfrw, x.left, x.right, seg)
   seg.device.number <- vector(length = 0)  
   for (i in 1:seg) {
     dev.new()
@@ -185,7 +187,7 @@ f.plot.single <- function(ring.data, bor.col, x.left, x.right, seg,
     layout(matrix(c(1, 2, 2), 3, 1))
     par(mar = c(1.25, 5, 2, 0))
     if (length(bor.list != 0)) {
-      f.rw.plot(bor.list, rw.list, yr.list, 
+      rw_plot(bor.list, rw.list, yr.list, 
         x.left[i], x.right[i], seg.name[i], 'upper')
     } else {
       plot(0, 0, type = "p", pch = 4, axes = F, 
@@ -195,10 +197,10 @@ f.plot.single <- function(ring.data, bor.col, x.left, x.right, seg,
         adj = c(0.5, -2), cex = 1.2)
     }
     par(mar = c(5, 5, 1.25, 0), mfg = c(2, 1))
-    f.img(ring.data, x.left[i], x.right[i], ybottom, ytop, x.left[1], F)
-    f.marker(bor.col, x.left[i], x.right[i], ybottom, ytop, py, 'upper',
+    img_plot(ring.data, x.left[i], x.right[i], ybottom, ytop, x.left[1], F)
+    marker_plot(bor.col, x.left[i], x.right[i], ybottom, ytop, py, 'upper',
       border.type, border.color, label.color, label.cex)
-    f.bor.plot(bor.col, x.left[i], x.right[i], py, 'upper', border.number,
+    border_plot(bor.col, x.left[i], x.right[i], py, 'upper', border.number,
       border.type, border.color, label.color, label.cex)
     seg.device.number[i] <- as.numeric(dev.cur())
   }
