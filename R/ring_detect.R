@@ -81,7 +81,7 @@
 #'   Step 1. Select the left and right edges of the rectangle
 #'   
 #'   If \code{partial.rings = TRUE}, the user can point the mouse at any 
-#'   desired locations and click the left #' mouse button to add each edge. 
+#'   desired locations and click the left mouse button to add each edge. 
 #'   
 #'   If \code{partial.rings = FALSE}, the left and right boundaries of the 
 #'   original image will be used directly as the left and right edges of 
