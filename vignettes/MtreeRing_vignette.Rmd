@@ -18,24 +18,24 @@ vignette: >
 ```{r eval=FALSE}
 library(MtreeRing)
 img.name <- system.file("001.png", package = "MtreeRing")
-t1 <- imgInput(img = img.name, dpi = 1200)
+t1 <- ring_read(img = img.name, dpi = 1200)
 ```
 
-`imgInput` supports commonly used image formats and returns a magick image object.
+`ring_read` supports commonly used image formats, including png, tiff, jpg and bmp.
 
 
 ## 2. Detect ring borders 
 
-After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://CRAN.R-project.org/package=measuRing).
-
-If `auto.path = TRUE`, the function will create a path at the center of the image. In the current version, the path is a horizontal dashed line. Detected ring borders are placed along the path, and are tagged with years and border numbers.
+`ring_detect` is the most important funtion in `MtreeRing`. It is used to automatically detect tree-ring borders along the user-defined path. The automatic detection can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://CRAN.R-project.org/package=measuRing).
 
 ```{r eval=FALSE}
 ## Split a long core sample into 2 pieces to
 ## get better display performance and use the
 ## watershed algorithm to detect ring borders:
-t2 <- autoDetect(ring.data = t1, auto.path = TRUE, seg = 2, method = 'watershed')
+t2 <- ring_detect(ring.data = t1, auto.path = TRUE, seg = 2, method = 'watershed')
 ```
+
+If `auto.path = TRUE`, the function will create a path at the center of the image. In the current version, the path is a horizontal dashed line. Detected ring borders are placed along the path, and are tagged with years and border numbers.
 
 ![](img/single_path.png)
 
@@ -43,33 +43,33 @@ For increment cores with inclined rings, you can create two paths by setting `in
 
 ```{r eval=FALSE}
 img.name <- system.file("incline.png", package = "MtreeRing")
-t1 <- imgInput(img = img.name, dpi = 1200)
-t2 <- autoDetect(ring.data = t1, incline = TRUE, method = 'watershed')
+t1 <- ring_read(img = img.name, dpi = 1200)
+t2 <- ring_detect(ring.data = t1, incline = TRUE, method = 'watershed')
 ```
 
 ![](img/two_paths.png)
 
 ## 3. Edit tree rings
 
-You can manually add (remove) tree ring borders to (from) the image using the function `visualSelect`.
+You can manually add (remove) tree ring borders to (from) the image using the function `ring_modify`.
 
 ### 3.1 Remove tree rings
 
-Assume that ring borders 1, 3, 5 were falsely identified as transitions between earlywood and latewood.
+Assume that ring borders numbered from 1 to 4 were falsely identified as transitions between earlywood and latewood. Try to remove them with the following commands.
 
 ```{r eval=FALSE}
 img.name <- system.file("001.png", package = "MtreeRing")
-t1 <- imgInput(img = img.name, dpi = 1200)
-t2 <- autoDetect(ring.data = t1, auto.path = TRUE, method = 'watershed')
-t2 <- visualSelect(ring.data = t2, del = c(1, 3, 5))
+t1 <- ring_read(img = img.name, dpi = 1200)
+t2 <- ring_detect(ring.data = t1, auto.path = TRUE, method = 'watershed')
+t2 <- ring_modify(ring.data = t2, del = c(1:4))
 ```
 
 ### 3.2 Add tree rings
 
-We have just removed 3 ring borders, now re-add borders by left-clicking on the image. See function's help for more details.
+We have just removed 4 ring borders, now re-add these borders by left-clicking on the image. See function's help for more details about mouse clicks.
 
 ```{r eval=FALSE}
-t2 <- visualSelect(ring.data = t2, add = TRUE)
+t2 <- ring_modify(ring.data = t2, add = TRUE)
 ```
 
 ## 4. Calculate ring-width series 
@@ -77,7 +77,7 @@ t2 <- visualSelect(ring.data = t2, add = TRUE)
 If all ring borders are correctly identified, you can generate a ring-width series in data frame format. Use `write.rwl` to export the ring-width series to an rwl file.
 
 ```{r eval=FALSE}
-rw.df <- calcRingWidth(ring.data = t2, seriesID = "940220")
+rw.df <- ring_calculate(ring.data = t2, seriesID = "940220")
 library(dplR) # A dendrochronological analysis package
 fn <- tempfile(fileext=".rwl")
 write.rwl(rwl.df = rw.df, fname = fn, format = "tucson")
@@ -85,13 +85,13 @@ write.rwl(rwl.df = rw.df, fname = fn, format = "tucson")
 
 ## 5. Measure tree rings near the pith
 
-It is common for increment cores to miss the pith. For wood samples with missing pith, the function `nearPith` is used to measure tree rings on the pith side. See function's help for more details.
+It is common for increment cores to miss the pith. For wood samples with missing pith, the function `pith_measure` is used to measure tree rings on the pith side. See function's help for more details.
 
 ```{r eval=FALSE}
 img.name <- system.file("arc.png", package = "MtreeRing")
-t1 <- imgInput(img = img.name, dpi = 1200)
+t1 <- ring_read(img = img.name, dpi = 1200)
 # Assume that the wood sample misses the pith
-t2 <- nearPith(ring.data = t1, inner.arc = TRUE, last.yr = 2016)
+t2 <- pith_measure(ring.data = t1, inner.arc = TRUE, last.yr = 2016)
 ```
 
 ![](img/arc.jpg)
@@ -103,7 +103,7 @@ If you are not familiar with R and its command line interface, the shiny-based a
 A workflow for the Shiny app can be found in the README file of this package. Most steps are demonstrated with a gif to make the workflow more understandable. Here is a link: https://github.com/JingningShi/MtreeRing.
 
 ```{r eval=FALSE}
-launchMtRApp()
+ring_app_launch()
 ```
 
 

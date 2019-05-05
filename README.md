@@ -48,8 +48,10 @@ library(MtreeRing)
 ```r
 ## Read and plot a tree ring image
 img.name <- system.file("001.png", package = "MtreeRing")
-t1 <- imgInput(img = img.name, dpi = 1200)
+t1 <- ring_read(img = img.name, dpi = 1200)
 ```
+
+`ring_read` supports commonly used image formats, including png, tiff, jpg and bmp.
 
 ### Detect ring borders 
 
@@ -60,7 +62,7 @@ After plotting the image, the automatic detection of ring borders can be perform
 ## Split a long core sample into 2 pieces to
 ## get better display performance and use the
 ## watershed algorithm to detect ring borders:
-t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
+t2 <- ring_detect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
 <center><img src="https://github.com/JingningShi/GifRepo/blob/master/figures/README-img001.png" width = 65% height = 65% /></center>
@@ -70,7 +72,7 @@ t2 <- autoDetect(ring.data = t1, seg = 2, method = 'watershed')
 
 
 ```r
-MtreeRing::launchMtRApp()
+MtreeRing::ring_app_launch()
 ```
 
 This command allows to run a Shiny-based application within the system's default web browser. The app provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.
