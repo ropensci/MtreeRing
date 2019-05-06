@@ -101,12 +101,12 @@ ring_modify <- function(ring.data, del = NULL, del.u = NULL,
     }
     for (i in existing.seg) dev.off(i)
     if (incline) {
-      img.attr <- f.plot.double(ring.data, bor.u, bor.l, x.left, x.right, 
+      img.attr <- two_paths_plot(ring.data, bor.u, bor.l, x.left, x.right, 
                     seg, py.upper, py.lower, dp, sample.yr, 
                     py2, nrow(ring.data), py, seg.name, 
                     border.type,border.color, label.color, label.cex)
     } else {
-      img.attr <- f.plot.single(ring.data, bor.col, x.left, x.right, seg, dp, 
+      img.attr <- single_path_plot(ring.data, bor.col, x.left, x.right, seg, dp, 
                     sample.yr, py2, nrow(ring.data), py, seg.name, 
                     border.type, border.color, label.color, label.cex)
     }
@@ -141,14 +141,14 @@ ring_modify <- function(ring.data, del = NULL, del.u = NULL,
     if (incline) {
       bor.l <- c(bor.l, add.l) %>% sort
       bor.u <- c(bor.u, add.u) %>% sort
-      img.attr <- f.plot.double(ring.data, bor.u, bor.l, x.left, x.right, 
+      img.attr <- two_paths_plot(ring.data, bor.u, bor.l, x.left, x.right, 
         seg, py.upper, py.lower, dp, sample.yr, 
         py2, nrow(ring.data), py, seg.name, 
         border.type,border.color, label.color, label.cex)
     } else {
       bor.col <- c(bor.col, add.bor) %>% sort
-      img.attr <- f.plot.single(ring.data, bor.col, x.left, x.right, seg, dp, 
-        sample.yr, py2, nrow(ring.data), py, seg.name, 
+      img.attr <- single_path_plot(ring.data, bor.col, x.left, x.right, seg, 
+        dp, sample.yr, py2, nrow(ring.data), py, seg.name, 
         border.type, border.color, label.color, label.cex)
     }
   }

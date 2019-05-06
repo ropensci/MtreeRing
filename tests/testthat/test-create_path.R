@@ -5,7 +5,7 @@ test_that("mock test", {
   library(mockery)
   
   path1 <- system.file("001.png", package = "MtreeRing")
-  img1 <- imgInput(img = path1, dpi = 1200)
+  img1 <- ring_read(img = path1, dpi = 1200)
   mock1 <- mock(c(50, 1800), cycle = T)
   mock2 <- mock(c(20, 160), cycle = T)
   mock3 <- mock(list(y = 111), cycle = T)
