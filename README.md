@@ -35,17 +35,13 @@ or the development version from GitHub
 devtools::install_github("JingningShi/MtreeRing")
 ```
 
-## Utilities
+## Measurement of ring width
+
+### 1. Read an image
 
 
 ```r
 library(MtreeRing)
-```
-
-### Read an image
-
-
-```r
 ## Read and plot a tree ring image
 img.name <- system.file("001.png", package = "MtreeRing")
 t1 <- ring_read(img = img.name, dpi = 1200)
@@ -53,7 +49,7 @@ t1 <- ring_read(img = img.name, dpi = 1200)
 
 `ring_read` supports commonly used image formats, including png, tiff, jpg and bmp.
 
-### Detect ring borders 
+### 2. Detect ring borders 
 
 After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package [measuRing](https://CRAN.R-project.org/package=measuRing).
 
