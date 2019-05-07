@@ -65,10 +65,12 @@ After plotting the image, the automatic detection of ring borders can be perform
 t2 <- ring_detect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
-<center><img src="img/README-img001.png" width = 65% height = 65% /></center>
+<center><img src="vignettes/img/README-img001.png" width = 65% height = 65% /></center>
 <center>Figure 1. The automatic detection of ring borders</center>
 
 ## Shiny application
+
+If you are not familiar with R and its command line interface, the shiny-based app is a good alternative.
 
 
 ```r
@@ -79,7 +81,14 @@ This command allows to run a Shiny-based application within the system's default
 
 The dashboard has three components: a header, sidebar and body, like this
 
-<img src="img/README-img002.png" width = 85% height = 85% />  
+<img src="vignettes/img/README-img002.png" width = 85% height = 85% />
+
+A workflow for the Shiny app can be found in the package vignette. Most steps are demonstrated with a gif to make the workflow more understandable.
+
+
+```r
+vignette('app-MtreeRing')
+```
 
 ## Ring width correction
 
@@ -87,7 +96,7 @@ If an increment borer is used to extract samples, it is well known that the auge
 
 Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by ticking the checkbox "**Inclined tree rings**". See this example.
 
-<img src="img/RingCorrection.png" /> 
+<img src="vignettes/img/RingCorrection.png" /> 
 
 The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.
 
