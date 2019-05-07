@@ -1,0 +1,51 @@
+---
+title: "Measure Tree Rings on Pith Side"
+author: "Jingning Shi"
+date: "2019-05-01"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Measure Tree Rings on Pith Side}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!--require(knitr);require(markdown);knit("MtreeRing_vignette.Rmd")-->
+
+It is common for increment cores to miss the pith. Under such conditions, errors associated with inclined rings can be corrected using the arcs of the inner-rings (Duncan, 1989).
+
+For wood samples with missing pith, the function `pith_measure` is used to estimate the position of missing pith and measure tree rings on the pith side. It is **strongly recommended** to read reference above to get a better understanding of the `pith_measure`. The procedure of ring-width correction consists of the following steps：
+
+## 1. Add a path
+
+```{r eval=FALSE}
+img.name <- system.file("missing_pith.png", package = "MtreeRing")
+t1 <- ring_read(img = img.name, dpi = 1200)
+# Assume that the wood sample misses the pith
+t2 <- pith_measure(ring.data = t1, inner.arc = TRUE, last.yr = 2016)
+```
+
+Once you run the third command, `pith_measure` will prompt you to add a path. The path should traverse an appropriate arc (read the reference for more details). See this example.
+
+<img src="img/pith1.png" width = 95% height = 95% />
+
+## 2. Locate the missing pith
+
+After adding the path, you will be prompted to add three points. These points are used to locate the missing pith. The first point should be placed on the left endpoint of the arc, and the second point is placed on the right endpoint.
+
+After adding the first two points, a vertical dashed line will be plotted automatically according to the (x,y) positions of endpoints you just added. The third points should be placed on the intersection of the vertical dashed line and the selected arc. See this example.
+
+<img src="img/pith2.png" width = 95% height = 95% />
+
+## 3. Mark tree rings along the path
+
+You will be prompted to mark tree rings along the path. The termination of identification process depends on the R version. For example, if you run `pith_measure` on a Windows PC, the identification process can be terminated by clicking the second button and selecting ‘Stop’ from the menu. 
+
+Note that the left endpoint of the arc will be considered as the last ring border without the need to mark it.
+
+<img src="img/pith3.png" width = 95% height = 95% />
+
+
+## Reference
+
+Duncan R. (1989) An evaluation of errors in tree age estimates based on increment cores in Kahikatea (Dacrycarpus dacrydiodes). *New Zealand Natural Sciences* **16(4)**, 1-37.
+

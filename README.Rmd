@@ -68,10 +68,12 @@ After plotting the image, the automatic detection of ring borders can be perform
 t2 <- ring_detect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
-<center><img src="https://github.com/JingningShi/GifRepo/blob/master/figures/README-img001.png" width = 65% height = 65% /></center>
+<center><img src="img/README-img001.png" width = 65% height = 65% /></center>
 <center>Figure 1. The automatic detection of ring borders</center>
 
 ## Shiny application
+
+If you are not familiar with R and its command line interface, the shiny-based app is a good alternative.
 
 ```{r eval=FALSE}
 MtreeRing::ring_app_launch()
@@ -81,93 +83,13 @@ This command allows to run a Shiny-based application within the system's default
 
 The dashboard has three components: a header, sidebar and body, like this
 
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/README-img002.png" width = 85% height = 85% />  
+<img src="img/README-img002.png" width = 85% height = 85% />
 
-## A simple workflow for Shiny app
+A workflow for the Shiny app can be found in the package vignette. Most steps are demonstrated with a gif to make the workflow more understandable.
 
-### 1. Image upload
-
-Once you launch the app, you can upload tree ring images from local hard disk. [Here](https://github.com/JingningShi/GifRepo/blob/master/figures/001.png) is a sample image with the resolution of 1200 dpi. In the following sections, this image is used to demonstrate the ring-width measurement. 
-
-### 2. Path creation
-
-After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Tree Ring Detection** and **Tree Ring Editing**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
-
-A path creation consists of the following steps:
-
-1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
-
-2. Click on the blue "**Create Path**" button at the top left corner of the **Tree Ring Detection**.
-
-See this example:
-
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/PathCreation3.gif" width = 70% height = 75% /> 
-
-In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
-
-### 3. Ring detection
-
-Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This action will create a blue rectangle. Here is an example of **brush**.
-
-
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/Brush2.gif" width = 60% height = 60% /> 
-
-If ring borders are clearly visible, follow the steps below to detect tree rings:
-
-1. Click on the "**Automation**" button (if this button is not selected). 
-
-    After clicking on this button, `MtreeRing` will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
-
-2. Create a blue rectangle mentioned above in the first graphical window (**Tree Ring Detection**) by brushing.
-
-3. Click on the green "**Run Detection**" button. 
-    
-    The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process. 
-
-See this example:
-
-
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/RingDetection2.gif" width = 60% height = 60% /> 
-
-### 4. Edit tree rings
-
-If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Tree Ring Editing**) is used to add (remove) tree ring borders to (from) the image.
-
-You may have noticed that the graphical windows **Tree Ring Editing** has no image. To generate a zoomed-in image in this windows, follow these steps:
-
-1. Create a blue rectangle in the **Tree Ring Detection** by brushing.
-
-2. **Double click** on this rectangle, or Click on the blue "**Create Sub-image**" button below.
-
-#### 4.1 Add tree rings
-
-After creating the zoomed-in image, you can add a ring by **double clicking** on the path. 
-
-See this example:
-
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/AddRing2.gif" width = 60% height = 60% /> 
-
-#### 4.2 Remove tree rings
-
-Follow these steps to remove tree rings: 
-
-1. Create a rectangle in the **Tree Ring Editing** by brushing.
-
-2. Click on the red "**Delete Border**" button at the top left corner of the **Tree Ring Editing**.
-
-    This operation will delete all ring borders covered by the rectangular region. 
-
-See this example:
-
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/RemoveRing.gif" width = 60% height = 60% /> 
-
-You can also perform a mass deletion of borders using the input control below the **Tree Ring Editing**.
-
-### 5. File download
-
-When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue "**Generate Series**" button at the bottom right corner of the app. 
-
-To download a file, click on the **RWL** tab or **CSV** tab. You can provide additional **headers** for the RWL file to record more useful information, such as species, elevation, and site. 
+```{r eval=FALSE}
+vignette('app-MtreeRing')
+```
 
 ## Ring width correction
 
@@ -175,7 +97,7 @@ If an increment borer is used to extract samples, it is well known that the auge
 
 Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by ticking the checkbox "**Inclined tree rings**". See this example.
 
-<img src="https://github.com/JingningShi/GifRepo/blob/master/figures/RingCorrection.png" /> 
+<img src="img/RingCorrection.png" /> 
 
 The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.
 

@@ -33,7 +33,10 @@ using arcs of inner rings.
 }
 \details{
 This function allows the user to create a path, and manually mark 
-ring borders by clicking on the graphical window.  
+ring borders by clicking on the graphical window. 
+An example demonstrated with pictures can be found in the package vignette. 
+Type \code{vignette('pith-MtreeRing')} to see this example.
+
 \itemize{
 \item
 If \code{inner.arc = TRUE}, the ring-width series is calibrated using arcs 
