@@ -4,3 +4,6 @@
 .travis.yml
 ^README\.Rmd$
 ^appveyor\.yml$
+^docs$
+
+
