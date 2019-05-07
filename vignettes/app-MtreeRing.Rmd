@@ -102,14 +102,4 @@ When the analysis of a sample is complete, you can generate a preview ring-width
 
 To download a file, click on the **RWL** tab or **CSV** tab. You can provide additional **headers** for the RWL file to record more useful information, such as species, elevation, and site. 
 
-## 6. Run Shiny app
-
-If you are not familiar with R and its command line interface, the shiny-based app is a good alternative. 
-
-A workflow for the Shiny app can be found in the README file of this package. Most steps are demonstrated with a gif to make the workflow more understandable. Here is a link: https://github.com/JingningShi/MtreeRing.
-
-```{r eval=FALSE}
-ring_app_launch()
-```
-
 
