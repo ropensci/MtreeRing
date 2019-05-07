@@ -41,7 +41,7 @@ or the development version from GitHub
 devtools::install_github("JingningShi/MtreeRing")
 ```
 
-## Measurement of ring width
+## Ring-width measurement
 
 ### 1. Read an image
 
@@ -67,6 +67,18 @@ t2 <- ring_detect(ring.data = t1, seg = 2, method = 'watershed')
 
 <center><img src="vignettes/img/README-img001.png" width = 65% height = 65% /></center>
 <center>Figure 1. The automatic detection of ring borders</center>
+
+### 4. Calculate ring-width series 
+
+If all ring borders are correctly identified, you can generate a ring-width series in data frame format. Use `write.rwl` to export the ring-width series to an rwl file.
+
+```{r eval=FALSE}
+rw.df <- ring_calculate(ring.data = t2, seriesID = "940220")
+library(dplR) # A dendrochronological analysis package
+fn <- tempfile(fileext=".rwl")
+write.rwl(rwl.df = rw.df, fname = fn, format = "tucson")
+```
+
 
 ## Shiny application
 
