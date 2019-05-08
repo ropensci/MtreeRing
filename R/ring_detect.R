@@ -183,33 +183,36 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     dimt <- image_info(ring.data) %>% '['(1, 2:3) %>% as.numeric
     rd.col <- dimt[1]
     rd.row <- dimt[2]
-    if (rd.col * rd.row >= 1.2e+07) {
-      resize.ratio <- 300 / x.dpi
-      resize.str <- paste0(round(rd.col*resize.ratio), 'x', 
-                           round(rd.row*resize.ratio))
-      tdata.copy <- image_resize(ring.data, resize.str)
-    } else{
-      tdata.copy <- ring.data
+    attributes(ring.data) <- c(attributes(ring.data), list(dimt = dimt))
+    device.number <- 'no plot'
+    
+    if (!auto.path) {
+      if (rd.col * rd.row >= 1.2e+07) {
+        resize.ratio <- 300 / x.dpi
+        resize.str <- paste0(round(rd.col*resize.ratio), 'x', 
+          round(rd.row*resize.ratio))
+        tdata.copy <- image_resize(ring.data, resize.str)
+      } else{
+        tdata.copy <- ring.data
+      }
+      dev.new()
+      if (names(dev.cur()) == "RStudioGD") dev.new()
+      device.number <- as.numeric(dev.cur())
+      xleft <- 0
+      ybottom <- 0
+      xright <- rd.col
+      ytop <- rd.row
+      layout(matrix(c(rep(1, 3), 2), 4, 1))
+      plot(x = 0, y = 0, main = img.name, xlab = '', ylab = '',
+        xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
+        type = 'n', axes = F, cex.main = 1.2)
+      axis(1, col = "grey", cex.axis = 1)
+      axis(2, col = "grey", cex.axis = 1)
+      rasterImage(as.raster(tdata.copy), xleft, ybottom, 
+        xright, ytop, interpolate = TRUE)
+      rm(tdata.copy)
+      gc()
     }
-    dev.new()
-    if (names(dev.cur()) == "RStudioGD") dev.new()
-    device.number <- as.numeric(dev.cur())
-    attributes(ring.data) <- c(attributes(ring.data), 
-                               list(dn = device.number, dimt = dimt))
-    xleft <- 0
-    ybottom <- 0
-    xright <- rd.col
-    ytop <- rd.row
-    layout(matrix(c(rep(1, 3), 2), 4, 1))
-    plot(x = 0, y = 0, main = img.name, xlab = '', ylab = '',
-         xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
-         type = 'n', axes = F, cex.main = 1.2)
-    axis(1, col = "grey", cex.axis = 1)
-    axis(2, col = "grey", cex.axis = 1)
-    rasterImage(as.raster(tdata.copy), xleft, ybottom, 
-                xright, ytop, interpolate = TRUE)
-    rm(tdata.copy)
-    gc()
   }
 
   xy.position <- create_path(auto.path, method, incline, path.dis,
@@ -365,10 +368,8 @@ create_path <- function(auto.path, method, incline, path.dis,
       number.of.pixels <- round((path.dis / 2) * dp)
       py.upper <- py + number.of.pixels
       if (py.upper >= rd.row - 1) 
-        stop('The y-position of the upper path is out of range')
+        stop('The y-position of the path is out of range')
       py.lower <- py - number.of.pixels
-      if (py.lower <= 0) 
-        stop('The y-position of the lower path is out of range')
       coordinate <- c(coordinate, py.upper, py.lower)
     }
     return(coordinate)

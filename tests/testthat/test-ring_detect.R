@@ -125,6 +125,36 @@ test_that("mock test", {
   
 })
 
+test_that("mock test", {
+  
+  library(mockery)
+  
+  path2 <- system.file("incline.png", package = "MtreeRing")
+  img2 <- ring_read(img = path2, dpi = 1200)
+  dev.off(attributes(img2)$dn)
+  expect_error(
+    ring_detect(ring.data = img2, auto.path = T, path.dis = 9, incline = T), 
+    'The y-position of the path is out of range')
+})
+
+
+test_that("mock test", {
+  
+  library(mockery)
+  
+  path2 <- system.file("incline.png", package = "MtreeRing")
+  img2 <- ring_read(img = path2, dpi = 1200, plot = FALSE)
+  mock2 <- mock(c(20, 1400, 0, 160, 50, 80, 20), cycle = T)
+  stub(ring_detect, 'create_path', mock2)
+  t8 <- ring_detect(ring.data = img2, auto.path = F, seg = 2, incline = T)
+  dev.off(attributes(t8)$dn)
+  dn <- attributes(t8)$seg.dn
+  apply(matrix(dn, nrow = 1), 2, dev.off)
+  
+  expect_is(t8, "array")
+  
+})
+
 # test_that("mock test", {
 #   path5 <- system.file("001gray.png", package = "MtreeRing")
 #   library(mockery)

@@ -45,7 +45,7 @@ test_that("pith_measure returns a dataframe", {
   mock2 <- mock(list(arc = arc, p = 264, t = 10, s = 2), cycle = T)
   stub(pith_measure, 'add_path', mock2)
   t2 <- pith_measure(img1, T)
-  
+  dev.off(as.numeric(dev.cur()))
   expect_is(img1, "magick-image")
   expect_is(t2, "data.frame")
 })
@@ -158,3 +158,4 @@ test_that("pith_measure returns a dataframe", {
   dev.off(attributes(img1)$dn)
   
 })
+
