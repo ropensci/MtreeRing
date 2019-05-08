@@ -118,7 +118,6 @@ pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
     rm(tdata.copy)
     gc()
   }
-  
   pos <- add_path(inner.arc, border.type, color, label.cex)
   text.line <- pos$t
   step.number <- pos$s
