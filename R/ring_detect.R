@@ -2,6 +2,7 @@
 #' @importFrom dplyr filter group_by select summarize
 #' @importFrom measuRing graySmoothed linearDetect
 #' @importFrom spatstat connected im
+#' @importFrom magick image_info image_resize 
 #' @importFrom imager as.cimg cannyEdges dilate_rect erode_rect imgradient 
 #' mclosing_square threshold watershed
 #' @title Automatic detection of tree-ring boundaries
@@ -164,16 +165,53 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
     stop("The argument 'method' should be a character vector of length one")
   if (method == "lineardetect" & incline) 
     stop("The linear detection can only create one path")
-  device.number <- attributes(ring.data)$dn
-  dev.set(device.number)
+  RGB <- attributes(ring.data)$RGB
   x.dpi <- attributes(ring.data)$x.dpi
   dp <- x.dpi / 25.4 
   if (x.dpi <= 300 & !manual)
     stop('The automatic detection requires a minimum of 300 dpi')
-  dimt <- attributes(ring.data)$dimt
-  rd.col <- dimt[1]
-  rd.row <- dimt[2]
-  RGB <- attributes(ring.data)$RGB
+  is.plot <- attributes(ring.data)$plot
+  #补上画图
+  if(is.plot) {
+    device.number <- attributes(ring.data)$dn
+    dev.set(device.number)
+    dimt <- attributes(ring.data)$dimt
+    rd.col <- dimt[1]
+    rd.row <- dimt[2]
+  } else {
+    img.name <- attributes(ring.data)$img.name
+    dimt <- image_info(ring.data) %>% '['(1, 2:3) %>% as.numeric
+    rd.col <- dimt[1]
+    rd.row <- dimt[2]
+    if (rd.col * rd.row >= 1.2e+07) {
+      resize.ratio <- 300 / x.dpi
+      resize.str <- paste0(round(rd.col*resize.ratio), 'x', 
+                           round(rd.row*resize.ratio))
+      tdata.copy <- image_resize(ring.data, resize.str)
+    } else{
+      tdata.copy <- ring.data
+    }
+    dev.new()
+    if (names(dev.cur()) == "RStudioGD") dev.new()
+    device.number <- as.numeric(dev.cur())
+    attributes(ring.data) <- c(attributes(ring.data), 
+                               list(dn = device.number, dimt = dimt))
+    xleft <- 0
+    ybottom <- 0
+    xright <- rd.col
+    ytop <- rd.row
+    layout(matrix(c(rep(1, 3), 2), 4, 1))
+    plot(x = 0, y = 0, main = img.name, xlab = '', ylab = '',
+         xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
+         type = 'n', axes = F, cex.main = 1.2)
+    axis(1, col = "grey", cex.axis = 1)
+    axis(2, col = "grey", cex.axis = 1)
+    rasterImage(as.raster(tdata.copy), xleft, ybottom, 
+                xright, ytop, interpolate = TRUE)
+    rm(tdata.copy)
+    gc()
+  }
+
   xy.position <- create_path(auto.path, method, incline, path.dis,
                              dp, rd.col, rd.row, label.color)
   px2 <- xy.position[1]

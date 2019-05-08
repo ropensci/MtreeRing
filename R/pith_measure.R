@@ -1,6 +1,7 @@
 #' @title Calibrate ring-width series
 #' @export
 #' @importFrom stats coef lm
+#' @importFrom magick image_info image_resize 
 #' @description This function can calibrate the ring-width series 
 #' using arcs of inner rings.
 #' @author Jingning Shi
@@ -79,12 +80,45 @@
 pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL, 
                          color = 'black', border.type = 16, label.cex = 1.5)
 {
-  img.name <- attributes(ring.data)$img.name  
-  device.number <- attributes(ring.data)$dn
   x.dpi <- attributes(ring.data)$x.dpi
   dp <- x.dpi / 25.4 
-  dev.set(device.number)
-  dimt <- attributes(ring.data)$dimt
+  is.plot <- attributes(ring.data)$plot
+  #补上画图
+  if(is.plot) {
+    device.number <- attributes(ring.data)$dn
+    dev.set(device.number)
+  } else {
+    img.name <- attributes(ring.data)$img.name
+    dimt <- image_info(ring.data) %>% '['(1, 2:3) %>% as.numeric
+    rd.col <- dimt[1]
+    rd.row <- dimt[2]
+    if (rd.col * rd.row >= 1.2e+07) {
+      resize.ratio <- 300 / x.dpi
+      resize.str <- paste0(round(rd.col*resize.ratio), 'x', 
+                           round(rd.row*resize.ratio))
+      tdata.copy <- image_resize(ring.data, resize.str)
+    } else{
+      tdata.copy <- ring.data
+    }
+    dev.new()
+    if (names(dev.cur()) == "RStudioGD") dev.new()
+    dn <- as.numeric(dev.cur())
+    xleft <- 0
+    ybottom <- 0
+    xright <- rd.col
+    ytop <- rd.row
+    layout(matrix(c(rep(1, 3), 2), 4, 1))
+    plot(x = 0, y = 0, main = img.name, xlab = '', ylab = '',
+         xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
+         type = 'n', axes = F, cex.main = 1.2)
+    axis(1, col = "grey", cex.axis = 1)
+    axis(2, col = "grey", cex.axis = 1)
+    rasterImage(as.raster(tdata.copy), xleft, ybottom, 
+                xright, ytop, interpolate = TRUE)
+    rm(tdata.copy)
+    gc()
+  }
+  
   pos <- add_path(inner.arc, border.type, color, label.cex)
   text.line <- pos$t
   step.number <- pos$s
@@ -118,7 +152,7 @@ pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
     l <- abs(arc.a$x - arc.b$x)
     h <- abs(arc.c$y - py)
     miss.r <- l^2/(8 * h) - h/2
-    d <- bor.distance(bor.x, rep(0, lenbx)) 
+    d <- bor_distance(bor.x, rep(0, lenbx)) 
     d.cum <- c(d, l/2) %>% rev %>% cumsum
     r.list <- sqrt(d.cum^2 + miss.r^2) 
     diff.r <- diff(r.list) %>% rev
@@ -134,7 +168,7 @@ pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
                               corrected.width = diff.r)
     }
   } else {
-    dis.pith <- bor.distance(bor.x, bor.y)
+    dis.pith <- bor_distance(bor.x, bor.y)
     dis.pith <- c(dis.pith/dp) %>% round(digits = 2)
     if (is.null(last.yr)) {
       df.pith <- data.frame(border.number = yr.list[-1], ring.width = dis.pith)
@@ -209,7 +243,7 @@ inclined_path <- function(border.type, color, label.cex) {
   list(x = c(p1$x, p2$x), y = c(p1$y, p2$y))
 }
 
-bor.distance <- function(bor.x, bor.y) {
+bor_distance <- function(bor.x, bor.y) {
   diff.x <- diff(bor.x)
   diff.y <- diff(bor.y)
   dis.pith <- sqrt(diff.x^2 + diff.y^2)

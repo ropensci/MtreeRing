@@ -6,9 +6,13 @@ test_that("ring_detect returns an array", {
   library(mockery)
   
   path1 <- system.file("001.png", package = "MtreeRing")
+  img1 <- ring_read(img = path1, dpi = 1200, plot = FALSE)
+  t1 <- ring_detect(ring.data = img1, auto.path = T, method = 'watershed')
+  dn <- attributes(t1)$seg.dn
+  apply(matrix(dn, nrow = 1), 2, dev.off)
+  
   img1 <- ring_read(img = path1, dpi = 1200)
   dev.off(attributes(img1)$dn)
-  
   t1 <- ring_detect(ring.data = img1, auto.path = T, method = 'watershed')
   dn <- attributes(t1)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)  
@@ -119,3 +123,14 @@ test_that("mock test", {
   
 })
 
+# test_that("mock test", {
+#   path5 <- system.file("001gray.png", package = "MtreeRing")
+#   library(mockery)
+#   mock1 <- mock(matrix(c(1, 5000, 5000), nrow = 1, byrow = T), cycle = T)
+#   stub(ring_detect, 'image_info', mock1)
+#   img1 <- ring_read(path5, dpi = 1200, plot = FALSE)
+#   t1 <- ring_detect(ring.data = img1, manual = TRUE)
+#   dn <- attributes(t1)$seg.dn
+#   apply(matrix(dn, nrow = 1), 2, dev.off)
+#   expect_is(img1, "magick-image")
+# })

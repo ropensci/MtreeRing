@@ -25,6 +25,31 @@ test_that("pith_measure returns a dataframe", {
   expect_is(t2, "data.frame")
 })
 
+## test1-2
+test_that("pith_measure returns a dataframe", {
+  
+  library(mockery)
+  path1 <- system.file("arc.png", package = "MtreeRing")
+  ## Read and plot the image:
+  img1 <- ring_read(img = path1, dpi = 1200, plot = F)
+  
+  mock1 <- mock(list(x = c(36, 110, 168.8, 249.3, 354.2), 
+    y = c(264, 264, 264, 264, 264)), cycle = T)
+  stub(pith_measure, 'locator', mock1)
+  
+  a <- list(x = 444.7, y = 264.46)
+  b <- list(x = 643, y = 264.46)
+  c <- list(x = 543.8, y = 300.48)
+  arc <- list(a = a, b = b, c = c)
+  
+  mock2 <- mock(list(arc = arc, p = 264, t = 10, s = 2), cycle = T)
+  stub(pith_measure, 'add_path', mock2)
+  t2 <- pith_measure(img1, T)
+  
+  expect_is(img1, "magick-image")
+  expect_is(t2, "data.frame")
+})
+
 ## test 2
 test_that("pith_measure returns a dataframe", {
   

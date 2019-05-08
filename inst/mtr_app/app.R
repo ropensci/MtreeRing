@@ -1714,7 +1714,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = rt, type = "error"
       )
     } else {
-      rt <- paste(number.border, 'boreders were detected')
+      rt <- paste(number.border, 'borders were detected')
       sendSweetAlert(
         session = session, title = "Finished", text = rt, type = "success"
       )

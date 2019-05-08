@@ -18,6 +18,9 @@
 #' @param dpi An integer specifying the dpi of the image file. A minimum of 
 #' 300 dpi is required when running automatic detection.
 #' @param RGB A numeric vector of length 3 giving the weight of RGB channels.
+#' @param plot A logical value indicating whether to plot the image 
+#' when reading it. If \code{FALSE}, the tree ring image is plotted when
+#' function \code{\link{ring_read}} or \code{\link{pith_measure}} is called.
 #' @param rotate An integer specifying how many degrees to rotate (clockwise). 
 #' It requires one of the following values:
 #' \code{0}, \code{90}, \code{180} or \code{270}.
@@ -42,7 +45,7 @@
 #' t1 <- ring_read(img = img.path, dpi = 1200)
 
 ring_read <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), 
-                      rotate = 0, magick = TRUE)
+                      plot = TRUE, rotate = 0, magick = TRUE)
 {
   check.degree <- rotate %in% c(0, 90, 180, 270, 360) 
   if (!check.degree)
@@ -82,10 +85,22 @@ ring_read <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
   options(warn = 0)
   if (rotate != 0)
     tdata <- image_rotate(tdata, rotate)
+  
+  img.name <- ifelse(is.character(img),
+    basename(img),
+    substitute(img) %>% as.character)
+  
+  attributes(tdata) <- c(attributes(tdata), 
+    list(x.dpi = dpi, RGB = RGB, img.name = img.name, plot = plot))
+  
+  if (!plot)
+    return(tdata)
+  
+  #这之后是画图代码，使用tdata
   dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
   dimcol <- dim.tdata[1]
   dimrow <- dim.tdata[2]
-  if ((dimcol*dimrow) >= 1.2e+07) {
+  if (dimcol*dimrow >= 1.2e+07) {
     resize.ratio <- 300 / dpi
     resize.str <- paste0(round(dimcol*resize.ratio), 'x', 
                          round(dimrow*resize.ratio))
@@ -95,13 +110,8 @@ ring_read <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
   }
   dev.new()
   if (names(dev.cur()) == "RStudioGD") dev.new()
-  device.number <- as.numeric(dev.cur())
-  img.name <- ifelse(is.character(img),
-                     basename(img),
-                     substitute(img) %>% as.character)
-  attributes(tdata) <- c(attributes(tdata), 
-                         list(x.dpi = dpi, RGB = RGB, img.name = img.name,
-                              dn = device.number, dimt = dim.tdata))
+  dn <- as.numeric(dev.cur())
+  attributes(tdata) <- c(attributes(tdata), list(dn = dn, dimt = dim.tdata))
   xleft <- 0
   ybottom <- 0
   xright <- dimcol

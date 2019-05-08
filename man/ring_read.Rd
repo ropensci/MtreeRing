@@ -4,8 +4,8 @@
 \alias{ring_read}
 \title{Read and plot a tree-ring image file}
 \usage{
-ring_read(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), rotate = 0,
-  magick = TRUE)
+ring_read(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), plot = TRUE,
+  rotate = 0, magick = TRUE)
 }
 \arguments{
 \item{img}{A character string indicating the path of the image file. 
@@ -15,6 +15,10 @@ Supported formats include png, tiff, jpg and bmp.}
 300 dpi is required when running automatic detection.}
 
 \item{RGB}{A numeric vector of length 3 giving the weight of RGB channels.}
+
+\item{plot}{A logical value indicating whether to plot the image 
+when reading it. If \code{FALSE}, the tree ring image is plotted when
+function \code{\link{ring_read}} or \code{\link{pith_measure}} is called.}
 
 \item{rotate}{An integer specifying how many degrees to rotate (clockwise). 
 It requires one of the following values:
