@@ -183,8 +183,6 @@ test_that("pith_measure returns a dataframe", {
   stub(inclined_path, 'locator', mock5)
   p1 <- inclined_path(16, 'red', 1.5)  
   expect_is(p1, "list")
-  
   dev.off(attributes(img1)$dn)
-  
 })
 
