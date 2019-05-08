@@ -106,8 +106,8 @@ ring_modify <- function(ring.data, del = NULL, del.u = NULL,
                     py2, nrow(ring.data), py, seg.name, 
                     border.type,border.color, label.color, label.cex)
     } else {
-      img.attr <- single_path_plot(ring.data, bor.col, x.left, x.right, seg, dp, 
-                    sample.yr, py2, nrow(ring.data), py, seg.name, 
+      img.attr <- single_path_plot(ring.data, bor.col, x.left, x.right, seg, 
+                    dp, sample.yr, py2, nrow(ring.data), py, seg.name, 
                     border.type, border.color, label.color, label.cex)
     }
     seg.dn <- img.attr$seg.dn

@@ -69,11 +69,13 @@ test_that("ring_detect returns an array", {
   expect_true(attributes(t5)$bor.u %>% length == 0)
   expect_true(attributes(t5)$bor.l %>% length == 0)
   
-  expect_error(ring_detect(img1, method = 'watershed', watershed.threshold = 1), 
+  expect_error(
+    ring_detect(img1, method = 'watershed', watershed.threshold = 1), 
     'Ring border was not detected')
   expect_error(ring_detect(img1, method = 'lineardetect', incline = T), 
     'The linear detection can only create one path')
-  expect_error(ring_detect(img1, method = 'watershed', watershed.threshold = 1), 
+  expect_error(
+    ring_detect(img1, method = 'watershed', watershed.threshold = 1), 
     'Ring border was not detected')
   expect_error(ring_detect(img1, seg = 'not a numeric'))
   expect_error(ring_detect(img1, method = c('two', 'methods')))

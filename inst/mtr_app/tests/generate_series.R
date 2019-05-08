@@ -13,7 +13,9 @@ app$setInputs(m_line = "90")
 app$setInputs(method = 'watershed')
 app$setInputs(buttoncreatpath2 = "click")
 # Input 'plot2_brush' was set, but doesn't have an input binding.
-app$setInputs(plot2_brush = list(xmin = 10, xmax = 2333, ymin = 60, ymax = 120),allowInputNoBinding_ = TRUE)
+app$setInputs(
+  plot2_brush = list(xmin = 10, xmax = 2333, ymin = 60, ymax = 12),
+  allowInputNoBinding_ = TRUE)
 app$setInputs(button_run_auto = "click")
 app$snapshot()
 app$setInputs(button_results = "click")
