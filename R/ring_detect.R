@@ -16,8 +16,9 @@
 #' the user to create a sub-image and a path by interactive clickings. 
 #' See details below.
 #' @param manual A logical value indicating whether to skip the automatic 
-#' detection. If \code{TRUE}, ring boundaries are visually identified using 
-#' the function \code{\link{ring_modify}}.
+#' detection. If \code{TRUE}, ring boundaries are visually identified after 
+#' creating the path. See \code{\link{ring_modify}} to learn how to mark
+#' tree rings by clicking on the image.
 #' @param method A character string specifying how ring borders are detected. 
 #' It requires one of the following characters: \code{"watershed"}, 
 #' \code{"canny"}, or \code{"lineardetect"}. See details below.
