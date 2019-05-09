@@ -138,8 +138,8 @@
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
-#' ## Read and plot the image:
-#' t1 <- ring_read(img = img.path, dpi = 1200)
+#' ## Read a tree ring image:
+#' t1 <- ring_read(img = img.path, dpi = 1200, plot = FALSE)
 #' 
 #' ## Split a long core sample into 3 pieces to
 #' ## get better display performance and use the
@@ -157,8 +157,18 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
                         border.color = 'black', border.type = 16, 
                         label.color = 'black', label.cex = 1.2)
 {
+  if(!is.logical(auto.path))
+    stop("The argument 'auto.path' should be a logical vector of length one")
+  if(!is.logical(manual))
+    stop("The argument 'manual' should be a logical vector of length one")
+  if(!is.logical(incline))
+    stop("The argument 'incline' should be a logical vector of length one")
+  check.method <- method %in% c('canny', 'watershed', 'lineardetect') 
+  if (!check.method)
+    stop(paste("The argument 'method' should be one of the",
+               "following strings: canny, watershed, lineardetect"))
   if (!is.numeric(seg))
-    stop("The argument 'seg' should be a numeric vector of length one")
+    stop("The argument 'seg' should be a integer vector of length one")
   if (!is.character(method))
     stop("The argument 'method' should be a character vector of length one")
   if (length(method) >= 2) 
@@ -236,8 +246,10 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   colInd <- column_indices(px2, px3, seg)
   x.left <- colInd$left
   x.right <- colInd$right
-  if (is.null(sample.yr))
+  if (is.null(sample.yr)) {
     sample.yr <- Sys.Date() %>% as.character %>% strtrim(4) %>% as.numeric
+    warning('The sampling year is set to the current year')
+  }
   if (!manual) {
     seg.data <- convert2gray(rd.m.array, RGB)
     if (method == 'watershed') {
@@ -335,6 +347,9 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
       attributes(rd.m.array) <- c(attributes(rd.m.array), 
                                   list(bor.col = vector()))
     }
+    
+    # run ring_modify
+    rd.m.array <- ring_modify(rd.m.array, add = T)
   }
   return(rd.m.array)
 }
@@ -401,8 +416,8 @@ create_path <- function(auto.path, method, incline, path.dis,
   coordinate <- c(coordinate, py2, py3)
   if (incline) {
     if (path.dis * dp >= (py3 - py2))
-      stop('Please increase the width of the sub-image or ',
-        'decrease the value of the argument \'path.dis\'')
+      stop('Increase the width of the sub-image or ',
+           'decrease the value of \'path.dis\'')
   }
   text.line <- 2 + text.line
   mtext(paste0('Step ', step.number, ' has already done '),
@@ -483,3 +498,4 @@ column_indices <- function(px2, px3, seg) {
   } 
   list(left = x.left, right = x.right)
 }
+

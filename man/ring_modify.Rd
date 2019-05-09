@@ -38,10 +38,15 @@ to delete ring borders.
 
 If \code{add = TRUE}, graphical windows where image segments are plotted 
 will be activated sequentially. When a graphical window is activated, 
-the user can add new borders by left-clicking the mouse along the path. 
-This visual selection process can be terminated by clicking the right 
-button and selecting "Stop" from the menu, or from the "Stop" button on 
-the top-left corner of the graphical window (depending on the R version). 
+the user can add new borders by left-clicking the mouse along the path.
+ 
+On Windows PC, the visual selection process can be terminated by 
+clicking the right button and selecting "Stop" from the menu, or from the
+"Stop" button on the top-left corner of the graphical window.
+ 
+On MacOS X computer, for the X11 device the visual selection process is 
+terminated by pressing any mouse button other than the first, and for a 
+quartz device the process is terminated by pressing the ESC key.
 
 Once the user terminates the visual selection process, the current 
 graphical window will be closed automatically, and the graphical window 
@@ -54,7 +59,7 @@ one call. A deletion of borders takes precedence over addition.
 \examples{
 img.path <- system.file("001.png", package = "MtreeRing")
 
-## Read and plot the image:
+## Read a tree ring image:
 t1 <- ring_read(img = img.path, dpi = 1200)
 
 ## Split a long core sample into 3 pieces to

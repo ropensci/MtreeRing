@@ -15,7 +15,8 @@
 #' @param border.type Symbol for ring borders. See \code{pch} in 
 #' \code{\link{points}} for possible values and their shapes.
 #' @param label.cex The magnification to be used for years and ring numbers.
-#' @return A data frame of the calibrated ring-width series.
+#' @return A data frame of the calibrated ring-width series. The measurements 
+#' units are millimeters (mm)
 #' @details 
 #' This function allows the user to create a path, and manually mark 
 #' ring borders by clicking on the graphical window. 
@@ -68,7 +69,7 @@
 #' img.path <- system.file("arc.png", package = "MtreeRing")
 #' 
 #' ## Read and plot the image:
-#' t1 <- ring_read(img = img.path, dpi = 1200)
+#' t1 <- ring_read(img = img.path, dpi = 1200, plot = TRUE)
 #'
 #' ## Use the arcs of inner rings to calibrate ring-width series:
 #' \donttest{t2 <- pith_measure(t1, inner.arc = TRUE, last.yr = 2016)}
@@ -122,9 +123,10 @@ pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
   text.line <- pos$t
   step.number <- pos$s
   text.line <- 2 + text.line
-  mtext(text = 'Please mark ring boundaries along the user-defined path', 
+  mtext(text = 'Mark ring boundaries along the user-defined path', 
         side = 1, line = text.line, adj = 0)
-  bor.xy <- locator(type = 'p', pch = border.type, col = color, cex = label.cex)
+  bor.xy <- locator(type = 'p', pch = border.type, 
+                    col = color, cex = label.cex)
   order.x <- order(bor.xy$x)
   bor.x <- sort(bor.xy$x)
   bor.y <- bor.xy$y[order.x]

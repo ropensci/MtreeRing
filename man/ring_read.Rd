@@ -4,8 +4,8 @@
 \alias{ring_read}
 \title{Read and plot a tree-ring image file}
 \usage{
-ring_read(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), plot = TRUE,
-  rotate = 0, magick = TRUE)
+ring_read(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
+  plot = FALSE, rotate = 0, magick = TRUE)
 }
 \arguments{
 \item{img}{A character string indicating the path of the image file. 
@@ -50,7 +50,7 @@ because the package \code{magick} can significantly reduce the memory usage.
 img.path <- system.file("001.png", package = "MtreeRing")
 
 ## Read and plot the image:
-t1 <- ring_read(img = img.path, dpi = 1200)
+t1 <- ring_read(img = img.path, dpi = 1200, plot = TRUE)
 }
 \author{
 Jingning Shi

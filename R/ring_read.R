@@ -42,10 +42,10 @@
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
 #' ## Read and plot the image:
-#' t1 <- ring_read(img = img.path, dpi = 1200)
+#' t1 <- ring_read(img = img.path, dpi = 1200, plot = TRUE)
 
 ring_read <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114), 
-                      plot = TRUE, rotate = 0, magick = TRUE)
+                      plot = FALSE, rotate = 0, magick = TRUE)
 {
   check.degree <- rotate %in% c(0, 90, 180, 270, 360) 
   if (!check.degree)
@@ -95,8 +95,7 @@ ring_read <- function(img, dpi = NULL, RGB = c(0.299, 0.587, 0.114),
   
   if (!plot)
     return(tdata)
-  
-  #这之后是画图代码，使用tdata
+
   dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
   dimcol <- dim.tdata[1]
   dimrow <- dim.tdata[2]

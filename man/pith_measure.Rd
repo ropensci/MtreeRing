@@ -25,7 +25,8 @@ are used instead of the year.}
 \item{label.cex}{The magnification to be used for years and ring numbers.}
 }
 \value{
-A data frame of the calibrated ring-width series.
+A data frame of the calibrated ring-width series. The measurements 
+units are millimeters (mm)
 }
 \description{
 This function can calibrate the ring-width series 
@@ -76,7 +77,7 @@ The termination of visual selection is similar to \code{\link{ring_modify}}.
 img.path <- system.file("arc.png", package = "MtreeRing")
 
 ## Read and plot the image:
-t1 <- ring_read(img = img.path, dpi = 1200)
+t1 <- ring_read(img = img.path, dpi = 1200, plot = TRUE)
 
 ## Use the arcs of inner rings to calibrate ring-width series:
 \donttest{t2 <- pith_measure(t1, inner.arc = TRUE, last.yr = 2016)}

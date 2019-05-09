@@ -164,8 +164,8 @@ positions so it only works on "X11", "windows" and "quartz".
 \examples{
 img.path <- system.file("001.png", package = "MtreeRing")
 
-## Read and plot the image:
-t1 <- ring_read(img = img.path, dpi = 1200)
+## Read a tree ring image:
+t1 <- ring_read(img = img.path, dpi = 1200, plot = FALSE)
 
 ## Split a long core sample into 3 pieces to
 ## get better display performance and use the

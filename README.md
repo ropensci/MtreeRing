@@ -44,7 +44,7 @@ devtools::install_github("JingningShi/MtreeRing")
 library(MtreeRing)
 ## Read and plot a tree ring image
 img.name <- system.file("001.png", package = "MtreeRing")
-t1 <- ring_read(img = img.name, dpi = 1200)
+t1 <- ring_read(img = img.name, dpi = 1200, plot = TRUE)
 ```
 
 `ring_read` supports commonly used image formats, including png, tiff, jpg and bmp.

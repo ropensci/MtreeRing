@@ -8,11 +8,11 @@
 #' @param seriesID A character string specifying the column name of 
 #' the ring-width series.
 #' @return A data frame. The series ID is the column name 
-#' and years are row name.
+#' and years are row names. The measurements units are millimeters (mm).
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
-#' ## Read and plot the image:
+#' ## Read a tree ring image:
 #' t1 <- ring_read(img = img.path, dpi = 1200)
 #'
 #' ## Split a long core sample into 3 pieces to
