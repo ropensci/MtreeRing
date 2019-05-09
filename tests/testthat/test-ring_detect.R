@@ -80,8 +80,6 @@ test_that("ring_detect returns an array", {
   expect_error(ring_detect(img1, seg = 'not a numeric'))
   expect_error(ring_detect(img1, method = c('two', 'methods')))
   expect_error(ring_detect(img1, method = 1))
-  img1 <- ring_read(img = path1, dpi = 200)
-  dev.off(attributes(img1)$dn)
   expect_error(ring_detect(img1, manual = F))
   
 })
