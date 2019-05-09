@@ -233,7 +233,7 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   img.crop <- image_crop(ring.data, img.range)
   rd.martix <- img.crop[[1]]
   rd.m.array <- magick2array(rd.martix)
-  colInd <- columnIndices(px2, px3, seg)
+  colInd <- column_indices(px2, px3, seg)
   x.left <- colInd$left
   x.right <- colInd$right
   if (is.null(sample.yr))
@@ -257,17 +257,17 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
       }
       seg.data <- canny.seg[,, 1, 1]
     }
-    if (method == 'lineardetect') {
-      attributes(seg.data)['image'] <- 'img'
-      smoothed <- graySmoothed(seg.data, ppi = x.dpi, rgb = RGB)
-      bor.col <- linearDetect(smoothed, origin = origin)
-      bor.col <- bor.col + px2 - 1
-    }
     if (incline) {
       bor.l <- border_det(seg.data, py3 - py.lower, dp) + px2 - 1
       bor.u <- border_det(seg.data, py3 - py.upper, dp) + px2 - 1
     } else {
       bor.col <- border_det(seg.data, py3 - py, dp) + px2 - 1
+    }
+    if (method == 'lineardetect') {
+      attributes(seg.data)['image'] <- 'img'
+      smoothed <- graySmoothed(seg.data, ppi = x.dpi, rgb = RGB)
+      bor.col <- linearDetect(smoothed, origin = origin)
+      bor.col <- bor.col + px2 - 1
     }
   }
   img.name <- attributes(ring.data)$img.name
@@ -468,7 +468,7 @@ magick2array <- function(rd.martix) {
   rd.m.array <- rd.m.array/255
 }
 
-columnIndices <- function(px2, px3, seg) {
+column_indices <- function(px2, px3, seg) {
   if (seg == 1) {
     x.left <- px2
     x.right <- px3
