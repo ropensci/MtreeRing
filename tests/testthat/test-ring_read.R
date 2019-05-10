@@ -9,18 +9,15 @@ test_that("ring_read plots a tree ring image and returns a magick object", {
   path5 <- system.file("001gray.png", package = "MtreeRing")
   
   ## Read and plot the image:
-  img1 <- ring_read(img = path1, dpi = 1200, plot = FALSE)
-  img2 <- ring_read(img = path2, dpi = 2540)
-  dev.off(attributes(img2)$dn)
-  img3 <- ring_read(img = path3, dpi = 1200)
-  dev.off(attributes(img3)$dn)
-  img4 <- ring_read(img = path4, dpi = 1200)
-  dev.off(attributes(img4)$dn)
-  img5 <- ring_read(img = path5, dpi = 1200)
-  dev.off(attributes(img5)$dn)
-  img6 <- ring_read(img = path5, dpi = 1200, rotate = 180)
-  dev.off(attributes(img6)$dn)
+  img1 <- ring_read(img = path1, dpi = 1200, plot = TRUE)
+  dev.off(attributes(img1)$dn)
   
+  img2 <- ring_read(img = path2, dpi = 2540)
+  img3 <- ring_read(img = path3, dpi = 1200)
+  img4 <- ring_read(img = path4, dpi = 1200)
+  img5 <- ring_read(img = path5, dpi = 1200)
+  img6 <- ring_read(img = path5, dpi = 1200, rotate = 180)
+
   expect_is(img1, "magick-image")
   expect_is(img2, "magick-image")
   expect_is(img3, "magick-image")
@@ -40,7 +37,6 @@ test_that("mock test", {
   mock1 <- mock(20*1024^2, cycle = T)
   stub(ring_read, 'file.size', mock1)
   img1 <- ring_read(path2, dpi = 1200)
-  dev.off(attributes(img1)$dn)
   expect_is(img1, "magick-image")
 })
 
@@ -50,7 +46,6 @@ test_that("mock test", {
   mock1 <- mock(20*1024^2, cycle = T)
   stub(ring_read, 'file.size', mock1)
   img1 <- ring_read(path5, dpi = 1200)
-  dev.off(attributes(img1)$dn)
   expect_is(img1, "magick-image")
 })
 
@@ -60,7 +55,6 @@ test_that("mock test", {
   mock1 <- mock(matrix(c(1, 5000, 5000), nrow = 1, byrow = T), cycle = T)
   stub(ring_read, 'image_info', mock1)
   img1 <- ring_read(path5, dpi = 1200)
-  dev.off(attributes(img1)$dn)
   expect_is(img1, "magick-image")
 })
 

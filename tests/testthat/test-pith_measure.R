@@ -5,7 +5,7 @@ test_that("pith_measure returns a dataframe", {
   library(mockery)
   path1 <- system.file("arc.png", package = "MtreeRing")
   ## Read and plot the image:
-  img1 <- ring_read(img = path1, dpi = 1200)
+  img1 <- ring_read(img = path1, dpi = 1200, plot = T)
 
   mock1 <- mock(list(x = c(36, 110, 168.8, 249.3, 354.2), 
                      y = c(264, 264, 264, 264, 264)), cycle = T)
@@ -85,7 +85,7 @@ test_that("pith_measure returns a dataframe", {
   library(mockery)
   path1 <- system.file("arc.png", package = "MtreeRing")
   ## Read and plot the image:
-  img1 <- ring_read(img = path1, dpi = 1200)
+  img1 <- ring_read(img = path1, dpi = 1200, plot = T)
   
   mock1 <- mock(list(x = c(36, 110, 168.8, 249.3, 354.2), 
     y = c(264, 264, 264, 264, 264)), cycle = T)
@@ -111,7 +111,7 @@ test_that("pith_measure returns a dataframe", {
   library(mockery)
   path1 <- system.file("arc.png", package = "MtreeRing")
   ## Read and plot the image:
-  img1 <- ring_read(img = path1, dpi = 1200)
+  img1 <- ring_read(img = path1, dpi = 1200, plot = T)
   
   mock1 <- mock(list(t = 6, s = 1), cycle = T)
   stub(pith_measure, 'add_path', mock1)
@@ -133,7 +133,7 @@ test_that("pith_measure returns a dataframe", {
   library(mockery)
   path1 <- system.file("arc.png", package = "MtreeRing")
   ## Read and plot the image:
-  img1 <- ring_read(img = path1, dpi = 1200)
+  img1 <- ring_read(img = path1, dpi = 1200, plot = T)
   
   mock1 <- mock(list(t = 6, s = 1), cycle = T)
   stub(pith_measure, 'add_path', mock1)
@@ -156,7 +156,7 @@ test_that("pith_measure returns a dataframe", {
   library(mockery)
   path1 <- system.file("arc.png", package = "MtreeRing")
   ## Read and plot the image:
-  img1 <- ring_read(img = path1, dpi = 1200)
+  img1 <- ring_read(img = path1, dpi = 1200, plot = T)
   
   mock1 <- mock(list(x = c(546.67, 33.39), y = c(122.29, 251.19)), cycle = T)
   stub(add_path, 'inclined_path', mock1)

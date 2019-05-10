@@ -16,9 +16,9 @@ Supported formats include png, tiff, jpg and bmp.}
 
 \item{RGB}{A numeric vector of length 3 giving the weight of RGB channels.}
 
-\item{plot}{A logical value indicating whether to plot the image 
-when reading it. If \code{FALSE}, the tree ring image is plotted when
-function \code{\link{ring_read}} or \code{\link{pith_measure}} is called.}
+\item{plot}{A logical value indicating whether to plot the tree ring image 
+when reading it. If \code{FALSE}, the image is not plotted until
+function \code{\link{ring_detect}} or \code{\link{pith_measure}} is called.}
 
 \item{rotate}{An integer specifying how many degrees to rotate (clockwise). 
 It requires one of the following values:
@@ -32,7 +32,7 @@ A magick image object containing the image data.
 }
 \description{
 This function can read an image file from the hard disk and 
-plot it in a newly-opened graphical device.
+plot it in a newly-opened graphics device.
 }
 \details{
 Proper image preparation has a great influence on the measurement of 
@@ -41,7 +41,7 @@ features, such as wooden mounts where cores are glued. The larger the file
 size of an image, the slower the image processing operation will be.
 
 \bold{Pith side} of the sample should be placed on the \bold{right side} of 
-the graphical window. Use the argument \code{rotate} to change its position.
+a graphics window. Use \code{rotate} to change its position.
 
 It is highly recommended to use the default value \code{magick = TRUE}, 
 because the package \code{magick} can significantly reduce the memory usage.

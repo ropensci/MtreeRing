@@ -1,44 +1,49 @@
 #' @export
 #' @title Edit ring borders visually
-#' @description This function can delete existing ring borders 
-#' or add new borders by clicking on the image.
+#' @description This function can remove existing ring borders 
+#' or add new borders.
 #' @author Jingning Shi
 #' @param ring.data A matrix or array produced by \code{\link{ring_detect}}.
-#' @param del A numeric vector giving the border numbers to be deleted.
-#' @param del.u A numeric vector giving the border numbers to be deleted 
+#' @param del A numeric vector giving the border numbers to be removed.
+#' @param del.u A numeric vector giving the border numbers to be removed 
 #' on the upper path.
-#' @param del.l A numeric vector giving the border numbers to be deleted 
+#' @param del.l A numeric vector giving the border numbers to be removed 
 #' on the lower path.
-#' @param add A logical value indicating whether to re-add ring borders.
-#' @return A matrix or array representing the tree ring image.
+#' @param add A logical value indicating whether to add new ring borders.
+#' @return A matrix (grayscale image) or array (color image)
+#' representing the tree ring image.
 #' @details 
-#' This function is used to delete existing ring borders, or to add new 
+#' This function is used to remove existing ring borders, or to add new 
 #' borders by interactively clicking on the image segments.
 #' 
-#' If the user creates only one path (\code{incline = FALSE}), the argument 
-#' \code{del} is used to delete ring borders. If the user creates two paths 
+#' If the user creates one path (\code{incline = FALSE}), the argument 
+#' \code{del} is used to remove ring borders. If the user creates two paths 
 #' (\code{incline = TRUE}), arguments \code{del.u} and \code{del.l} are used 
-#' to delete ring borders.
+#' to remove ring borders.
 #' 
-#' If \code{add = TRUE}, graphical windows where image segments are plotted 
-#' will be activated sequentially. When a graphical window is activated, 
+#' If \code{add = TRUE}, graphics windows where image segments are plotted 
+#' will be activated sequentially. When a graphics window is activated, 
 #' the user can add new borders by left-clicking the mouse along the path.
-#'  
-#' On Windows PC, the visual selection process can be terminated by 
-#' clicking the right button and selecting "Stop" from the menu, or from the
-#' "Stop" button on the top-left corner of the graphical window.
-#'  
-#' On MacOS X computer, for the X11 device the visual selection process is 
-#' terminated by pressing any mouse button other than the first, and for a 
-#' quartz device the process is terminated by pressing the ESC key.
+#' Every click draws a point representing the ring border. 
+#' The identification process does not automatically stop by itself.
 #' 
-#' Once the user terminates the visual selection process, the current 
-#' graphical window will be closed automatically, and the graphical window 
-#' of the following segment is activated. When all graphical windows are 
-#' closed, this function will re-open graphical windows and plot new borders.
+#' \itemize{
+#'   \item
+#'   On the Windows system, the identification process can be terminated by 
+#'   pressing the right mouse button and selecting \bold{Stop} from the menu.
+#'   \item 
+#'   On the MacOS system, for a X11 device the identification process is 
+#'   terminated by pressing any mouse button other than the first, and for a 
+#'   quartz device this process is terminated by pressing the \bold{ESC} key.
+#' }
 #' 
-#' This function can perform both operations (deletion and addition) in 
-#' one call. A deletion of borders takes precedence over addition.
+#' Once the user terminates the identification process, the current 
+#' graphics window will be closed automatically, and the graphics window of
+#' the following segment is activated. When all graphics windows are closed,
+#' \code{ring_modify} will re-open graphics windows and plot new borders.
+#' 
+#' This function can perform both deletion and addition in one call.
+#' The removal of ring borders takes precedence over addition.
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
@@ -51,8 +56,9 @@
 #' t2 <- ring_detect(ring.data = t1, seg = 3, method = 'watershed')
 #'
 #' ## Do not modify t2, but create a new array object t3. 
-#' ## Delete some borders without adding new borders:
+#' ## Remove some borders without adding new borders:
 #' t3 <- ring_modify(ring.data = t2, del = c(1, 3, 5, 19:21), add = FALSE)
+#' 
 
 ring_modify <- function(ring.data, del = NULL, del.u = NULL, 
                         del.l = NULL, add = FALSE)
@@ -120,8 +126,8 @@ ring_modify <- function(ring.data, del = NULL, del.u = NULL,
   } 
   if (add) {
     if (all(!check.dn)) {
-      stop(paste('All graphical windows have been closed.',
-                 'You can not mark new ring boundaries.'))
+      stop(paste('All graphics windows have been closed.',
+                 'You can not mark ring borders.'))
     }  
     add.bor <- vector(length = 0)
     add.l <- vector(length = 0)

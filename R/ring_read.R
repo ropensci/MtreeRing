@@ -11,16 +11,16 @@
 #' @importFrom graphics abline axis layout lines locator mtext par plot points 
 #' rasterImage segments text title
 #' @description This function can read an image file from the hard disk and 
-#' plot it in a newly-opened graphical device.
+#' plot it in a newly-opened graphics device.
 #' @author Jingning Shi
 #' @param img A character string indicating the path of the image file. 
 #' Supported formats include png, tiff, jpg and bmp.
 #' @param dpi An integer specifying the dpi of the image file. A minimum of 
 #' 300 dpi is required when running automatic detection.
 #' @param RGB A numeric vector of length 3 giving the weight of RGB channels.
-#' @param plot A logical value indicating whether to plot the image 
-#' when reading it. If \code{FALSE}, the tree ring image is plotted when
-#' function \code{\link{ring_read}} or \code{\link{pith_measure}} is called.
+#' @param plot A logical value indicating whether to plot the tree ring image 
+#' when reading it. If \code{FALSE}, the image is not plotted until
+#' function \code{\link{ring_detect}} or \code{\link{pith_measure}} is called.
 #' @param rotate An integer specifying how many degrees to rotate (clockwise). 
 #' It requires one of the following values:
 #' \code{0}, \code{90}, \code{180} or \code{270}.
@@ -34,7 +34,7 @@
 #' size of an image, the slower the image processing operation will be.
 #' 
 #' \bold{Pith side} of the sample should be placed on the \bold{right side} of 
-#' the graphical window. Use the argument \code{rotate} to change its position.
+#' a graphics window. Use \code{rotate} to change its position.
 #' 
 #' It is highly recommended to use the default value \code{magick = TRUE}, 
 #' because the package \code{magick} can significantly reduce the memory usage.

@@ -5,9 +5,9 @@
 #' @importFrom magick image_info image_resize 
 #' @importFrom imager as.cimg cannyEdges dilate_rect erode_rect imgradient 
 #' mclosing_square threshold watershed
-#' @title Automatic detection of tree-ring boundaries
-#' @description This function is used to automatically detect tree-ring 
-#' boundaries along the user-defined path.
+#' @title Automatic detection of tree-ring borders
+#' @description This function is used to automatically detect tree ring 
+#' borders along the user-defined path.
 #' @author Jingning Shi
 #' @param ring.data A magick image object produced by \code{\link{ring_read}}.
 #' @param seg An integer specifying the number of image segments.
@@ -16,7 +16,7 @@
 #' the user to create a sub-image and a path by interactive clickings. 
 #' See details below.
 #' @param manual A logical value indicating whether to skip the automatic 
-#' detection. If \code{TRUE}, ring boundaries are visually identified after 
+#' detection. If \code{TRUE}, ring borders are visually identified after 
 #' creating the path. See \code{\link{ring_modify}} to learn how to mark
 #' tree rings by clicking on the image.
 #' @param method A character string specifying how ring borders are detected. 
@@ -74,10 +74,10 @@
 #' 
 #' @details 
 #' If \code{auto.path = FALSE}, the user can create a rectangular sub-image 
-#' and a horizontal path by interactively clicking on the tree-ring image. 
-#' The automatic detection will be performed within the rectangular 
-#' sub-image along a pre-determined path. 
-#' To create the sub-image and the path, follow these steps.
+#' and a horizontal path by interactively clicking on the tree ring image. 
+#' The automatic detection will be performed within this rectangular 
+#' sub-image. 
+#' To create a sub-image and a path, follow these steps.
 #' \itemize{
 #'   \item
 #'   Step 1. Select the left and right edges of the rectangle
@@ -109,8 +109,8 @@
 #' }
 #' 
 #' After creating the sub-image and the path, this function will open several 
-#' graphical windows and plot detected ring borders on image segments. The 
-#' number of image segments is controlled by argument \code{seg} (see above).
+#' graphics windows and plot detected ring borders on image segments. The 
+#' number of image segments is controlled by the argument \code{seg}.
 #' 
 #' Argument \code{method} determines how ring borders are identified. 
 #' \itemize{
@@ -131,11 +131,12 @@
 #' structuring elements of increasing size before detecting borders. The first 
 #' small structuring element is used to remove smaller dark spots in early 
 #' wood regions, and the second large structuring element is used to remove 
-#' light strips in late wood regions. More details can be found at 
-#' Soille and Misson (2001).
+#' light strips in late wood regions. More details about morphological 
+#' processing can be found at Soille and Misson (2001).
+#' 
 
-#' @note This function uses the function \code{\link{locator}} to record mouse 
-#' positions so it only works on "X11", "windows" and "quartz".
+#' @note This function uses \code{\link{locator}} to record mouse 
+#' positions so it only works on "X11", "windows" and "quartz" devices.
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
@@ -146,6 +147,7 @@
 #' ## get better display performance and use the
 #' ## watershed algorithm to detect ring borders:
 #' t2 <- ring_detect(t1, seg = 3, method = 'watershed', border.color = 'green')
+#' 
 
 
 ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
@@ -165,17 +167,17 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   if(!is.logical(incline))
     stop("The argument 'incline' should be a logical vector of length one")
   check.method <- method %in% c('canny', 'watershed', 'lineardetect') 
+  if (length(method) >= 2) 
+    stop("The argument 'method' should be a character vector of length one")
   if (!check.method)
     stop(paste("The argument 'method' should be one of the",
                "following strings: canny, watershed, lineardetect"))
-  if (!is.numeric(seg))
-    stop("The argument 'seg' should be a integer vector of length one")
   if (!is.character(method))
-    stop("The argument 'method' should be a character vector of length one")
-  if (length(method) >= 2) 
     stop("The argument 'method' should be a character vector of length one")
   if (method == "lineardetect" & incline) 
     stop("The linear detection can only create one path")
+  if (!is.numeric(seg))
+    stop("The argument 'seg' should be a integer vector of length one")
   RGB <- attributes(ring.data)$RGB
   x.dpi <- attributes(ring.data)$x.dpi
   dp <- x.dpi / 25.4 
