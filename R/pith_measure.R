@@ -9,12 +9,12 @@
 #' @param inner.arc A logical value indicating whether to calibrate the 
 #' ring-width series using the arcs of inner rings. See details below.
 #' @param last.yr \code{NULL} or an integer giving the year of formation 
-#' of the left-most ring. If \code{NULL}, borders numbers (starting from 1) 
+#' of the left-most ring. If \code{NULL}, border numbers (starting from 1) 
 #' are used instead of years.
 #' @param color Color for labels.
 #' @param border.type Symbol for ring borders. See \code{pch} in 
 #' \code{\link{points}} for possible values and shapes.
-#' @param label.cex The magnification to be used for years or ring numbers.
+#' @param label.cex The magnification to be used for years or border numbers.
 #' @return A data frame of the calibrated ring-width series. The measurements 
 #' units are millimeters (mm)
 #' @details 
@@ -33,7 +33,7 @@
 #' The path should traverse an appropriate arc (read the reference below  
 #' for more details).
 #' 
-#' \bold{Step2}.. You can add three points to the selected arc by
+#' \bold{Step2}. You can add three points to the selected arc by
 #' left-clicking. The first point should be placed on the left endpoint of 
 #' the arc, and the second point is placed on the right endpoint. 
 #' 
@@ -50,7 +50,7 @@
 #' After marking tree rings, the identification process does not automatically 
 #' stop by itself. On the Windows platform, the identification process 
 #' can be terminated by clicking the second button and selecting \bold{Stop} 
-#' from the menu. On the MacOS system, you can press the Escape key to 
+#' from the menu. On the MacOS system, you can press the \bold{Escape} key to 
 #' terminate this process.
 #' 
 #' The ring-width series are corrected using formulas proposed by Duncan (1989).
@@ -64,8 +64,8 @@
 #' A path passing through these two points will be plotted. The path should 
 #' follow the rays from bark to pith.
 #' 
-#' \bold{Step2}. You can visually mark tree rings along the path by 
-#' left-clicking on the image. The termination of visual selection is similar.
+#' \bold{Step2}. You can mark tree rings along the path by left-clicking
+#' on the image. The termination of identification process is similar.
 #' }
 #' 
 #' @references 
