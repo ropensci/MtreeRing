@@ -9,6 +9,7 @@ test_that("ring_calculate returns a data.frame", {
                    method = 'watershed', incline = T)
   dn <- attributes(t1)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)  
+  
   t2 <- ring_detect(ring.data = img1, auto.path = T, sample.yr = 2015,
                    method = 'canny', incline = F)
   dn <- attributes(t2)$seg.dn
@@ -17,7 +18,7 @@ test_that("ring_calculate returns a data.frame", {
   rw1 <- ring_calculate(ring.data = t1, '940220')
   rw2 <- ring_calculate(ring.data = t2, '940220')
   
-  t3 <- ring_detect(ring.data = img1, sample.yr = 2015,incline = T)
+  t3 <- ring_detect(ring.data = img1, sample.yr = 2015, incline = T)
   dn <- attributes(t3)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)
   attributes(t3)$bor.u <- vector()

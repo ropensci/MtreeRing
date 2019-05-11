@@ -100,14 +100,14 @@ ring_modify <- function(ring.data, del = NULL, del.u = NULL,
   if (!all(del.cond)) {
     if (incline) {
       if (!all(is.element(del.l,sn.l)))
-        stop('The ring number on the lower path you entered was not correct')
+        stop('The border number on the lower path you entered was not correct')
       if (!all(is.element(del.u,sn.u)))
-        stop('The ring number on the upper path you entered was not correct')
+        stop('The border number on the upper path you entered was not correct')
       if (!is.null(del.l)) bor.l <- bor.l[-del.l]
       if (!is.null(del.u)) bor.u <- bor.u[-del.u]
     } else {
       if (!all(is.element(del,sn)))
-        stop('The ring number you entered was not correct')
+        stop('The border number you entered was not correct')
       if (!is.null(del)) bor.col <- bor.col[-del]
     }
     for (i in existing.seg) dev.off(i)

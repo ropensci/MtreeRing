@@ -18,11 +18,6 @@ test_that("ring_detect returns an array", {
   dn <- attributes(t1)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)
   
-  img1 <- ring_read(img = path1, dpi = 1200)
-  t1 <- ring_detect(ring.data = img1, sample.yr = 2015, method = 'watershed')
-  dn <- attributes(t1)$seg.dn
-  apply(matrix(dn, nrow = 1), 2, dev.off)  
-  
   t2 <- ring_detect(img1, seg = 3, sample.yr = 2015, method = 'canny')
   dn <- attributes(t2)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off) 
@@ -101,6 +96,7 @@ test_that("ring_detect returns an array", {
   img1 <- ring_read(img = path1, dpi = 200)
   expect_error(ring_detect(img1, sample.yr = 2015, manual = F))
   expect_warning(ring_detect(ring.data = img2, method = 'watershed'))
+  dev.off(as.numeric(dev.cur()))
 })
 
 # test manual = TRUE and incline = F
@@ -171,7 +167,9 @@ test_that("mock test", {
 
   mock2 <- mock(c(20, 1400, 0, 160, 50, 80, 20), cycle = T)
   stub(ring_detect, 'create_path', mock2)
-  t8 <- ring_detect(ring.data = img2, sample.yr = 2015, seg = 2, incline = T)
+  t8 <- ring_detect(ring.data = img2, auto.path = F, 
+    sample.yr = 2015, seg = 2, incline = T)
+  dev.off(as.numeric(attributes(t8)$dn))
   dn <- attributes(t8)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)
   
@@ -196,7 +194,7 @@ test_that("mock test", {
   library(mockery)
   
   path2 <- system.file("incline.png", package = "MtreeRing")
-  img2 <- ring_read(img = path2, dpi = 1200, plot = FALSE)
+  img2 <- ring_read(img = path2, dpi = 1200, plot = TRUE)
   mock2 <- mock(c(20, 1400, 0, 160, 50, 80, 20), cycle = T)
   stub(ring_detect, 'create_path', mock2)
   t8 <- ring_detect(ring.data = img2, auto.path = F, 

@@ -1,7 +1,6 @@
 context("ring_modify")
 
 test_that("ring_modify", {
-  library(mockery)
   path1 <- system.file("001.png", package = "MtreeRing")
   img1 <- ring_read(img = path1, dpi = 1200)
 
@@ -23,20 +22,21 @@ test_that("ring_modify", {
   dn <- attributes(t4)$seg.dn
   apply(matrix(dn, nrow = 1), 2, dev.off)  
   
-
-  expect_is(t1, "array")
-  expect_is(t2, "array")
   expect_is(t3, "array")
   expect_is(t4, "array")
+  
+  # if all windows are closed
   expect_error(ring_modify(t2, add = T))
+  
   expect_error(ring_modify(t2, del = 31:35), 
-    'The ring number you entered was not correct')
+    'The border number you entered was not correct')
   expect_error(ring_modify(t1, del.u = 20:35), 
-    'The ring number on the upper path you entered was not correct')
+    'The border number on the upper path you entered was not correct')
   expect_error(ring_modify(t1, del.l = 20:35), 
-    'The ring number on the lower path you entered was not correct')
+    'The border number on the lower path you entered was not correct')
   expect_error(ring_modify(t1, add = F))
 
+  # add some borders
   t5 <- ring_detect(img1, sample.yr = 2015, method = 'watershed', incline = F)
   mock1 <- mock(list(x = c(100, 200, 300, 500), 
                      y = c(20, 160, 160, 20)), cycle = T)
@@ -44,6 +44,7 @@ test_that("ring_modify", {
   m1 <- ring_modify(ring.data = t5, add = T)
   expect_is(m1, "array")
   
+  # add some borders
   t6 <- ring_detect(img1, sample.yr = 2015, method = 'watershed', incline = T)
   mock2 <- mock(list(x = c(111, 222, 333, 555, 666), 
                      y = c(20, 160, 160, 20, 20)), cycle = T)
