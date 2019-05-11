@@ -21,10 +21,13 @@
 #' (\code{incline = TRUE}), arguments \code{del.u} and \code{del.l} are used 
 #' to remove ring borders.
 #' 
-#' If \code{add = TRUE}, graphics windows where image segments are plotted 
+#' If \code{add = TRUE}, graphics windows opened by \code{\link{ring_detect}}
 #' will be activated sequentially. When a graphics window is activated, 
 #' the user can add new borders by left-clicking the mouse along the path.
-#' Every click draws a point representing the ring border. 
+#' Every click draws a point representing the ring border.
+#' Type \code{vignette('detection-MtreeRing')} to see 
+#' an example of adding ring borders.
+#' 
 #' The identification process does not automatically stop by itself.
 #' 
 #' \itemize{
