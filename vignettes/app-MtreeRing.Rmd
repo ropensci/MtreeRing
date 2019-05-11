@@ -22,9 +22,19 @@ MtreeRing::ring_app_launch()
 
 Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named `001.png`, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (https://github.com/JingningShi/MtreeRing/raw/master/inst/001.png). In the following sections, this image is used to demonstrate the ring-width measurement. 
 
+You can upload an image with the following steps:
+
+1. When you start the app, click on the **Image Loading** button in the sidebar (This is the default mode. In most cases, you do not need to do this).
+
+2. Click on the **Browse...** button in the **Image Upload** window.
+
+3. Choose an image from hard disk.
+
+4. Click on the **Load** button.
+
 ## 2. Path creation
 
-After image loading, you can click on the "**Measurement**" button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named **Tree Ring Detection** and **Tree Ring Editing**. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
+After image uploading, you can click on the **Measurement** button in the sidebar, and it switches content in the main body. The new page has two graphics windows, named **Tree Ring Detection** and **Tree Ring Editing**. These two graphics windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
 
 A path creation consists of the following steps:
 
@@ -40,7 +50,7 @@ In the current version, the path is a horizontal dashed line (see Figure 1 above
 
 ## 3. Ring detection
 
-Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This action will create a blue rectangle. Here is an example of **brush**.
+Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of **brush**.
 
 
 <img src="img/Brush2.gif" width = 60% height = 60% /> 
@@ -51,7 +61,7 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 
     After clicking on this button, `MtreeRing` will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
 
-2. Create a blue rectangle mentioned above in the first graphical window (**Tree Ring Detection**) by brushing.
+2. Create a blue rectangle mentioned above in the first graphics window (**Tree Ring Detection**) by brushing.
 
 3. Click on the green "**Run Detection**" button. 
     
@@ -64,9 +74,9 @@ See this example:
 
 ## 4. Edit tree rings
 
-If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (**Tree Ring Editing**) is used to add (remove) tree ring borders to (from) the image.
+If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphics window (**Tree Ring Editing**) is used to add (remove) tree ring borders to (from) the image.
 
-You may have noticed that the graphical windows **Tree Ring Editing** has no image. To generate a zoomed-in image in this windows, follow these steps:
+You may have noticed that the graphics windows **Tree Ring Editing** has no image. To generate a zoomed-in image in this windows, follow these steps:
 
 1. Create a blue rectangle in the **Tree Ring Detection** by brushing.
 
