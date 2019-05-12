@@ -14,9 +14,16 @@
 #' @title Run Shiny-based Application
 #' @description Run a Shiny-based application within the system's default 
 #' web browser.
-#' @param launch.browser A logical value. If \code{TRUE}, the system's default 
-#' web browser will be launched automatically after the app is started. 
-#' @details 
+#' @param launch.browser A logical value. 
+#' If \code{FALSE}, a built-in browser will be launched automatically 
+#' after the app is started. If \code{TRUE}, the system's default 
+#' web browser is used instead. This argument only works for RStudio.
+#' See details below.
+#' 
+#' @details
+#' \code{launch.browser = FALSE} is not recommended, as the file renaming
+#' does not work on the RStudio built-in browser when saving the data.
+#' 
 #' A workflow for the Shiny app can be found in the package vignette. 
 #' Type \code{vignette('app-MtreeRing')} to learn how to use the app. Most
 #' steps are demonstrated with a gif to make the workflow more understandable.
@@ -30,5 +37,10 @@
 
 ring_app_launch <- function(launch.browser = TRUE) {
   app_dir <- system.file('mtr_app', package = 'MtreeRing')
-  shinyAppDir(app_dir, options = list(launch.browser = launch.browser))
+  if (launch.browser) {
+    shinyAppDir(app_dir, options = list(launch.browser = TRUE))
+  } else {
+    shinyAppDir(app_dir)
+  }
+  
 }

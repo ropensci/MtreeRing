@@ -23,9 +23,9 @@ createUI <- function()
   shiny.sider <- dashboardSidebar(
     sidebarMenu(
       menuItem('Image Loading',tabName = 'input_pre', 
-        icon = icon('folder-open', lib = 'font-awesome')),
+        icon = icon('folder-open', lib = 'font-awesome'), selected = TRUE),
       menuItem('Measurement',tabName = 'mea_arg', 
-        icon = icon('gear', lib = 'font-awesome'), selected = TRUE)
+        icon = icon('gear', lib = 'font-awesome'))
     )
   )
   page1 <- fluidRow(
@@ -2151,7 +2151,6 @@ createServer <- function(input, output, session)
     }, contentType = "rwl"
   )
 }
-options(shiny.testmode = TRUE)
-shinyApp(ui = createUI(), server = createServer,
-  options = list(launch.browser = T))
+
+shinyApp(ui = createUI(), server = createServer)
 
