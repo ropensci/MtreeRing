@@ -40,7 +40,7 @@
 #' because the package \code{magick} can significantly reduce the memory usage.
 #' In a few cases where image data is stored in a non-standard format, 
 #' \code{magick} may return an error when reading image files. In this case,
-#' You can set \code{magick = FALSE} to avoid the use of \code{magick}.
+#' you can set \code{magick = FALSE} to avoid the use of \code{magick}.
 #' 
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
