@@ -25,7 +25,7 @@
 #' It requires one of the following values:
 #' \code{0}, \code{90}, \code{180} or \code{270}.
 #' @param magick A logical value. If \code{TRUE}, the package \code{magick} 
-#' is used to read the image file whose size is over 10MB.
+#' is used to read the image file whose size is over 10MB. See details below.
 #' @return A magick image object containing the image data.
 #' @details 
 #' Proper image preparation has a great influence on the measurement of 
@@ -33,11 +33,15 @@
 #' features, such as wooden mounts where cores are glued. The larger the file 
 #' size of an image, the slower the image processing operation will be.
 #' 
-#' \bold{Pith side} of the sample should be placed on the \bold{right side} of 
-#' a graphics window. Use \code{rotate} to change its position.
+#' \bold{Pith side} of a wood sample should be placed on the \bold{right side} 
+#' of a graphics window. Use \code{rotate} to change its position.
 #' 
 #' It is highly recommended to use the default value \code{magick = TRUE}, 
 #' because the package \code{magick} can significantly reduce the memory usage.
+#' In a few cases where image data is stored in a non-standard format, 
+#' \code{magick} may return an error when reading image files. In this case,
+#' You can set \code{magick = FALSE} to avoid the use of \code{magick}.
+#' 
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
 #' 
