@@ -12,7 +12,7 @@ MtreeRing
 [![TravisCI Build Status](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)](https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/3iwxn4euvmw2fd6e/branch/master?svg=true)](https://ci.appveyor.com/project/JingningShi/mtreering/branch/master)
 [![codecov](https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/JingningShi/MtreeRing)
-[![](https://badges.ropensci.org/284_status.svg)](https://github.com/ropensci/software-review/issues/287)
+[![](https://badges.ropensci.org/287_status.svg)](https://github.com/ropensci/software-review/issues/287)
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
 [![Downloads](https://cranlogs.r-pkg.org/badges/MtreeRing)](https://CRAN.R-project.org/package=MtreeRing)
 
