@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 <!--pkg badges-->
 [![TravisCI Build Status](https://travis-ci.org/ropensci/MtreeRing.svg?branch=master)](https://travis-ci.org/ropensci/MtreeRing.svg?branch=master)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ropensci/MtreeRing?branch=master&svg=true)](https://ci.appveyor.com/project/JingningShi/mtreering-n021j)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ropensci/MtreeRing?branch=master&svg=true)](https://ci.appveyor.com/project/JingningShi/mtreering)
 [![codecov](https://codecov.io/gh/ropensci/MtreeRing/branch/master/graphs/badge.svg)](https://codecov.io/gh/ropensci/MtreeRing)
 [![](https://badges.ropensci.org/287_status.svg)](https://github.com/ropensci/software-review/issues/287)
 [![cran checks](https://cranchecks.info/badges/worst/MtreeRing)](https://cranchecks.info/pkgs/MtreeRing)
