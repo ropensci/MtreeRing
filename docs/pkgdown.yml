@@ -6,6 +6,6 @@ articles:
   detection-MtreeRing: detection-MtreeRing.html
   pith-MtreeRing: pith-MtreeRing.html
 urls:
-  reference: https://github.com/JingningShi/MtreeRing/reference
-  article: https://github.com/JingningShi/MtreeRing/articles
+  reference: https://github.com/ropensci/MtreeRing/reference
+  article: https://github.com/ropensci/MtreeRing/articles
 
