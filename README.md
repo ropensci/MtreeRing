@@ -32,7 +32,7 @@ or the development version from GitHub
 
 ```r
 # install.packages("devtools")
-devtools::install_github("JingningShi/MtreeRing")
+devtools::install_github("ropensci/MtreeRing")
 ```
 
 ## Ring-width measurement
