@@ -109,14 +109,14 @@ t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_rea
 <span class="co"># Assume that the wood sample misses the pith</span>
 t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pith_measure.html">pith_measure</a></span>(<span class="dt">ring.data =</span> t1, <span class="dt">inner.arc =</span> <span class="ot">TRUE</span>, <span class="dt">last.yr =</span> <span class="dv">2016</span>)</code></pre></div>
 <p>Once you call <code>pith_measure</code>, you are prompted to add a path. You need to click on the image once, then a horizontal dashed line passing through the mouse cursor will be plotted. The path should traverse an appropriate arc (read the reference for more details). See this example.</p>
-<p><img src="img/pith1.png" width="95%" height="95%"></p>
+<p><img src="../../vignettes/img/pith1.png" width="95%" height="95%"></p>
 </div>
 <div id="locate-the-missing-pith" class="section level2">
 <h2 class="hasAnchor">
 <a href="#locate-the-missing-pith" class="anchor"></a>2. Locate the missing pith</h2>
 <p>After creating the path, you are prompted to add three points. Every click draws a point. These points are used to locate the missing pith. The first point should be placed on the left endpoint of the arc, and the second point is placed on the right endpoint.</p>
 <p>After adding these two points, a vertical dashed line will be plotted automatically according to the (x,y) positions of endpoints you just added. The third points should be placed on the intersection of the vertical dashed line and the selected arc. See this example.</p>
-<p><img src="img/pith2.png" width="95%" height="95%"></p>
+<p><img src="../../vignettes/img/pith2.png" width="95%" height="95%"></p>
 </div>
 <div id="mark-tree-rings-along-the-path" class="section level2">
 <h2 class="hasAnchor">
@@ -127,7 +127,7 @@ t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pith_mea
 <li><p>On the MacOS system, you can press the <strong>Escape</strong> key to terminate the identification process</p></li>
 </ol>
 <p>Note that the left endpoint of the arc will be considered as the last ring border without the need to mark it. Once you terminate the identification process, ring borders will be tagged with years or border numbers.</p>
-<p><img src="img/pith3.png" width="95%" height="95%"></p>
+<p><img src="../../vignettes/img/pith3.png" width="95%" height="95%"></p>
 <p>The measurements units are millimeters. Let’s look at what we get:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(t2)
   year original.width corrected.width
