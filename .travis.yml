@@ -1,19 +1,23 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: r
+os:
+  - linux
 r:
   - release
   - devel 
-r_check_args: '--ignore-vignettes'
-r_build_args: '--no-build-vignettes'
+
+before_install:
+  - sudo apt-get install -y libmagick++-dev
+  - sudo add-apt-repository -y ppa:opencpu/imagemagick
+  - sudo apt-get update
+  - sudo apt-get install -y libmagick++-dev  
 
 r_packages:
   - covr
   - mockery
   - shinytest
   - testthat
-  - magick
-  - imager
 addons:
   apt:
     packages:
