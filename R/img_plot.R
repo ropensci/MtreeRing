@@ -126,6 +126,7 @@ two_paths_plot <- function(ring.data, bor.u, bor.l, x.left, x.right,
   seg.device.number <- vector(length = 0)  
   for (i in 1:seg) {
     dev.new()
+    if (names(dev.cur()) == "RStudioGD") dev.new()
     bor.list.u <- seg.lbl.u$bor.list[[i]]
     rw.list.u <- seg.lbl.u$rw.list[[i]]
     yr.list.u <- seg.lbl.u$yr.list[[i]]
@@ -181,6 +182,7 @@ single_path_plot <- function(ring.data, bor.col, x.left, x.right, seg,
   seg.device.number <- vector(length = 0)  
   for (i in 1:seg) {
     dev.new()
+    if (names(dev.cur()) == "RStudioGD") dev.new()
     bor.list <- segmented.label.list$bor.list[[i]]
     rw.list <- segmented.label.list$rw.list[[i]]
     yr.list <- segmented.label.list$yr.list[[i]]
