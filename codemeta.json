@@ -143,11 +143,11 @@
     }
   ],
   "readme": "https://github.com/ropensci/MtreeRing/blob/master/README.md",
-  "fileSize": "22396.57KB",
+  "fileSize": "22396.559KB",
   "contIntegration": [
-    "https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master",
+    "https://travis-ci.org/ropensci/MtreeRing.svg?branch=master",
     "https://ci.appveyor.com/project/JingningShi/mtreering/branch/master",
-    "https://codecov.io/gh/JingningShi/MtreeRing"
+    "https://codecov.io/gh/ropensci/MtreeRing"
   ],
-  "releaseNotes": "https://github.com/JingningShi/MtreeRing/blob/master/NEWS.md"
+  "releaseNotes": "https://github.com/ropensci/MtreeRing/blob/master/NEWS.md"
 }
