@@ -1,0 +1,45 @@
+title: MtreeRing
+url: https://github.com/ropensci/MtreeRing
+
+navbar:
+  structure:
+    left:
+    - home
+    - intro
+    - reference
+    - articles
+    - tutorials
+    - news
+    right: github
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: A Simple Workflow for Shiny App
+        href: articles/app-MtreeRing.html
+      - text: 'MtreeRing: Measuring Tree Ring Width in R'
+        href: articles/detection-MtreeRing.html
+      - text: Measure Tree Rings on Pith Side
+        href: articles/pith-MtreeRing.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/JingningShi/MtreeRing
+
+reference:
+- title: All functions
+  desc: ~
+  contents:
+  - '`MtreeRing-package`'
+  - '`pith_measure`'
+  - '`ring_app_launch`'
+  - '`ring_calculate`'
+  - '`ring_detect`'
+  - '`ring_modify`'
+  - '`ring_read`'
+
