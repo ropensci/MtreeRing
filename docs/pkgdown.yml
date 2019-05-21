@@ -5,4 +5,7 @@ articles:
   app-MtreeRing: app-MtreeRing.html
   detection-MtreeRing: detection-MtreeRing.html
   pith-MtreeRing: pith-MtreeRing.html
+urls:
+  reference: https://github.com/JingningShi/MtreeRing/reference
+  article: https://github.com/JingningShi/MtreeRing/articles
 

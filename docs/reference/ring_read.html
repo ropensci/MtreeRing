@@ -33,7 +33,7 @@
 <meta property="og:title" content="Read and plot a tree-ring image file — ring_read" />
 
 <meta property="og:description" content="This function can read an image file from the hard disk and 
-plot it in a newly-opened graphical device." />
+plot it in a newly-opened graphics device." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@ plot it in a newly-opened graphical device." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ plot it in a newly-opened graphical device." />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -119,19 +122,19 @@ plot it in a newly-opened graphical device." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Read and plot a tree-ring image file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/JingningShi/MtreeRing/blob/master/R/ring_read.R'><code>R/ring_read.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/MtreeRing/blob/master/R/ring_read.R'><code>R/ring_read.R</code></a></small>
     <div class="hidden name"><code>ring_read.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
     <p>This function can read an image file from the hard disk and 
-plot it in a newly-opened graphical device.</p>
+plot it in a newly-opened graphics device.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>ring_read</span>(<span class='no'>img</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>RGB</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.299</span>, <span class='fl'>0.587</span>, <span class='fl'>0.114</span>), <span class='kw'>rotate</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>magick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>ring_read</span>(<span class='no'>img</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>RGB</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.299</span>, <span class='fl'>0.587</span>, <span class='fl'>0.114</span>),
+  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rotate</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>magick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,6 +154,12 @@ Supported formats include png, tiff, jpg and bmp.</p></td>
       <td><p>A numeric vector of length 3 giving the weight of RGB channels.</p></td>
     </tr>
     <tr>
+      <th>plot</th>
+      <td><p>A logical value indicating whether to plot the tree ring image 
+when reading it. If <code>FALSE</code>, the image is not plotted until
+function <code><a href='ring_detect.html'>ring_detect</a></code> or <code><a href='pith_measure.html'>pith_measure</a></code> is called.</p></td>
+    </tr>
+    <tr>
       <th>rotate</th>
       <td><p>An integer specifying how many degrees to rotate (clockwise). 
 It requires one of the following values:
@@ -158,8 +167,10 @@ It requires one of the following values:
     </tr>
     <tr>
       <th>magick</th>
-      <td><p>A logical value. If <code>TRUE</code>, the package <code>magick</code> 
-is used to read the image file whose size is over 10MB.</p></td>
+      <td><p>A logical value. If <code>TRUE</code>, <code>magick</code> is used to
+read the image file whose size is over 10MB. If <code>FALSE</code>,
+packages <code>png</code>, <code>jpg</code> and <code>tiff</code> are used instead.
+See details below.</p></td>
     </tr>
     </table>
     
@@ -173,17 +184,22 @@ is used to read the image file whose size is over 10MB.</p></td>
 ring widths. A tree-ring image should not contain irrelevant or redundant 
 features, such as wooden mounts where cores are glued. The larger the file 
 size of an image, the slower the image processing operation will be.</p>
-<p><b>Pith side</b> of the sample should be placed on the <b>right side</b> of 
-the graphical window. Use the argument <code>rotate</code> to change its position.</p>
+<p><b>Pith side</b> of a wood sample should be placed on the <b>right side</b> 
+of a graphics window. Use <code>rotate</code> to change its position.</p>
 <p>It is highly recommended to use the default value <code>magick = TRUE</code>, 
-because the package <code>magick</code> can significantly reduce the memory usage.</p>
+because the package <code>magick</code> can significantly reduce the memory usage
+when reading a large file.
+In a few cases where image data is stored in a non-standard format, 
+<code>magick</code> may return an error when reading files. 
+If <code>ring_read</code> fails reading a large file,
+you can set <code>magick = FALSE</code> to avoid the use of <code>magick</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>img.path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"001.png"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MtreeRing"</span>)
 
 <span class='co'>## Read and plot the image:</span>
-<span class='no'>t1</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_read</span>(<span class='kw'>img</span> <span class='kw'>=</span> <span class='no'>img.path</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>1200</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots23.pdf")</span></div></pre>
+<span class='no'>t1</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_read</span>(<span class='kw'>img</span> <span class='kw'>=</span> <span class='no'>img.path</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>1200</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots43.pdf")</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

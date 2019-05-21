@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,7 +91,7 @@
             
             <h4 class="date">2019-05-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/JingningShi/MtreeRing/blob/master/vignettes/detection-MtreeRing.Rmd"><code>vignettes/detection-MtreeRing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/MtreeRing/blob/master/vignettes/detection-MtreeRing.Rmd"><code>vignettes/detection-MtreeRing.Rmd</code></a></small>
       <div class="hidden name"><code>detection-MtreeRing.Rmd</code></div>
 
     </div>
@@ -102,7 +105,7 @@
 <a href="#read-and-plot-a-tree-ring-image" class="anchor"></a>1. Read and plot a tree ring image</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(MtreeRing)
 img.name &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"001.png"</span>, <span class="dt">package =</span> <span class="st">"MtreeRing"</span>)
-t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_read.html">ring_read</a></span>(<span class="dt">img =</span> img.name, <span class="dt">dpi =</span> <span class="dv">1200</span>)</code></pre></div>
+t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_read.html">ring_read</a></span>(<span class="dt">img =</span> img.name, <span class="dt">dpi =</span> <span class="dv">1200</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><code>ring_read</code> supports commonly used image formats, including png, tiff, jpg and bmp.</p>
 </div>
 <div id="detect-ring-borders" class="section level2">
@@ -113,7 +116,7 @@ t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_rea
 ## get better display performance and use the
 ## watershed algorithm to detect ring borders:
 t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_detect.html">ring_detect</a></span>(<span class="dt">ring.data =</span> t1, <span class="dt">auto.path =</span> <span class="ot">TRUE</span>, <span class="dt">seg =</span> <span class="dv">2</span>, <span class="dt">method =</span> <span class="st">'watershed'</span>)</code></pre></div>
-<p>If <code>auto.path = TRUE</code>, the function will create a path at the center of the image. In the current version, the path is a horizontal dashed line. Detected ring borders are placed along the path, and are tagged with years and border numbers.</p>
+<p>If <code>auto.path = TRUE</code>, <code>ring_detect</code> will create a path at the center of the image. In the current version, the path is a horizontal dashed line. Detected ring borders are placed along the path, and are tagged with years and border numbers.</p>
 <p><img src="img/single_path.png" width="85%" height="85%"></p>
 <p>For increment cores with inclined rings, you can create two paths by setting <code>incline = TRUE</code>. The distance between adjacent rings and orientation of ring borders are used to correct the ring-width series.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">img.name &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"incline.png"</span>, <span class="dt">package =</span> <span class="st">"MtreeRing"</span>)
@@ -137,8 +140,16 @@ t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_mod
 <div id="add-tree-rings" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-tree-rings" class="anchor"></a>3.2 Add tree rings</h3>
-<p>We have just removed 4 ring borders, now re-add these borders by left-clicking on the image. See function’s help for more details about mouse clicks.</p>
+<p>We have just removed 4 ring borders, now re-add these borders by left-clicking on the image.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_modify.html">ring_modify</a></span>(<span class="dt">ring.data =</span> t2, <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>If <code>add = TRUE</code>, graphics windows opened by <code>ring_detect</code> will be activated sequentially. When a graphics window is activated, you can add new borders by left-clicking the mouse along the path. Every click draws a point representing the ring border. The identification process does not automatically stop by itself.</p>
+<ol style="list-style-type: decimal">
+<li><p>On the Windows system, the identification process can be terminated by pressing the right mouse button and selecting <strong>Stop</strong> from the menu.</p></li>
+<li><p>On the MacOS system, for a X11 device the identification process is terminated by pressing any mouse button other than the first, and for a quartz device this process is terminated by pressing the <strong>ESC</strong> key.</p></li>
+</ol>
+<p>Once you terminate an identification process, the current graphics window will be closed automatically, and the graphics window of the following segment is activated.</p>
+<p>Here is an example of adding ring borders on Windows system:</p>
+<p><img src="img/Ring_modify_add.gif" width="95%" height="95%"></p>
 </div>
 </div>
 <div id="calculate-ring-width-series" class="section level2">

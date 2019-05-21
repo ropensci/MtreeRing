@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Automatic detection of tree-ring boundaries — ring_detect • MtreeRing</title>
+<title>Automatic detection of tree-ring borders — ring_detect • MtreeRing</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Automatic detection of tree-ring boundaries — ring_detect" />
+<meta property="og:title" content="Automatic detection of tree-ring borders — ring_detect" />
 
-<meta property="og:description" content="This function is used to automatically detect tree-ring 
-boundaries along the user-defined path." />
+<meta property="og:description" content="This function is used to automatically detect tree ring 
+borders along the user-defined path." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@ boundaries along the user-defined path." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ boundaries along the user-defined path." />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -118,15 +121,15 @@ boundaries along the user-defined path." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Automatic detection of tree-ring boundaries</h1>
-    <small class="dont-index">Source: <a href='https://github.com/JingningShi/MtreeRing/blob/master/R/ring_detect.R'><code>R/ring_detect.R</code></a></small>
+    <h1>Automatic detection of tree-ring borders</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/MtreeRing/blob/master/R/ring_detect.R'><code>R/ring_detect.R</code></a></small>
     <div class="hidden name"><code>ring_detect.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function is used to automatically detect tree-ring 
-boundaries along the user-defined path.</p>
+    <p>This function is used to automatically detect tree ring 
+borders along the user-defined path.</p>
     
     </div>
 
@@ -160,8 +163,9 @@ See details below.</p></td>
     <tr>
       <th>manual</th>
       <td><p>A logical value indicating whether to skip the automatic 
-detection. If <code>TRUE</code>, ring boundaries are visually identified using 
-the function <code><a href='ring_modify.html'>ring_modify</a></code>.</p></td>
+detection. If <code>TRUE</code>, ring borders are visually identified after 
+creating the path. See <code><a href='ring_modify.html'>ring_modify</a></code> to learn how to mark
+tree rings by clicking on the image.</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -271,10 +275,10 @@ representing the tree-ring image.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If <code>auto.path = FALSE</code>, the user can create a rectangular sub-image 
-and a horizontal path by interactively clicking on the tree-ring image. 
-The automatic detection will be performed within the rectangular 
-sub-image along a pre-determined path. 
-To create the sub-image and the path, follow these steps.</p><ul>
+and a horizontal path by interactively clicking on the tree ring image. 
+The automatic detection will be performed within this rectangular 
+sub-image. 
+To create a sub-image and a path, follow these steps.</p><ul>
 <li><p>Step 1. Select the left and right edges of the rectangle</p>  
 <p>If <code>partial.rings = TRUE</code>, the user can point the mouse at any 
   desired locations and click the left mouse button to add each edge.</p>  
@@ -295,8 +299,8 @@ To create the sub-image and the path, follow these steps.</p><ul>
   two paths are added simultaneously.</p></li>
 </ul>
     <p>After creating the sub-image and the path, this function will open several 
-graphical windows and plot detected ring borders on image segments. The 
-number of image segments is controlled by argument <code>seg</code> (see above).</p>
+graphics windows and plot detected ring borders on image segments. The 
+number of image segments is controlled by the argument <code>seg</code>.</p>
 <p>Argument <code>method</code> determines how ring borders are identified.</p><ul>
 <li><p>If <code>method = "watershed"</code>, this function uses the watershed algorithm 
   to obtain ring borders (Soille and Misson, 2001).</p></li>
@@ -311,13 +315,13 @@ image is processed by morphological openings and closings using rectangular
 structuring elements of increasing size before detecting borders. The first 
 small structuring element is used to remove smaller dark spots in early 
 wood regions, and the second large structuring element is used to remove 
-light strips in late wood regions. More details can be found at 
-Soille and Misson (2001).</p>
+light strips in late wood regions. More details about morphological 
+processing can be found at Soille and Misson (2001).</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This function uses the function <code><a href='https://www.rdocumentation.org/packages/graphics/topics/locator'>locator</a></code> to record mouse 
-positions so it only works on "X11", "windows" and "quartz".</p>
+    <p>This function uses <code><a href='https://www.rdocumentation.org/packages/graphics/topics/locator'>locator</a></code> to record mouse 
+positions so it only works on "X11", "windows" and "quartz" devices.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -334,12 +338,14 @@ measuRing: An R package to measure tree-ring widths from scanned images.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>img.path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"001.png"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MtreeRing"</span>)
 
-<span class='co'>## Read and plot the image:</span>
-<span class='no'>t1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_read.html'>ring_read</a></span>(<span class='kw'>img</span> <span class='kw'>=</span> <span class='no'>img.path</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>1200</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots10.pdf")</span></div><div class='input'>
+<span class='co'>## Read a tree ring image:</span>
+<span class='no'>t1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_read.html'>ring_read</a></span>(<span class='kw'>img</span> <span class='kw'>=</span> <span class='no'>img.path</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>1200</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
 <span class='co'>## Split a long core sample into 3 pieces to</span>
 <span class='co'>## get better display performance and use the</span>
 <span class='co'>## watershed algorithm to detect ring borders:</span>
-<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_detect</span>(<span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>, <span class='kw'>border.color</span> <span class='kw'>=</span> <span class='st'>'green'</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots11.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots12.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots13.pdf")</span></div></pre>
+<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_detect</span>(<span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>, <span class='kw'>border.color</span> <span class='kw'>=</span> <span class='st'>'green'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots32.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots33.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots34.pdf")</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

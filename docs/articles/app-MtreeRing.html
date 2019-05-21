@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,7 +91,7 @@
             
             <h4 class="date">2019-05-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/JingningShi/MtreeRing/blob/master/vignettes/app-MtreeRing.Rmd"><code>vignettes/app-MtreeRing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/MtreeRing/blob/master/vignettes/app-MtreeRing.Rmd"><code>vignettes/app-MtreeRing.Rmd</code></a></small>
       <div class="hidden name"><code>app-MtreeRing.Rmd</code></div>
 
     </div>
@@ -102,11 +105,18 @@
 <h2 class="hasAnchor">
 <a href="#image-upload" class="anchor"></a>1. Image upload</h2>
 <p>Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named <code>001.png</code>, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (<a href="https://github.com/JingningShi/MtreeRing/raw/master/inst/001.png" class="uri">https://github.com/JingningShi/MtreeRing/raw/master/inst/001.png</a>). In the following sections, this image is used to demonstrate the ring-width measurement.</p>
+<p>You can upload an image with the following steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>When you start the app, click on the <strong>Image Loading</strong> button in the sidebar (This is the default mode. In most cases, you do not need to do this).</p></li>
+<li><p>Click on the <strong>Browse…</strong> button in the <strong>Image Upload</strong> window.</p></li>
+<li><p>Choose an image from hard disk.</p></li>
+<li><p>Click on the <strong>Load</strong> button.</p></li>
+</ol>
 </div>
 <div id="path-creation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#path-creation" class="anchor"></a>2. Path creation</h2>
-<p>After image loading, you can click on the “<strong>Measurement</strong>” button in the sidebar, and it switches content in the main body. The new page has two graphical windows, named <strong>Tree Ring Detection</strong> and <strong>Tree Ring Editing</strong>. These two graphical windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.</p>
+<p>After image uploading, you can click on the <strong>Measurement</strong> button in the sidebar, and it switches content in the main body. The new page has two graphics windows, named <strong>Tree Ring Detection</strong> and <strong>Tree Ring Editing</strong>. These two graphics windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.</p>
 <p>A path creation consists of the following steps:</p>
 <ol style="list-style-type: decimal">
 <li><p>Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.</p></li>
@@ -119,7 +129,7 @@
 <div id="ring-detection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ring-detection" class="anchor"></a>3. Ring detection</h2>
-<p>Let’s start by introducing a new action. The Shiny-based app provides a mouse event, called “<strong>brush</strong>”. You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphical window. This action will create a blue rectangle. Here is an example of <strong>brush</strong>.</p>
+<p>Let’s start by introducing a new action. The Shiny-based app provides a mouse event, called “<strong>brush</strong>”. You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of <strong>brush</strong>.</p>
 <p><img src="img/Brush2.gif" width="60%" height="60%"></p>
 <p>If ring borders are clearly visible, follow the steps below to detect tree rings:</p>
 <ol style="list-style-type: decimal">
@@ -127,7 +137,7 @@
 <p>Click on the “<strong>Automation</strong>” button (if this button is not selected).</p>
 <p>After clicking on this button, <code>MtreeRing</code> will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.</p>
 </li>
-<li><p>Create a blue rectangle mentioned above in the first graphical window (<strong>Tree Ring Detection</strong>) by brushing.</p></li>
+<li><p>Create a blue rectangle mentioned above in the first graphics window (<strong>Tree Ring Detection</strong>) by brushing.</p></li>
 <li>
 <p>Click on the green “<strong>Run Detection</strong>” button.</p>
 <p>The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process.</p>
@@ -139,8 +149,8 @@
 <div id="edit-tree-rings" class="section level2">
 <h2 class="hasAnchor">
 <a href="#edit-tree-rings" class="anchor"></a>4. Edit tree rings</h2>
-<p>If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphical window (<strong>Tree Ring Editing</strong>) is used to add (remove) tree ring borders to (from) the image.</p>
-<p>You may have noticed that the graphical windows <strong>Tree Ring Editing</strong> has no image. To generate a zoomed-in image in this windows, follow these steps:</p>
+<p>If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphics window (<strong>Tree Ring Editing</strong>) is used to add (remove) tree ring borders to (from) the image.</p>
+<p>You may have noticed that the graphics windows <strong>Tree Ring Editing</strong> has no image. To generate a zoomed-in image in this windows, follow these steps:</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a blue rectangle in the <strong>Tree Ring Detection</strong> by brushing.</p></li>
 <li><p><strong>Double click</strong> on this rectangle, or Click on the blue “<strong>Create Sub-image</strong>” button below.</p></li>

@@ -64,7 +64,7 @@ web browser." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ web browser." />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -119,7 +122,7 @@ web browser." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Run Shiny-based Application</h1>
-    <small class="dont-index">Source: <a href='https://github.com/JingningShi/MtreeRing/blob/master/R/ring_app_launch.R'><code>R/ring_app_launch.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/MtreeRing/blob/master/R/ring_app_launch.R'><code>R/ring_app_launch.R</code></a></small>
     <div class="hidden name"><code>ring_app_launch.Rd</code></div>
     </div>
 
@@ -137,14 +140,19 @@ web browser.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>launch.browser</th>
-      <td><p>A logical value. If <code>TRUE</code>, the system's default 
-web browser will be launched automatically after the app is started.</p></td>
+      <td><p>A logical value. 
+If <code>FALSE</code>, a built-in browser will be launched automatically 
+after the app is started. If <code>TRUE</code>, the system's default 
+web browser is used instead. This argument only works for RStudio.
+See details below.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A workflow for the Shiny app can be found in the package vignette. 
+    <p><code>launch.browser = FALSE</code> is not recommended, as the file renaming
+does not work on the RStudio built-in browser when saving the data.</p>
+<p>A workflow for the Shiny app can be found in the package vignette. 
 Type <code><a href='../articles/app-MtreeRing.html'>vignette('app-MtreeRing')</a></code> to learn how to use the app. Most
 steps are demonstrated with a gif to make the workflow more understandable.</p>
 <p>To stop the app, go to the R console and press the Escape key. 

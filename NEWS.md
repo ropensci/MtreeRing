@@ -1,3 +1,6 @@
+MtreeRing News
+=======
+
 ### MtreeRing 1.3 (2019-05-20)
 - Add a NEWS.md file to track changes
 - Add CODE_OF_CONDUCT.md

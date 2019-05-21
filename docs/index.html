@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -92,7 +95,7 @@
 <!--require(knitr);require(markdown);knit("README.Rmd")-->
 <p><strong>Authors:</strong> <a href="https://www.researchgate.net/profile/Jingning_Shi">Jingning Shi</a>, <a href="https://www.researchgate.net/profile/Wei_Xiang15">Wei Xiang</a><br><strong>License:</strong> <a href="https://cran.r-project.org/web/licenses/GPL-3">GPL3</a></p>
 <!--pkg badges-->
-<p><a href="https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master"><img src="https://travis-ci.org/JingningShi/MtreeRing.svg?branch=master" alt="TravisCI Build Status"></a> <a href="https://ci.appveyor.com/project/JingningShi/mtreering/branch/master"><img src="https://ci.appveyor.com/api/projects/status/3iwxn4euvmw2fd6e/branch/master?svg=true" alt="AppVeyor Build Status"></a> <a href="https://codecov.io/gh/JingningShi/MtreeRing"><img src="https://codecov.io/gh/JingningShi/MtreeRing/branch/master/graphs/badge.svg" alt="codecov"></a> <a href="https://github.com/ropensci/software-review/issues/287"><img src="https://badges.ropensci.org/284_status.svg"></a> <a href="https://cranchecks.info/pkgs/MtreeRing"><img src="https://cranchecks.info/badges/worst/MtreeRing" alt="cran checks"></a> <a href="https://CRAN.R-project.org/package=MtreeRing"><img src="https://cranlogs.r-pkg.org/badges/MtreeRing" alt="Downloads"></a></p>
+<p><a href="https://travis-ci.org/ropensci/MtreeRing.svg?branch=master"><img src="https://travis-ci.org/ropensci/MtreeRing.svg?branch=master" alt="TravisCI Build Status"></a> <a href="https://ci.appveyor.com/project/JingningShi/MtreeRing"><img src="https://ci.appveyor.com/api/projects/status/cti7i110hecl8kpf?svg=true" alt="AppVeyor Build Status"></a> <a href="https://codecov.io/github/ropensci/MtreeRing?branch=master"><img src="https://codecov.io/github/ropensci/MtreeRing/coverage.svg?branch=master" alt="codecov"></a> <a href="https://github.com/ropensci/software-review/issues/287"><img src="https://badges.ropensci.org/287_status.svg" alt="ropensci"></a> <a href="https://cranchecks.info/pkgs/MtreeRing"><img src="https://cranchecks.info/badges/worst/MtreeRing" alt="cran checks"></a> <a href="https://CRAN.R-project.org/package=MtreeRing"><img src="https://cranlogs.r-pkg.org/badges/MtreeRing" alt="Downloads"></a></p>
 <p><code>MtreeRing</code> is a tool for automatically measuring tree-ring width using image processing techniques.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -101,23 +104,23 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"MtreeRing"</span>)</code></pre></div>
 <p>or the development version from GitHub</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"JingningShi/MtreeRing"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"ropensci/MtreeRing"</span>)</code></pre></div>
 </div>
-<div id="utilities" class="section level2">
+<div id="ring-width-measurement" class="section level2">
 <h2 class="hasAnchor">
-<a href="#utilities" class="anchor"></a>Utilities</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(MtreeRing)</code></pre></div>
+<a href="#ring-width-measurement" class="anchor"></a>Ring-width measurement</h2>
 <div id="read-an-image" class="section level3">
 <h3 class="hasAnchor">
-<a href="#read-an-image" class="anchor"></a>Read an image</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Read and plot a tree ring image
+<a href="#read-an-image" class="anchor"></a>1. Read an image</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(MtreeRing)
+## Read and plot a tree ring image
 img.name &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"001.png"</span>, <span class="dt">package =</span> <span class="st">"MtreeRing"</span>)
-t1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/ring_read.html">ring_read</a></span>(<span class="dt">img =</span> img.name, <span class="dt">dpi =</span> <span class="dv">1200</span>)</code></pre></div>
+t1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/ring_read.html">ring_read</a></span>(<span class="dt">img =</span> img.name, <span class="dt">dpi =</span> <span class="dv">1200</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><code>ring_read</code> supports commonly used image formats, including png, tiff, jpg and bmp.</p>
 </div>
 <div id="detect-ring-borders" class="section level3">
 <h3 class="hasAnchor">
-<a href="#detect-ring-borders" class="anchor"></a>Detect ring borders</h3>
+<a href="#detect-ring-borders" class="anchor"></a>2. Detect ring borders</h3>
 <p>After plotting the image, the automatic detection of ring borders can be performed using three alternative methods: (1) watershed algorithm; (2) Canny edge detector; (3) a linear detection algorithm from R package <a href="https://CRAN.R-project.org/package=measuRing">measuRing</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Split a long core sample into 2 pieces to
 ## get better display performance and use the
@@ -129,6 +132,15 @@ t2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/ring_detect
 <center>
 Figure 1. The automatic detection of ring borders
 </center>
+</div>
+<div id="calculate-ring-width-series" class="section level3">
+<h3 class="hasAnchor">
+<a href="#calculate-ring-width-series" class="anchor"></a>3. Calculate ring-width series</h3>
+<p>If all ring borders are correctly identified, you can generate a ring-width series in data frame format. Use <code>write.rwl</code> to export the ring-width series to an rwl file.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rw.df &lt;-<span class="st"> </span><span class="kw"><a href="reference/ring_calculate.html">ring_calculate</a></span>(<span class="dt">ring.data =</span> t2, <span class="dt">seriesID =</span> <span class="st">"940220"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplR) <span class="co"># A dendrochronological analysis package</span>
+fn &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempfile</a></span>(<span class="dt">fileext=</span><span class="st">".rwl"</span>)
+<span class="kw">write.rwl</span>(<span class="dt">rwl.df =</span> rw.df, <span class="dt">fname =</span> fn, <span class="dt">format =</span> <span class="st">"tucson"</span>)</code></pre></div>
 </div>
 </div>
 <div id="shiny-application" class="section level2">
@@ -154,6 +166,7 @@ Figure 1. The automatic detection of ring borders
 <h2 class="hasAnchor">
 <a href="#code-of-conduct" class="anchor"></a>Code of conduct</h2>
 <p>Please note that the ‘MtreeRing’ project is released with a <a href="CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+<p><a href="https://ropensci.org"><img src="https://ropensci.org/public_images/ropensci_footer.png" alt="ropensci_footer"></a></p>
 </div>
 </div>
   </div>
@@ -164,9 +177,9 @@ Figure 1. The automatic detection of ring borders
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=MtreeRing">https://​cloud.r-project.org/​package=MtreeRing</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/JingningShi/MtreeRing">https://​github.com/​JingningShi/​MtreeRing</a>
+<li>Browse source code at <br><a href="https://github.com/ropensci/MtreeRing">https://​github.com/​ropensci/​MtreeRing</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/JingningShi/MtreeRing/issues">https://​github.com/​JingningShi/​MtreeRing/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/ropensci/MtreeRing/issues">https://​github.com/​ropensci/​MtreeRing/​issues</a>
 </li>
 </ul>
 </div>

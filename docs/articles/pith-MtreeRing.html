@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,7 +91,7 @@
             
             <h4 class="date">2019-05-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/JingningShi/MtreeRing/blob/master/vignettes/pith-MtreeRing.Rmd"><code>vignettes/pith-MtreeRing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/MtreeRing/blob/master/vignettes/pith-MtreeRing.Rmd"><code>vignettes/pith-MtreeRing.Rmd</code></a></small>
       <div class="hidden name"><code>pith-MtreeRing.Rmd</code></div>
 
     </div>
@@ -97,7 +100,7 @@
     
 <!--require(knitr);require(markdown);knit("MtreeRing_vignette.Rmd")-->
 <p>It is common for increment cores to miss the pith. Under such conditions, errors associated with inclined rings can be corrected using the arcs of the inner-rings (Duncan, 1989).</p>
-<p>For wood samples with missing pith, the function <code>pith_measure</code> is used to estimate the position of missing pith and measure tree rings on the pith side. It is <strong>strongly recommended</strong> to read reference above to get a better understanding of the <code>pith_measure</code>. The procedure of ring-width correction consists of the following steps：</p>
+<p>For wood samples with missing pith, the function <code>pith_measure</code> is used to estimate the position of missing pith and measure tree rings on the pith side. It is <strong>strongly recommended</strong> to read reference below to get a better understanding of <code>pith_measure</code>. The procedure of ring-width correction consists of the following steps：</p>
 <div id="add-a-path" class="section level2">
 <h2 class="hasAnchor">
 <a href="#add-a-path" class="anchor"></a>1. Add a path</h2>
@@ -105,22 +108,34 @@
 t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_read.html">ring_read</a></span>(<span class="dt">img =</span> img.name, <span class="dt">dpi =</span> <span class="dv">1200</span>)
 <span class="co"># Assume that the wood sample misses the pith</span>
 t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pith_measure.html">pith_measure</a></span>(<span class="dt">ring.data =</span> t1, <span class="dt">inner.arc =</span> <span class="ot">TRUE</span>, <span class="dt">last.yr =</span> <span class="dv">2016</span>)</code></pre></div>
-<p>Once you run the third command, <code>pith_measure</code> will prompt you to add a path. The path should traverse an appropriate arc (read the reference for more details). See this example.</p>
+<p>Once you call <code>pith_measure</code>, you are prompted to add a path. You need to click on the image once, then a horizontal dashed line passing through the mouse cursor will be plotted. The path should traverse an appropriate arc (read the reference for more details). See this example.</p>
 <p><img src="img/pith1.png" width="95%" height="95%"></p>
 </div>
 <div id="locate-the-missing-pith" class="section level2">
 <h2 class="hasAnchor">
 <a href="#locate-the-missing-pith" class="anchor"></a>2. Locate the missing pith</h2>
-<p>After adding the path, you will be prompted to add three points. These points are used to locate the missing pith. The first point should be placed on the left endpoint of the arc, and the second point is placed on the right endpoint.</p>
-<p>After adding the first two points, a vertical dashed line will be plotted automatically according to the (x,y) positions of endpoints you just added. The third points should be placed on the intersection of the vertical dashed line and the selected arc. See this example.</p>
+<p>After creating the path, you are prompted to add three points. Every click draws a point. These points are used to locate the missing pith. The first point should be placed on the left endpoint of the arc, and the second point is placed on the right endpoint.</p>
+<p>After adding these two points, a vertical dashed line will be plotted automatically according to the (x,y) positions of endpoints you just added. The third points should be placed on the intersection of the vertical dashed line and the selected arc. See this example.</p>
 <p><img src="img/pith2.png" width="95%" height="95%"></p>
 </div>
 <div id="mark-tree-rings-along-the-path" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mark-tree-rings-along-the-path" class="anchor"></a>3. Mark tree rings along the path</h2>
-<p>You will be prompted to mark tree rings along the path. The termination of identification process depends on the R version. For example, if you run <code>pith_measure</code> on a Windows PC, the identification process can be terminated by clicking the second button and selecting ‘Stop’ from the menu.</p>
-<p>Note that the left endpoint of the arc will be considered as the last ring border without the need to mark it.</p>
+<p>You will be prompted to mark tree rings along the path by left-clicking on the image. Every click draws a point. The identification process does not automatically stop by itself. The termination of identification process depends on the R version.</p>
+<ol style="list-style-type: decimal">
+<li><p>On the Windows platform, the identification process can be terminated by clicking the second button and selecting ‘Stop’ from the menu.</p></li>
+<li><p>On the MacOS system, you can press the <strong>Escape</strong> key to terminate the identification process</p></li>
+</ol>
+<p>Note that the left endpoint of the arc will be considered as the last ring border without the need to mark it. Once you terminate the identification process, ring borders will be tagged with years or border numbers.</p>
 <p><img src="img/pith3.png" width="95%" height="95%"></p>
+<p>The measurements units are millimeters. Let’s look at what we get:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(t2)
+  year original.width corrected.width
+<span class="dv">1</span> <span class="dv">2015</span>           <span class="fl">1.57</span>            <span class="fl">1.54</span>
+<span class="dv">2</span> <span class="dv">2014</span>           <span class="fl">1.17</span>            <span class="fl">1.14</span>
+<span class="dv">3</span> <span class="dv">2013</span>           <span class="fl">1.72</span>            <span class="fl">1.65</span>
+<span class="dv">4</span> <span class="dv">2012</span>           <span class="fl">2.05</span>            <span class="fl">1.90</span>
+<span class="dv">5</span> <span class="dv">2011</span>           <span class="fl">1.70</span>            <span class="fl">1.45</span></code></pre></div>
 </div>
 <div id="reference" class="section level2">
 <h2 class="hasAnchor">

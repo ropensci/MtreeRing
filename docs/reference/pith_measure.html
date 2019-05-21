@@ -64,7 +64,7 @@ using arcs of inner rings." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ using arcs of inner rings." />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -119,7 +122,7 @@ using arcs of inner rings." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calibrate ring-width series</h1>
-    <small class="dont-index">Source: <a href='https://github.com/JingningShi/MtreeRing/blob/master/R/pith_measure.R'><code>R/pith_measure.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/MtreeRing/blob/master/R/pith_measure.R'><code>R/pith_measure.R</code></a></small>
     <div class="hidden name"><code>pith_measure.Rd</code></div>
     </div>
 
@@ -148,8 +151,8 @@ ring-width series using the arcs of inner rings. See details below.</p></td>
     <tr>
       <th>last.yr</th>
       <td><p><code>NULL</code> or an integer giving the year of formation 
-of the left-most ring. If <code>NULL</code>, borders numbers (starting from 1) 
-are used instead of the year.</p></td>
+of the left-most ring. If <code>NULL</code>, border numbers (starting from 1) 
+are used instead of years.</p></td>
     </tr>
     <tr>
       <th>color</th>
@@ -158,48 +161,56 @@ are used instead of the year.</p></td>
     <tr>
       <th>border.type</th>
       <td><p>Symbol for ring borders. See <code>pch</code> in 
-<code><a href='https://www.rdocumentation.org/packages/graphics/topics/points'>points</a></code> for possible values and their shapes.</p></td>
+<code><a href='https://www.rdocumentation.org/packages/graphics/topics/points'>points</a></code> for possible values and shapes.</p></td>
     </tr>
     <tr>
       <th>label.cex</th>
-      <td><p>The magnification to be used for years and ring numbers.</p></td>
+      <td><p>The magnification to be used for years or border numbers.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of the calibrated ring-width series.</p>
+    <p>A data frame of the calibrated ring-width series. The measurements 
+units are millimeters (mm)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function allows the user to create a path, and manually mark 
-ring borders by clicking on the graphical window. 
-An example demonstrated with pictures can be found in the package vignette. 
+ring borders by clicking on the graphical window.</p>
+<p>An example demonstrated with pictures can be found in the package vignette. 
 Type <code><a href='../articles/pith-MtreeRing.html'>vignette('pith-MtreeRing')</a></code> to see this example.</p>
 <ul>
 <li><p>If <code>inner.arc = TRUE</code>, the ring-width series is calibrated using arcs 
 of inner rings (Duncan, 1989).</p> 
-<p>First, the user can click the left mouse button to add a horizontal path.
-The path should traverse an appropriate arc (read the reference below for 
-more details). Then, the user can add three points to the selected arc by
+<p><b>Step1</b>. You can click the left mouse button to add a horizontal path.
+The path should traverse an appropriate arc (read the reference below  
+for more details).</p>
+<p><b>Step2</b>. You can add three points to the selected arc by
 left-clicking. The first point should be placed on the left endpoint of 
 the arc, and the second point is placed on the right endpoint.</p>
-<p>After two endpoints are added, a vertical dashed line will be plotted 
+<p>After adding these two points, a vertical dashed line will be plotted 
 automatically according to the (x,y) positions of endpoints you just added. 
 The third points should be placed on the intersection of the vertical 
 dashed line and the selected arc.</p>
-<p>Finally, the user is prompted to visually mark ring borders along the path.
-The termination of visual selection is similar to <code><a href='ring_modify.html'>ring_modify</a></code>.
+<p><b>Step3</b>. you are prompted to mark tree rings along the path by 
+left-clicking on the image. Every click draws a point.
 Note that the left endpoint of the arc will be considered as the last 
 ring border without the need to mark it.</p>
+<p>After marking tree rings, the identification process does not automatically 
+stop by itself. On the Windows platform, the identification process 
+can be terminated by clicking the second button and selecting <b>Stop</b> 
+from the menu. On the MacOS system, you can press the <b>Escape</b> key to 
+terminate this process.</p>
 <p>The ring-width series are corrected using formulas proposed by Duncan (1989).</p></li>
 <li><p>If <code>inner.arc = FALSE</code>, the user can create a path which matches 
 the direction of wood growth.</p>
-<p>First, the user can add two points by left-clicking on the image. 
+<p><b>Step1</b>. You can add two points by left-clicking on the image. 
+Every click draws a point.
 A path passing through these two points will be plotted. The path should 
 follow the rays from bark to pith.</p>
-<p>Then, the user can visually mark ring borders along the path. 
-The termination of visual selection is similar to <code><a href='ring_modify.html'>ring_modify</a></code>.</p></li>
+<p><b>Step2</b>. You can mark tree rings along the path by left-clicking
+on the image. The termination of identification process is similar.</p></li>
 </ul>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -214,12 +225,12 @@ in Kahikatea (Dacrycarpus dacrydiodes).
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>img.path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"arc.png"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MtreeRing"</span>)
 
-<span class='co'>## Read and plot the image:</span>
-<span class='no'>t1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_read.html'>ring_read</a></span>(<span class='kw'>img</span> <span class='kw'>=</span> <span class='no'>img.path</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>1200</span>)
+<span class='co'>## Read the image:</span>
+<span class='no'>t1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_read.html'>ring_read</a></span>(<span class='kw'>img</span> <span class='kw'>=</span> <span class='no'>img.path</span>, <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>1200</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='co'>## Use the arcs of inner rings to calibrate ring-width series:</span></div><div class='input'><span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'>pith_measure</span>(<span class='no'>t1</span>, <span class='kw'>inner.arc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>last.yr</span> <span class='kw'>=</span> <span class='fl'>2016</span>)</div><div class='output co'>#&gt; <span class='error'>Error in round(step1$y): 数学函数中用了非数值参数</span></div><div class='input'>
+<span class='co'>## Use the arcs of inner rings to calibrate ring-width series:</span></div><div class='input'><span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'>pith_measure</span>(<span class='no'>t1</span>, <span class='kw'>inner.arc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>last.yr</span> <span class='kw'>=</span> <span class='fl'>2016</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots23.pdf")</span></div><div class='output co'>#&gt; <span class='error'>Error in round(step1$y): 数学函数中用了非数值参数</span></div><div class='input'>
 ## Try another method to measure ring widths:
-</div><div class='input'><span class='no'>t3</span> <span class='kw'>&lt;-</span> <span class='fu'>pith_measure</span>(<span class='no'>t1</span>, <span class='kw'>inner.arc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>last.yr</span> <span class='kw'>=</span> <span class='fl'>2016</span>)</div><div class='output co'>#&gt; <span class='error'>Error in model.frame.default(formula = path.position$y ~ path.position$x +     1, drop.unused.levels = TRUE): 参数'path.position$y'的种类(NULL)不对</span></div></pre>
+</div><div class='input'><span class='no'>t3</span> <span class='kw'>&lt;-</span> <span class='fu'>pith_measure</span>(<span class='no'>t1</span>, <span class='kw'>inner.arc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>last.yr</span> <span class='kw'>=</span> <span class='fl'>2016</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots26.pdf")</span></div><div class='output co'>#&gt; <span class='error'>Error in model.frame.default(formula = path.position$y ~ path.position$x +     1, drop.unused.levels = TRUE): 参数'path.position$y'的种类(NULL)不对</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
