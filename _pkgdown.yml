@@ -29,7 +29,7 @@ navbar:
         href: articles/pith-MtreeRing.html
     github:
       icon: fa-github fa-lg
-      href: https://github.com/JingningShi/MtreeRing
+      href: https://github.com/ropensci/MtreeRing
 
 reference:
 - title: All functions
