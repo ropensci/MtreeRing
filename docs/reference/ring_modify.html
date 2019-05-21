@@ -104,7 +104,7 @@ or add new borders." />
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/JingningShi/MtreeRing">
+  <a href="https://github.com/ropensci/MtreeRing">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -207,10 +207,10 @@ The removal of ring borders takes precedence over addition.</p>
 <span class='co'>## Split a long core sample into 3 pieces to</span>
 <span class='co'>## get better display performance and use the</span>
 <span class='co'>## watershed algorithm to detect ring borders:</span>
-<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_detect.html'>ring_detect</a></span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots13.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots14.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots15.pdf")</span></div><div class='input'>
+<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_detect.html'>ring_detect</a></span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots36.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots37.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots38.pdf")</span></div><div class='input'>
 <span class='co'>## Do not modify t2, but create a new array object t3. </span>
 <span class='co'>## Remove some borders without adding new borders:</span>
-<span class='no'>t3</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_modify</span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t2</span>, <span class='kw'>del</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>19</span>:<span class='fl'>21</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots16.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots17.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots18.pdf")</span></div><div class='input'>
+<span class='no'>t3</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_modify</span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t2</span>, <span class='kw'>del</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>19</span>:<span class='fl'>21</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots39.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots40.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots41.pdf")</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

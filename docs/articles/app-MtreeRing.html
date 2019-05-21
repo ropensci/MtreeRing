@@ -69,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/JingningShi/MtreeRing">
+  <a href="https://github.com/ropensci/MtreeRing">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -104,7 +104,7 @@
 <div id="image-upload" class="section level2">
 <h2 class="hasAnchor">
 <a href="#image-upload" class="anchor"></a>1. Image upload</h2>
-<p>Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named <code>001.png</code>, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (<a href="https://github.com/JingningShi/MtreeRing/raw/master/inst/001.png" class="uri">https://github.com/JingningShi/MtreeRing/raw/master/inst/001.png</a>). In the following sections, this image is used to demonstrate the ring-width measurement.</p>
+<p>Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named <code>001.png</code>, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (<a href="https://github.com/ropensci/MtreeRing/raw/master/inst/001.png" class="uri">https://github.com/ropensci/MtreeRing/raw/master/inst/001.png</a>). In the following sections, this image is used to demonstrate the ring-width measurement.</p>
 <p>You can upload an image with the following steps:</p>
 <ol style="list-style-type: decimal">
 <li><p>When you start the app, click on the <strong>Image Loading</strong> button in the sidebar (This is the default mode. In most cases, you do not need to do this).</p></li>
@@ -123,14 +123,14 @@
 <li><p>Click on the blue “<strong>Create Path</strong>” button at the top left corner of the <strong>Tree Ring Detection</strong>.</p></li>
 </ol>
 <p>See this example:</p>
-<p><img src="../../vignettes/img/PathCreation3.gif" width="80%" height="80%"></p>
+<p><img src="img/PathCreation3.gif" width="80%" height="80%"></p>
 <p>In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.</p>
 </div>
 <div id="ring-detection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ring-detection" class="anchor"></a>3. Ring detection</h2>
 <p>Let’s start by introducing a new action. The Shiny-based app provides a mouse event, called “<strong>brush</strong>”. You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of <strong>brush</strong>.</p>
-<p><img src="../../vignettes/img/Brush2.gif" width="60%" height="60%"></p>
+<p><img src="img/Brush2.gif" width="60%" height="60%"></p>
 <p>If ring borders are clearly visible, follow the steps below to detect tree rings:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -144,7 +144,7 @@
 </li>
 </ol>
 <p>See this example:</p>
-<p><img src="../../vignettes/img/RingDetection2.gif" width="75%" height="75%"></p>
+<p><img src="img/RingDetection2.gif" width="75%" height="75%"></p>
 </div>
 <div id="edit-tree-rings" class="section level2">
 <h2 class="hasAnchor">
@@ -160,7 +160,7 @@
 <a href="#add-tree-rings" class="anchor"></a>4.1 Add tree rings</h3>
 <p>After creating the zoomed-in image, you can add a ring by <strong>double clicking</strong> on the path.</p>
 <p>See this example:</p>
-<p><img src="../../vignettes/img/AddRing2.gif" width="60%" height="60%"></p>
+<p><img src="img/AddRing2.gif" width="60%" height="60%"></p>
 </div>
 <div id="remove-tree-rings" class="section level3">
 <h3 class="hasAnchor">
@@ -174,7 +174,7 @@
 </li>
 </ol>
 <p>See this example:</p>
-<p><img src="../../vignettes/img/RemoveRing.gif" width="75%" height="75%"></p>
+<p><img src="img/RemoveRing.gif" width="75%" height="75%"></p>
 <p>You can also perform a mass deletion of borders using the input control below the <strong>Tree Ring Editing</strong>.</p>
 </div>
 </div>

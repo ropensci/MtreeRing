@@ -104,7 +104,7 @@ borders along the user-defined path." />
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/JingningShi/MtreeRing">
+  <a href="https://github.com/ropensci/MtreeRing">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -280,11 +280,8 @@ The automatic detection will be performed within this rectangular
 sub-image. 
 To create a sub-image and a path, follow these steps.</p><ul>
 <li><p>Step 1. Select the left and right edges of the rectangle</p>  
-<p>If <code>partial.rings = TRUE</code>, the user can point the mouse at any 
-  desired locations and click the left mouse button to add each edge.</p>  
-<p>If <code>partial.rings = FALSE</code>, the left and right boundaries of the 
-  original image will be used directly as the left and right edges of 
-  the rectangle (i.e., skip the step 1).</p></li>
+<p>The user can point the mouse at any 
+  desired locations and click the left mouse button to add each edge.</p></li>
 <li><p>Step 2. Select the top and bottom edges of the rectangle</p>  
 <p>The user can point the mouse at any desired locations and click the 
   left mouse button to add each edge. The width of the rectangle is 
@@ -344,7 +341,7 @@ measuRing: An R package to measure tree-ring widths from scanned images.
 <span class='co'>## Split a long core sample into 3 pieces to</span>
 <span class='co'>## get better display performance and use the</span>
 <span class='co'>## watershed algorithm to detect ring borders:</span>
-<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_detect</span>(<span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>, <span class='kw'>border.color</span> <span class='kw'>=</span> <span class='st'>'green'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots9.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots10.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots11.pdf")</span></div><div class='input'>
+<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_detect</span>(<span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>, <span class='kw'>border.color</span> <span class='kw'>=</span> <span class='st'>'green'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots32.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots33.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots34.pdf")</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

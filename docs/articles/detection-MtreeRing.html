@@ -69,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/JingningShi/MtreeRing">
+  <a href="https://github.com/ropensci/MtreeRing">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -117,12 +117,12 @@ t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_rea
 ## watershed algorithm to detect ring borders:
 t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_detect.html">ring_detect</a></span>(<span class="dt">ring.data =</span> t1, <span class="dt">auto.path =</span> <span class="ot">TRUE</span>, <span class="dt">seg =</span> <span class="dv">2</span>, <span class="dt">method =</span> <span class="st">'watershed'</span>)</code></pre></div>
 <p>If <code>auto.path = TRUE</code>, <code>ring_detect</code> will create a path at the center of the image. In the current version, the path is a horizontal dashed line. Detected ring borders are placed along the path, and are tagged with years and border numbers.</p>
-<p><img src="../../vignettes/img/single_path.png" width="85%" height="85%"></p>
+<p><img src="img/single_path.png" width="85%" height="85%"></p>
 <p>For increment cores with inclined rings, you can create two paths by setting <code>incline = TRUE</code>. The distance between adjacent rings and orientation of ring borders are used to correct the ring-width series.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">img.name &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"incline.png"</span>, <span class="dt">package =</span> <span class="st">"MtreeRing"</span>)
 t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_read.html">ring_read</a></span>(<span class="dt">img =</span> img.name, <span class="dt">dpi =</span> <span class="dv">1200</span>)
 t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_detect.html">ring_detect</a></span>(<span class="dt">ring.data =</span> t1, <span class="dt">incline =</span> <span class="ot">TRUE</span>, <span class="dt">method =</span> <span class="st">'watershed'</span>)</code></pre></div>
-<p><img src="../../vignettes/img/two_paths.png" width="85%" height="85%"></p>
+<p><img src="img/two_paths.png" width="85%" height="85%"></p>
 </div>
 <div id="edit-tree-rings" class="section level2">
 <h2 class="hasAnchor">
@@ -149,7 +149,7 @@ t2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ring_mod
 </ol>
 <p>Once you terminate an identification process, the current graphics window will be closed automatically, and the graphics window of the following segment is activated.</p>
 <p>Here is an example of adding ring borders on Windows system:</p>
-<p><img src="../../vignettes/img/Ring_modify_add.gif" width="95%" height="95%"></p>
+<p><img src="img/Ring_modify_add.gif" width="95%" height="95%"></p>
 </div>
 </div>
 <div id="calculate-ring-width-series" class="section level2">

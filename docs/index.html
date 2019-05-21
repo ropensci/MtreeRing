@@ -69,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/JingningShi/MtreeRing">
+  <a href="https://github.com/ropensci/MtreeRing">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -127,7 +127,7 @@ t1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/ring_read.h
 ## watershed algorithm to detect ring borders:
 t2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/ring_detect.html">ring_detect</a></span>(<span class="dt">ring.data =</span> t1, <span class="dt">seg =</span> <span class="dv">2</span>, <span class="dt">method =</span> <span class="st">'watershed'</span>)</code></pre></div>
 <center>
-<img src="../vignettes/img/README-img001.png" width="65%" height="65%">
+<img src="articles/img/README-img001.png" width="65%" height="65%">
 </center>
 <center>
 Figure 1. The automatic detection of ring borders
@@ -150,7 +150,7 @@ fn &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocument
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MtreeRing<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/MtreeRing/topics/ring_app_launch">ring_app_launch</a></span>()</code></pre></div>
 <p>This command allows to run a Shiny-based application within the system’s default web browser. The app provides a beginner-friendly graphical interface and supports more flexible mouse-based interactions.</p>
 <p>The dashboard has three components: a header, sidebar and body, like this</p>
-<p><img src="../vignettes/img/README-img002.png" width="85%" height="85%"></p>
+<p><img src="articles/img/README-img002.png" width="85%" height="85%"></p>
 <p>A workflow for the Shiny app can be found in the package vignette. Most steps are demonstrated with a gif to make the workflow more understandable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="st">'app-MtreeRing'</span>)</code></pre></div>
 </div>
@@ -159,7 +159,7 @@ fn &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocument
 <a href="#ring-width-correction" class="anchor"></a>Ring width correction</h2>
 <p>If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. Tangent lines of rings close to the pith are therefore not perpendicular to the horizontal path, which may lead to considerable errors in ring widths.</p>
 <p>Under such conditions, you can create two paths by setting the argument <code>incline = TRUE</code>, or by ticking the checkbox “<strong>Inclined tree rings</strong>”. See this example.</p>
-<p><img src="../vignettes/img/RingCorrection.png" width="80%" height="80%"></p>
+<p><img src="articles/img/RingCorrection.png" width="80%" height="80%"></p>
 <p>The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.</p>
 </div>
 <div id="code-of-conduct" class="section level2">

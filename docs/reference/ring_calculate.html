@@ -104,7 +104,7 @@ coordinates of detected ring borders." />
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/JingningShi/MtreeRing">
+  <a href="https://github.com/ropensci/MtreeRing">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -165,7 +165,7 @@ and years are row names. The measurements units are millimeters (mm).</p>
 <span class='co'>## Split a long core sample into 3 pieces to</span>
 <span class='co'>## get better display performance and use the</span>
 <span class='co'>## watershed algorithm to detect ring borders:</span>
-<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_detect.html'>ring_detect</a></span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots5.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots6.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots7.pdf")</span></div><div class='input'>
+<span class='no'>t2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ring_detect.html'>ring_detect</a></span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t1</span>, <span class='kw'>seg</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'watershed'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The sampling year is set to the current year</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots28.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots29.pdf")</span></div><div class='output co'>#&gt; <span class='message'>dev.new(): using pdf(file="Rplots30.pdf")</span></div><div class='input'>
 <span class='co'>## Calculate ring widths from the attribute list of t2:</span>
 <span class='no'>rw.df</span> <span class='kw'>&lt;-</span> <span class='fu'>ring_calculate</span>(<span class='kw'>ring.data</span> <span class='kw'>=</span> <span class='no'>t2</span>, <span class='kw'>seriesID</span> <span class='kw'>=</span> <span class='st'>"940220"</span>)</div></pre>
   </div>
