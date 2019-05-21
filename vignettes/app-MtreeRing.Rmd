@@ -20,7 +20,7 @@ MtreeRing::ring_app_launch()
 
 ## 1. Image upload
 
-Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named `001.png`, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (https://github.com/JingningShi/MtreeRing/raw/master/inst/001.png). In the following sections, this image is used to demonstrate the ring-width measurement. 
+Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named `001.png`, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (https://github.com/ropensci/MtreeRing/raw/master/inst/001.png). In the following sections, this image is used to demonstrate the ring-width measurement. 
 
 You can upload an image with the following steps:
 
