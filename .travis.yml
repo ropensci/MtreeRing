@@ -7,11 +7,8 @@ r:
 
 matrix:
   include:
-    - dist: trusty
-    - dist: xenial
     - os: osx
       brew_packages: imagemagick
-    - dist: trusty
       r_check_args: '--ignore-vignettes'
       r_build_args: '--no-build-vignettes'
       addons:
