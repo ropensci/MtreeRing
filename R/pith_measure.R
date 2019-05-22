@@ -76,7 +76,7 @@
 #' \bold{16(4)}, 1-37.
 #' 
 #' @examples 
-#' img.path <- system.file("arc.png", package = "MtreeRing")
+#' img.path <- system.file("missing_pith.png", package = "MtreeRing")
 #' 
 #' ## Read the image:
 #' t1 <- ring_read(img = img.path, dpi = 1200, plot = FALSE)
