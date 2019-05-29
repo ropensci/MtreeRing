@@ -180,7 +180,6 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
   if (x.dpi <= 300 & !manual)
     stop('The automatic detection requires a minimum of 300 dpi')
   is.plot <- attributes(ring.data)$plot
-  #补上画图
   if(is.plot) {
     device.number <- attributes(ring.data)$dn
     dev.set(device.number)
