@@ -94,7 +94,6 @@ pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL,
   x.dpi <- attributes(ring.data)$x.dpi
   dp <- x.dpi / 25.4 
   is.plot <- attributes(ring.data)$plot
-  #补上画图
   if(is.plot) {
     device.number <- attributes(ring.data)$dn
     dev.set(device.number)
