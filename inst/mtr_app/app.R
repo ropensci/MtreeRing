@@ -33,6 +33,12 @@ createUI <- function()
       title = div(style = 'color:#FFFFFF;font-size:80%; 
         font-weight: bolder', 'Image Preview'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
+      prettyCheckbox(
+        inputId = "wh_ratio", 
+        label = div(style = 'color:#000000;font-weight: bolder;',
+                    'Maintain original width/height ratio'), 
+        shape = "curve", value = F, status = "success"),
+      hr(),
       plotOutput('pre.img',
         brush = brushOpts(
           id = "plot1_brush",
@@ -143,40 +149,58 @@ createUI <- function()
   page2.1 <- fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Options'),
+        font-weight: bolder', 'Options'), height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
-      textInput('tuid', 'Series ID', '', width = '75%'),
-      textInput('dpi', 'DPI', '', '75%'),
-      textInput('sample_yr', 'Sampling year', '', '75%'),
-      textInput('m_line', 'Y-coordinate of path', '', '75%'),
-      prettyCheckbox(
-        inputId = "incline", 
-        label = div(
-          style = 'color:#000000;font-weight: bolder;', 'Inclined tree rings'), 
-        shape = "curve", value = F, status = "success"
+      textInput('tuid', 'Series ID', '001', width = '75%'),
+      textInput('dpi', 'DPI', '700', '75%'),
+      textInput('sample_yr', 'Sampling year', '2015', '75%'),
+      # textInput('m_line', 'Y-coordinate of path', '', '75%'),
+      pickerInput(
+        inputId = "sel_sin_mul", 
+        div(
+          style = 'color:#000000;font-weight:bolder;font-size:90%', 
+          'Path Mode'), 
+        width = '87%',
+        choices = c("Single Segment", "Multi Segments"),
+        options = list(style = "btn-primary")
       ),
       conditionalPanel(
-        condition = 'input.incline',
-        numericInput('h.dis', 'Distance between paths (mm)', 
-          1, 0.1, 30, 0.1, width = '75%')
+        condition = 'input.sel_sin_mul == "Single Segment"',
+        prettyCheckbox(
+          inputId = "hor_path", 
+          label = div(
+            style = 'color:#000000;font-weight: bolder;font-size:90%', 
+            'Horizontal path'), 
+          shape = "curve", value = T, status = "success"
+        )
       ),
-      br(),
-      radioGroupButtons(
-        inputId = "measuremethod", 
-        label = 'Measurement mode',
-        status = "btn btn-primary btn-md",
-        #individual = T,
-        size = 'normal',
-        selected = 'auto',
-        choiceNames = list(
-          div(style = 'color:#FFFFFF;font-weight: bolder;', 'Manual'), 
-          div(style = 'color:#FFFFFF;font-weight: bolder;', 'Automation')),
-        choiceValues = list('manual', 'auto'),
-        width = '100%') 
-      ),
+      # 默认的是2个点，如果切换多路径可以升级
+      numericInput('num_seg', 
+        div(style = 'color:#000000;font-weight:bolder;font-size:90%', 
+            'Number of segments'),
+        value = 1, min = 1, max = 1, step = 1, width = "75%"),
+      
+      # 倾斜校正只对水平路径可用
+      conditionalPanel(
+        condition = 'input.hor_path',
+        prettyCheckbox(
+          inputId = "incline", 
+          label = div(
+            style = 'color:#000000;font-weight: bolder;font-size:90%', 
+            'Inclined tree rings'), 
+          shape = "curve", value = F, status = "success"
+        ),
+        conditionalPanel(
+          condition = 'input.incline',
+          numericInput('h.dis', 'Distance between paths (mm)', 
+                       1, 0.1, 30, 0.1, width = '75%')
+        ) 
+      )
+      
+    ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Options'),
+        font-weight: bolder', 'Options'), height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       sliderInput('linelwd', 'Path width', 
         0.2, 3, 1, 0.1, width = '80%'),
@@ -218,191 +242,237 @@ createUI <- function()
           "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
         selected = 'black', mode = "radio", display_label = FALSE, ncol = 9
       )
+    ),
+    box(
+      title = div(style = 'color:#FFFFFF;font-size:80%;
+                  font-weight: bolder', 'Options'),  height = "auto",
+      width = 4, status = 'primary', solidHeader = T, collapsible = T,
+      prettyCheckbox(
+        inputId = "isrgb", 
+        label = div(
+          style = 'color:#000000;;font-size:90%;font-weight:bolder;', 
+          "Default RGB"), 
+        shape = "curve", value = T, status = "success"
       ),
-    conditionalPanel(
-      condition = 'input.measuremethod=="auto"',
-      box(
-        title = div(style = 'color:#FFFFFF;font-size:80%;
-          font-weight: bolder', 'Options'),
-        width = 4, status = 'primary', solidHeader = T, collapsible = T,
-        prettyCheckbox(
-          inputId = "isrgb", 
-          label = div(
-            style = 'color:#000000;font-weight:bolder;', "Default RGB"), 
-          shape = "curve", value = T, status = "success"
-        ),
-        conditionalPanel(
-          condition = '!input.isrgb',
-          textInput('customRGB', 'Custom RGB', '0.299,0.587,0.114'),
-          helpText('Note:The three numbers correspond to',
-            'R, G and B components,respectively.',
-            style = 'color:#000000;font-weight: bolder'),
-          hr()
-        ),
-        radioGroupButtons(
-          inputId = "method",
-          label = 'Ring detection method',
-          status = "btn btn-primary btn-md",
-          #individual = T,
-          selected = 'canny',
-          size = 'normal',
-          choiceNames = list(
-            div(style = 'color:#FFFFFF;font-weight: bolder;font-size:80%',
+      conditionalPanel(
+        condition = '!input.isrgb',
+        textInput('customRGB', 'Custom RGB', '0.299,0.587,0.114'),
+        helpText('Note:The three numbers correspond to',
+                 'R, G and B components,respectively.',
+                 style = 'color:#000000;font-weight: bolder'),
+        hr()
+      ),
+      radioGroupButtons(
+        inputId = "method",
+        label = div(style = 'color:#000000;font-weight: bolder;font-size:85%',
+                    'Ring detection method'),
+        status = "btn btn-primary btn-md",
+        #individual = T,
+        selected = 'canny',
+        size = 'normal',
+        choiceNames = list(
+          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:85%',
               'Watershed'),
-            div(style = 'color:#FFFFFF;font-weight: bolder;font-size:80%',
+          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:85%',
               'Canny'),
-            div(style = 'color:#FFFFFF;font-weight: bolder;font-size:80%',
+          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:85%',
               'measuRing')
-          ),
-          choiceValues = list('watershed', 'canny', 'lineardetect'), 
-          width = '100%'
+        ),
+        choiceValues = list('watershed', 'canny', 'lineardetect'), 
+        width = '100%'
+      ),
+      conditionalPanel(
+        condition = 'input.method=="watershed"',
+        selectInput('watershed.threshold',
+                    'Otsu threshold',
+                    c('Auto (Recommended)' = 'auto',
+                      'Custom' = 'custom.waterthr'),
+                    width = '75%'
         ),
         conditionalPanel(
-          condition = 'input.method=="watershed"',
-          selectInput('watershed.threshold',
-            'Otsu threshold',
-            c('Auto (Recommended)' = 'auto',
-              'Custom' = 'custom.waterthr'),
-            width = '75%'
-          ),
-          conditionalPanel(
-            condition = 'input["watershed.threshold"]=="auto"',
-            sliderInput('watershed.adjust',
-              'Threshold adjusment factor',
-              0.5, 1.5, 0.8, 0.05, width = '85%')
-          ),
-          conditionalPanel(
-            condition = 'input["watershed.threshold"]=="custom.waterthr"',
-            textInput('watershed.threshold2', 'Threshold value', ''),
-            'A value of the form XX% (e.g. 98%)'
-          )
+          condition = 'input["watershed.threshold"]=="auto"',
+          sliderInput('watershed.adjust',
+                      'Threshold adjusment factor',
+                      0.5, 1.5, 0.8, 0.05, width = '85%')
         ),
         conditionalPanel(
-          condition = 'input.method=="canny"',
-          prettyCheckbox(
-            inputId = "defaultcanny", 
-            label = div(
-              style = 'color:#000000;font-weight: bolder;',
-              "Auto threshold (Recommanded)"), 
-            shape = "curve", value = T, status = "success"),
-          conditionalPanel(
-            condition = 'input.defaultcanny',
-            sliderInput('canny.adjust',
-              'Threshold adjusment factor',
-              0.8, 1.8, 1.4, 0.05, width = '75%')
-          ),
-          conditionalPanel(
-            condition = '!input.defaultcanny',
-            textInput('canny.t2', 'Threshold for strong edges', '', '75%'),
-            textInput('canny.t1', 'Threshold for weak edges', '', '75%')
-          ),
-          numericInput('canny.smoothing',
-            'Degree of smoothing',
-            1, 0, 4, 1, width = '75%')
-        ),
-        conditionalPanel(
-          condition = 'input.method!="lineardetect"',
-          prettyCheckbox(inputId = "defaultse", 
-            label = div(
-              style = 'color:#000000;font-weight: bolder;',
-              "Default structuring elements"), 
-            shape = "curve", value = T, status = "success"),
-          conditionalPanel(
-            condition = '!input.defaultse',
-            textInput('struc.ele1', 'First structuring element', '', '75%'),
-            textInput('struc.ele2', 'Second structuring element', '', '75%')
-          ),
-          hr()
-        ),
-        conditionalPanel(
-          condition = 'input.method=="lineardetect"',
-          textInput('origin', ' Origin in smoothed gray', '0', '75%'),
-          'If you use the linear detection, don\'t ',
-          'tick the checkbox "Inclined tree rings".',
-          hr()
-        ),
-        helpText('Automatic detection may take a few seconds (depending',
-          ' on the image size and complexity of the sample).',
-          #style = 'color:#000000;font-size:95%;text-align:justify;')
-          style = 'color:#000000;font-size:90%;')
+          condition = 'input["watershed.threshold"]=="custom.waterthr"',
+          textInput('watershed.threshold2', 
+                    'Threshold value', '', width = '75%'),
+          'A value of the form XX% (e.g. 98%)',
+          br(),
+          br()
         )
+      ),
+      conditionalPanel(
+        condition = 'input.method=="canny"',
+        prettyCheckbox(
+          inputId = "defaultcanny", 
+          label = div(
+            style = 'color:#000000;font-size:90%;font-weight: bolder;',
+            "Auto threshold (Recommanded)"), 
+          shape = "curve", value = T, status = "success"),
+        conditionalPanel(
+          condition = 'input.defaultcanny',
+          sliderInput('canny.adjust',
+                      'Threshold adjusment factor',
+                      0.8, 1.8, 1.4, 0.05, width = '85%')
+        ),
+        conditionalPanel(
+          condition = '!input.defaultcanny',
+          textInput('canny.t2', 'Threshold for strong edges', '', '85%'),
+          textInput('canny.t1', 'Threshold for weak edges', '', '85%')
+        ),
+        sliderInput('canny.smoothing', 'Degree of smoothing',
+                    0, 5, 2, 1, width = '85%')
+        # numericInput('canny.smoothing', 'Degree of smoothing',
+        #   1, 0, 4, 1, width = '75%')
+      ),
+      conditionalPanel(
+        condition = 'input.method!="lineardetect"',
+        prettyCheckbox(inputId = "defaultse", 
+                       label = div(
+                         style = 'color:#000000;font-size:90%;font-weight: bolder;',
+                         "Default structuring elements"), 
+                       shape = "curve", value = T, status = "success"),
+        conditionalPanel(
+          condition = '!input.defaultse',
+          numericInput('struc.ele1', 'First structuring element', 
+                       3, 1, 100, 1, "75%"),
+          numericInput('struc.ele2', 'First structuring element', 
+                       9, 1, 100, 1, "75%")
+        ),
+        hr()
+      ),
+      conditionalPanel(
+        condition = 'input.method=="lineardetect"',
+        textInput('origin', ' Origin in smoothed gray', '0', '75%'),
+        'If you use the linear detection, don\'t ',
+        'tick the checkbox "Inclined tree rings".',
+        hr()
+      ),
+      helpText('Automatic detection may take a few seconds.',
+               # 'depending on the image size and complexity of the sample.',
+               # style = 'color:#000000;font-size:95%;text-align:justify;')
+               style = 'color:#000000;font-size:90%;')
     ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:100%;
-        font-weight: bolder', 'Tree Ring Detection'),
+        font-weight: bolder', 'Main Window'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
-      conditionalPanel(
-        condition = 'input.measuremethod!="auto"',
-        actionButton(
-          'buttoncreatpath', 'Create Path',
-          class = "btn btn-primary btn-md", icon = icon('plus'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+      radioGroupButtons(inputId = "sel_mode", status = "primary",
+        label = 
+          div(style = 'color:#000000;font-weight: bolder;font-size:110%',
+              'Working mode selector'),
+        choiceNames = list(
+          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
+              'Path Creation'),
+          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
+              'Ring Detection'),
+          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
+              'Ring Editing')
         ),
-        useSweetAlert(),
-        actionButton(
-          'buttonrcm', 'Remove All',
-          class = "btn btn-danger btn-md", icon = icon('trash'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
-        ),
-        useSweetAlert()
+        # direction = "vertical",
+        choiceValues = list('sel_path', 'sel_det', 'sel_edit')
       ),
       conditionalPanel(
-        condition = 'input.measuremethod=="auto"',
+        condition = "input.sel_mode == 'sel_path'",
         actionButton(
-          'buttoncreatpath2', 'Create Path',
-          class = "btn btn-primary btn-md", icon = icon('plus'),
+          'rm_last', 'Remove Last',
+          class = "btn btn-warning btn-md", icon = icon('reply'),
           style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
         ),
         useSweetAlert(),
         actionButton(
-          'buttonrcm2', 'Remove All',
+          'rm_all', 'Remove All',
           class = "btn btn-danger btn-md", icon = icon('trash'),
           style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
         ),
         useSweetAlert(),
+        br(),
+        br(),
+        prettyCheckbox(
+          inputId = "pre_path", 
+          label = div(style = 'color:#000000;font-weight: bolder;',
+                      'Show the preview path'), 
+          shape = "curve", value = F, status = "success")
+      ),
+      # 检测的按钮
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_det'",
         actionButton(
           'button_run_auto', 'Run Detection',
           class = "btn btn-success btn-md", icon = icon('play'),
           style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
         ),
-        useSweetAlert()
+        useSweetAlert(),
+        br(),
+        br()
       ),
+      # 编辑的按钮
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_edit'",
+        actionButton(
+          'buttonzoomdel', 'Delete Border',
+          class = "btn btn-warning btn-md",
+          icon = icon('eraser'),
+          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+        ),
+        useSweetAlert(),
+        actionButton(
+          'rm_all_border', 'Remove All',
+          class = "btn btn-danger btn-md", icon = icon('trash'),
+          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+        ),
+        useSweetAlert(),
+        br(),
+        br()
+      ),
+      prettyCheckbox(
+        inputId = "wh_ratio2", 
+        label = div(style = 'color:#000000;font-weight: bolder;',
+                    'Maintain original width/height ratio'), 
+        shape = "curve", value = F, status = "success"),
       hr(),
-      plotOutput('pre.img2',
-        dblclick = "plot2_dblclick",
-        brush = brushOpts(
-          id = "plot2_brush",
-          resetOnNew = TRUE
+      fluidPage(
+        fluidRow(
+          column(width = 11,
+                 plotOutput('ring_edit', height = "310px",
+                            dblclick = "plot2_dblclick",
+                            brush = brushOpts(
+                              id = "plot2_brush", resetOnNew = TRUE
+                            ),
+                            hover = hoverOpts(
+                              id = "plot2_hover", delay = 200,
+                              delayType = "debounce"
+                            )
+                 )
+          ),
+          column(width = 1,
+                 br(), br(),
+                 noUiSliderInput(
+                   width = "100px", height = "250px",
+                   inputId = "img_ver", label = NULL, tooltips = F,
+                   min = 0, max = 1000, step = 10,
+                   value = c(0, 1000), margin = 10,
+                   orientation = "vertical", behaviour = "drag"
+                 )
+          )
+        ),
+        br(),
+        fluidRow(
+          column(
+            width = 11, offset = 0,
+            sliderInput(
+              inputId = "img_hor", label = NULL,
+              min = 0, max = 100, value = c(0, 100), step = 1, 
+              round = T, ticks = F, dragRange = T, post = "%"
+            )
+          )
         )
-      ),
-      hr(),
-      actionButton(
-        'buttonsubimg', 'Create Sub-image',
-        class = "btn btn-primary btn-md", icon = icon('search-plus'),
-        style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
       )
-      ),
-    box(
-      title = div(style = 'color:#FFFFFF;font-size:100%;
-        font-weight: bolder', 'Tree Ring Editing'),
-      width = 12, status = 'primary', solidHeader = T, collapsible = T,
-      actionButton(
-        'buttonzoomdel', 'Delete Border',
-        class = "btn btn-danger btn-md",
-        icon = icon('eraser'),
-        style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
-      ),
-      useSweetAlert(),
-      hr(),
-      plotOutput('zoom.img',
-        dblclick = dblclickOpts(id = "zoom_dblclick"),
-        brush = brushOpts(
-          id = "zoom_brush",
-          resetOnNew = TRUE
-        )
-      )
-      )
-      )
+    )
+  )
   page2.2 <- fluidRow(
     column(width = 12,
       conditionalPanel(
@@ -550,7 +620,7 @@ createUI <- function()
           textInput('tuhdr12', 'Completion Date', '')
         )
       )   
-  )
+    )
   )
   shiny.body <- dashboardBody(
     tabItems(
@@ -569,14 +639,6 @@ createUI <- function()
 createServer <- function(input, output, session) 
 {
   f.morphological <- function(seg.data, struc.ele1, struc.ele2, x.dpi) {
-    if (is.null(struc.ele1)) {
-      stru.1 <- x.dpi/400
-      struc.ele1 <- c(stru.1, stru.1) %>% round
-    }
-    if (is.null(struc.ele2)) {
-      stru.2 <- x.dpi/80
-      struc.ele2 <- c(stru.2, stru.2) %>% round
-    }
     cim <- as.cimg(seg.data)
     cim2 <- erode_rect(cim, sx = struc.ele1[1], sy = struc.ele1[2], sz = 1L)
     cim2 <- dilate_rect(cim2, sx = struc.ele1[1], sy = struc.ele1[2], sz = 1L)
@@ -653,167 +715,215 @@ createServer <- function(input, output, session)
   watershed.im <- function(water.seg, seg.data) {
     normalize <- function(x) return((x - min(x))/(max(x) - min(x)))
     imgra <- imgradient(as.cimg(seg.data), axes = "y", scheme = 2)
-    watershed.seg <- watershed(as.cimg(water.seg), imgra, fill_lines = T)
-    watershed.seg <- normalize(watershed.seg[, , 1, 1])
-    return(watershed.seg)
+    watershed.seg <- watershed(as.cimg(water.seg), imgra, fill_lines = F)
+    # watershed.seg <- normalize(watershed.seg[, , 1, 1])
+    return(watershed.seg[,, 1, 1])
   }
-  r.det <- function(seg.data, py) {
-    gray.values <- seg.data[py, ]
-    diff.gray <- c(0, diff(gray.values, lag = 1))
-    col.num <- which(diff.gray != 0)
-    if (length(col.num) == 0) 
-      stop("Ring border was not detected")
-    return(col.num)
+
+  f.sort <- function(bor_xy, dp) {
+    filter.col <- diff(bor_xy$x) >= dp/10
+    filter.col <- c(TRUE, filter.col)
+    bor_xy <- bor_xy[filter.col,]
+    return(bor_xy)
   }
-  f.sort <- function(border.col, dp) {
-    filter.col <- diff(border.col) >= dp/10
-    selected.border <- c(border.col[1], border.col[-1][filter.col])
-    return(selected.border)
-  }
-  f.border <- function(seg.data, py, dp) {
-    border.col <- r.det(seg.data, py)
-    border.col <- f.sort(border.col, dp)
-    return(border.col)
-  }
-  plot.marker <- function(py, incline, dp, sample_yr, h.dis, l.w, 
-    bor.color, lab.color, pch, label.cex, 
-    df.loc, plot.year, img.name)
+
+  plot.marker <- function(path.info, hover.xy, sample_yr, l.w, pch,
+                          bor.color, lab.color, label.cex)
   {
-    title(main = img.name)
-    if (!is.null(py)) {
-      abline(h = py, lty = 2, lwd = l.w, col = lab.color)
-      if (incline) {
-        abline(h = py, lty = 1, lwd = l.w, col = lab.color)
-        number.of.pixels <- round((h.dis / 2) * dp)
-        py.upper <- py + number.of.pixels
-        abline(h = py.upper, lty = 2, lwd = l.w, col = lab.color)
-        py.lower <- py - number.of.pixels
-        abline(h = py.lower, lty = 2, lwd = l.w, col = lab.color)
-      }
-    } else {
+    if(is.null(path.info$x))
       return()
+    # 导入path信息
+    p.max <- path.info$max
+    p.x <- path.info$x - crop.offset.xy$x
+    p.y <- path.info$y - crop.offset.xy$y
+    p.type <- path.info$type
+    p.hor <- path.info$horizontal
+    incline <- path.info$incline
+    h.dis <- path.info$h
+    dpi <- path.info$dpi
+    len <- length(p.x)
+    
+    # 画路径起始点
+    if (len == 1)
+      points(p.x, p.y, pch = 16, col = lab.color)
+    
+    # 有俩点及以上，画实线路径
+    if (len >= 2) 
+      points(p.x, p.y, type = 'l', col = lab.color, lty = 1)
+    # 倾斜的双路径
+    if(incline){
+      dp <- dpi/25.4
+      d <- h.dis*dp/2
+      points(p.x, p.y + d, type = 'l', col = lab.color, lty = 2)
+      points(p.x, p.y - d, type = 'l', col = lab.color, lty = 2)
+      
+      if(len == 2) {
+        points(c(p.x[1], p.x[1]), c(p.y[1] + d, p.y[1] - d), 
+               type = 'l', col = lab.color, lty = 2)
+        points(c(p.x[len], p.x[len]), c(p.y[len] + d, p.y[len] - d), 
+               type = 'l', col = lab.color, lty = 2)
+      }
     }
-    if (nrow(df.loc ) >= 3) {
-      bx <- df.loc$x[-c(1,2)]
-      where.bx <- df.loc$z[-c(1,2)]
-      where.bx <- where.bx[order(bx)]
+    
+    # 画悬浮路径
+    if(input$sel_mode == 'sel_path' & len < p.max & len >= 1 & input$pre_path){
+      y <- ifelse(p.hor, p.y[len], hover.xy$y)
+      points(c(p.x[len], hover.xy$x), c(p.y[len], y), 
+             type = 'l', col = lab.color, lty = 2)
+    }
+
+    # 开始画边界点
+    if(is.null(df.loc$data))
+      return()
+    df.loc <- df.loc$data
+    
+    if (nrow(df.loc) >= 1) {
+      bx <- df.loc$x - crop.offset.xy$x
+      by <- df.loc$y - crop.offset.xy$y
+      bz <- df.loc$z
+      bz <- bz[order(bx)]
+      by <- by[order(bx)]
       bx <- sort(bx)
       if (incline) {
-        up <- which(where.bx > 0)
+        up <- which(bz == 'u')
         lenup <- length(up)
         if (lenup >= 1) {
-          by.up <- rep(py.upper, time = lenup)
-          points(bx[up], by.up, col = bor.color, type = "p", 
+          points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          if (plot.year) {
-            year.u <- c(sample_yr:(sample_yr - lenup + 1))
-            text(bx[up], by.up, year.u, adj = c(1.5, 0.5), 
-              srt = 90, col = lab.color, cex = label.cex)
-            border.num <- 1:lenup
-            text(bx[up], by.up, border.num, adj = c(0.5, -1.25), 
-              col = lab.color, cex = label.cex)
-          }
+          year.u <- c(sample_yr:(sample_yr - lenup + 1))
+          text(bx[up], by[up], year.u, adj = c(1.5, 0.5), 
+               srt = 90, col = lab.color, cex = label.cex)
+          border.num <- 1:lenup
+          text(bx[up], by[up], border.num, adj = c(0.5, -1.25), 
+               col = lab.color, cex = label.cex)
         }
-        lower <- which(where.bx < 0)
+        lower <- which(bz == 'l')
         lenlo <- length(lower)
         if (lenlo >= 1) {
-          by.lower <- rep(py.lower, time = lenlo)
-          points(bx[lower], by.lower, col = bor.color, type = "p", 
+          points(bx[lower], by[lower], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          if (plot.year) {
-            year.l <- c(sample_yr:(sample_yr - lenlo + 1))
-            text(bx[lower], by.lower, year.l, adj = c(1.5, 0.5), 
-              srt = 90, col = lab.color, cex = label.cex)
-            border.num <- 1:lenlo
-            text(bx[lower], by.lower, border.num, adj = c(0.5, -1.25), 
-              col = lab.color, cex = label.cex)
-          }
+          year.l <- c(sample_yr:(sample_yr - lenlo + 1))
+          text(bx[lower], by[lower], year.l, adj = c(1.5, 0.5), 
+               srt = 90, col = lab.color, cex = label.cex)
+          border.num <- 1:lenlo
+          text(bx[lower], by[lower], border.num, adj = c(0.5, -1.25), 
+               col = lab.color, cex = label.cex)
         }
       } else { 
         if (length(bx) >= 1) {
           lenbx <- length(bx)
-          by <- rep(py, time = lenbx)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          if (plot.year) {
-            year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-            text(bx, by, year.u, adj = c(1.5, 0.5), 
-              srt = 90, col = lab.color, cex = label.cex)
-            border.num <- 1:lenbx
-            text(bx, by, border.num, adj = c(0.5, -1.25), 
-              col = lab.color, cex = label.cex)
-          }
+          year.u <- c(sample_yr:(sample_yr - length(by) + 1))
+          text(bx, by, year.u, adj = c(1.5, 0.5), 
+               srt = 90, col = lab.color, cex = label.cex)
+          border.num <- 1:lenbx
+          text(bx, by, border.num, adj = c(0.5, -1.25), 
+               col = lab.color, cex = label.cex)
         }
       }
     }
   }
-  f.rw <- function(outfile, sample_yr, incline, py, dpi, h.dis) {
+  f.rw <- function(outfile, sample_yr, incline, dpi, h.dis) {
     df.loc <- outfile
-    bx <- df.loc$x[-c(1:2)]
-    where.bx <- df.loc$z[-c(1:2)]
-    where.bx <- where.bx[order(bx)]
+    bx <- df.loc$x
+    by <- df.loc$y
+    bz <- df.loc$z
+    by <- by[order(bx)]
+    bz <- bz[order(bx)]
     bx <- sort(bx)
     dp <- dpi/25.4
     if (!incline) {
       lenbx <- length(bx)
-      diff.col.num <- c(NA, diff(bx))
-      rw <- round(diff.col.num/dp, 2)
+      dx <- diff(bx)
+      dy <- diff(by)
+      d <- sqrt(dx^2 + dy^2)
+      rw <- c(NA, round(d / dp, 2))
       years <- c(sample_yr:(sample_yr - lenbx + 1))
-      df.rw <- data.frame(year = years, column.numbers = bx, ring.width = rw)
+      df.rw <- data.frame(year = years, x = bx, y = by, ring.width = rw)
     } else { 
-      up <- which(where.bx > 0)
+      up <- which(bz == 'u')
       lenup <- length(up)
-      if (lenup >= 1) {
-        bx.up <- bx[up]
-        diff.col.num.up <- c(NA, diff(bx.up))
-        rw.up <- round(diff.col.num.up/dp, 2)
-      }
-      lower <- which(where.bx < 0)
+      bx.up <- bx[up]
+      diff.col.num.up <- diff(bx.up)
+      rw.up <- round(diff.col.num.up/dp, 2)
+      
+      lower <- which(bz == 'l')
       lenlo <- length(lower)
-      if (lenlo >= 1) {
-        bx.lower <- bx[lower]
-        diff.col.num.lower <- c(NA, diff(bx.lower))
-        rw.lower <- round(diff.col.num.lower/dp, 2)
-      }
+      bx.lower <- bx[lower]
+      diff.col.num.lower <- diff(bx.lower)
+      rw.lower <- round(diff.col.num.lower/dp, 2)
+      
       years <- c(sample_yr:(sample_yr - lenup + 1))
-      mean.bor <- (diff.col.num.lower[-1] + diff.col.num.up[-1])/2
+      mean.bor <- (diff.col.num.lower + diff.col.num.up)/2
       x.cor <- abs(bx.lower - bx.up)
       x.cor <- x.cor[-length(x.cor)]
       correct.rw <- mean.bor * cos(atan(x.cor/(dp * h.dis)))
       correct.rw <- c(NA, correct.rw)
-      correct.rw <- round(correct.rw/dp, 2)
-      df.rw <- data.frame(year = years, upper.cn = bx.up, upper.rw = rw.up, 
-        lower.cn = bx.lower, lower.rw = rw.lower, 
-        ring.width = correct.rw)
+      correct.rw <- round(correct.rw / dp, 2)
+      df.rw <- data.frame(year = years, 
+                          original = round(c(NA, mean.bor)/dp, 2), 
+                          corrected = correct.rw)
     }
     return(df.rw)
   }
-  automatic.det <- function(img, incline, method, h.dis, dpi, m_line, RGB, 
-    x1, x2, y1, y2, arghed, watershed.threshold, 
-    watershed.adjust, struc.ele1, struc.ele2, 
-    default.canny, canny.t1, canny.t2, canny.adjust, 
-    canny.smoothing, origin) 
+  
+  # 计算结构元素
+  calc.se <- function(se, dpi, order) {
+    if (is.null(se)) {
+      if(order == 1)
+        se1 <- dpi/400
+      if(order == 2)
+        se1 <- dpi/80
+      se <- c(se1, se1) %>% round
+    }
+    return(se)
+  }
+  
+  # 0804 这个函数返回对于全图坐标的xy边界点
+  automatic.det <- function(
+    img, incline, method, h.dis, dpi, RGB, px, py, path.hor, path.df,
+    watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
+    default.canny, canny.t1, canny.t2, canny.adjust, canny.smoothing, origin
+  )
   {   
     dp <- dpi/25.4
-    py <- round(m_line)
-    if (incline) {
-      number.of.pixels <- round((h.dis/2) * dp)
-      py.upper <- py + number.of.pixels
-      py.lower <- py - number.of.pixels
-    }
-    dim.img <- image_info(img) %>% '['(1,2:3) %>% as.numeric
-    dimcol <- dim.img[1]
-    dimrow <- dim.img[2]
-    if (x1 <= 0) x1 <- 1
-    if (y1 <= 0) y1 <- 0
-    if (x2 >= dimcol) x2 <- dimcol
-    if (y2 >= dimrow) y2 <- dimrow - 1
-    img.range <- paste0(as.character(x2 - x1 + 1), 'x', 
-      as.character(y2 - y1 + 1), '+',
-      as.character(x1 - 1), '+', 
-      as.character(dimrow - y2 - 1))
-    img.crop <- image_crop(img, img.range)
-    rd.martix <- img.crop[[1]]
+    dimt <- image_info(img) %>% '['(1, 2:3) %>% as.numeric
+    dimcol <- dimt[1]
+    dimrow <- dimt[2]
+    ##
+    struc.ele1 <- calc.se(struc.ele1, dpi, 1)
+    struc.ele2 <- calc.se(struc.ele2, dpi, 2)
+    ##
+
+    pxmin <- min(px) - round(1.5 * struc.ele2[1])
+    if (pxmin <= 0)
+      pxmin <- 0
+    pxmax <- max(px) + round(1.5 * struc.ele2[1])
+    if (pxmax >= dimcol)
+      pxmax <- dimcol
+    # Y轴上多一点
+    pymin <- min(py) - 2 * struc.ele2[1]
+    if (incline & path.hor)
+      pymin <- pymin - round(h.dis * dp / 2)
+    if (pymin <= 0)
+      pymin <- 0
+    
+    pymax <- max(py) + 2 * struc.ele2[1]
+    if (incline & path.hor)
+      pymax <- pymax + round(h.dis * dp / 2)
+    if (pymax >= dimrow)
+      pymax <- dimrow
+    
+    # 剪裁图像用于自动检测
+    img.range <- paste0(as.character(pxmax - pxmin), 'x', 
+                        as.character(pymax - pymin), '+',
+                        as.character(pxmin), '+', 
+                        as.character(dimrow - pymax))
+    
+    img <- image_crop(img, img.range)
+    
+    rd.martix <- img[[1]]
     hex2dec <- function(rd.martix) apply(rd.martix, 1, as.numeric)
     rd.channel <- dim(rd.martix)[1]
     if (rd.channel == 1) {
@@ -831,53 +941,92 @@ createServer <- function(input, output, session)
       seg.data <- rd.m.array[, , 1]
     if (rd.channel >= 3)
       seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
+    
+    tdata <- seg.data
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
       marker.img <- water.im(black.hat, T)
       seg.data <- watershed.im(marker.img, seg.mor)
+      # 错位相减
+      s2 <- seg.data[, -1]
+      s2 <- cbind(s2, matrix(max(s2), ncol = 1, nrow = nrow(s2)))
+      seg.data <- as.cimg(s2 - seg.data)
+      
     }  
     if (method == 'canny') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       if (default.canny) {
-        canny.seg <- cannyEdges(as.cimg(seg.mor), alpha = canny.adjust, 
+        seg.data <- cannyEdges(as.cimg(seg.mor), alpha = canny.adjust, 
           sigma = canny.smoothing)
       } else {
-        canny.seg <- cannyEdges(as.cimg(seg.mor), t1=canny.t1, t2=canny.t2,
+        seg.data <- cannyEdges(as.cimg(seg.mor), t1=canny.t1, t2=canny.t2,
           alpha = canny.adjust, sigma = canny.smoothing)
       }
-      seg.data <- canny.seg[, , 1, 1]
+      # seg.data <- canny.seg[, , 1, 1]
     } 
+    
+    # 求结果图里面路径点和边界点的交集
+    if (method != 'lineardetect') {
+      bor_xy <- where(seg.data == TRUE) # 注意：他的xy是反着的，要交换
+      bor_xy <- bor_xy[, c(2, 1)]
+      colnames(bor_xy) <- c('x', 'y')
+      bor_xy$x <- bor_xy$x + pxmin - 1
+      bor_xy$y <- nrow(seg.data) - bor_xy$y + pymin
+      # 单路径和双路径的交集不一样
+      if (path.hor & incline) {
+        df.upper <- path.df
+        df.lower <- path.df
+        df.upper$y <- df.upper$y + round(h.dis * dp / 2)
+        df.lower$y <- df.lower$y - round(h.dis * dp / 2)
+        bor_xy_u <- intersect(bor_xy, df.upper)
+        bor_xy_u <- f.sort(bor_xy_u, dp)
+        bor_xy_u$z <- 'u'
+        bor_xy_l <- intersect(bor_xy, df.lower)
+        bor_xy_l <- f.sort(bor_xy_l, dp)
+        bor_xy_l$z <- 'l'
+        bor_xy <- rbind(bor_xy_u, bor_xy_l)
+      } else {
+        bor_xy <- intersect(bor_xy, path.df)
+        bor_xy <- f.sort(bor_xy, dp)
+        bor_xy$z <- 'u'
+      }
+    }
+    # 为了防止canny检测错误，过滤从暗到亮的边缘
+    filter_edge <- function(bor_xy, tdata, pxmin, pymin, dp) {
+      bor_row <- nrow(tdata) - bor_xy$y + pymin
+      bor_col <- bor_xy$x - pxmin
+      num_dp <- dp * 0.2
+      num_dp <- ifelse(num_dp %% 2 ==0, num_dp + 1, num_dp)
+      mat <- matrix(c(bor_row, bor_col - (num_dp - 1) / 2), ncol = 2)
+      pixel_mat <- matrix(nrow = length(bor_row), ncol = 0)
+      
+      # 提取前后0.2mm的点，求slope
+      for(i in 1:num_dp) {
+        pixel_mat <- cbind(pixel_mat, tdata[mat])
+        mat[,2] <- mat[,2] + 1
+      }
+      calc_slope <- function(x){
+        lm(x~c(1:num_dp)) %>% coef %>% as.numeric
+      }
+      slope <- apply(pixel_mat, 1, calc_slope)
+      bor_xy <- bor_xy[slope[2,] < 0,]
+    }
+    
+    bor_xy <- filter_edge(bor_xy, tdata, pxmin, pymin, dp)
+  
     if (method == 'lineardetect') {
       attributes(seg.data)['image'] <- 'img'
       smoothed <- graySmoothed(seg.data, ppi = dpi, rgb = RGB)
       borders <- linearDetect(smoothed, origin = origin)
-      borders <- borders + x1 - 1
-      py.ld <- round((y1 + y2)/2)
-      df <- data.frame(x = borders, 
-        y = rep(py.ld, time = length(borders)), 
-        z = rep(0, time = length(borders)))
-      df.loc <- rbind(arghed, df)
-      return(df.loc)
+      borders <- borders + pxmin
+      print(py[1])
+      print(pymin)
+      bor_xy <- data.frame(x = borders, y = py[1], z = 'u')
+      print(bor_xy)
     }
-    if (incline) {
-      bor.u <- f.border(seg.data, y2 - py.upper, dp) + x1 - 1
-      bor.l <- f.border(seg.data, y2 - py.lower, dp) + x1 - 1
-      if (method == 'watershed') {
-        bor.u <- bor.u - 1
-        bor.l <- bor.l - 1
-      }
-      df.u <- data.frame(x = bor.u, y = py.upper, z = 1)
-      df.l <- data.frame(x = bor.l, y = py.lower, z = -1)
-      df.loc <- rbind(arghed, df.u, df.l)
-    } else {
-      bor.col <- f.border(seg.data, y2 - py, dp) + x1 - 1
-      if (method == 'watershed')
-        bor.col <- bor.col - 1
-      df <- data.frame(x = bor.col, y = py, z = 0)
-      df.loc <- rbind(arghed, df)
-    }
-    return(df.loc)
+    return(bor_xy)
+
   } 
   readImg <- function(img, img.name, magick.switch = TRUE) {
     img.size <- file.size(img)/1024^2
@@ -917,56 +1066,90 @@ createServer <- function(input, output, session)
     return(tdata)
   }
   imgInput <- function(tdata, tdata.copy, plot1_rangesx, plot1_rangesy) {
-    dimt <- attributes(tdata)$dimt
     img.name <- attributes(tdata)$img.name
-    dimcol <- dimt[1]
-    dimrow <- dimt[2]
+    dim.tdata <- image_info(tdata.copy) %>% '['(1,2:3) %>% as.numeric
     xleft <- 0
     ybottom <- 0
-    xright <- dimcol
-    ytop <- dimrow
+    xright <- dim.tdata[1]
+    ytop <- dim.tdata[2]
     par(mar = c(2.5, 2, 2, 0))
-    plot(x = c(xleft, xright), y = c(ybottom, ytop), 
-      xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
-      main = img.name, xlab = "", ylab = "", 
-      type = "n", axes = F, cex.main = 1.2)
+    # 0729
+    if(input$wh_ratio){
+      plot(tdata.copy, xlim = c(xleft, xright), ylim = c(ybottom, ytop),
+           main = img.name, xlab = "", ylab = "", cex.main = 1.2)
+      
+    } else {
+      plot(x = c(xleft, xright), y = c(ybottom, ytop),
+           xlim = c(xleft, xright), ylim = c(ybottom, ytop),
+           main = img.name, xlab = "", ylab = "",
+           type = "n", axes = F, cex.main = 1.2)
+      rasterImage(as.raster(tdata.copy), xleft, ybottom,
+                  xright, ytop, interpolate = FALSE)
+    }
+    
     axis(1, col = "grey", cex.axis = 1)
     axis(2, col = "grey", cex.axis = 1)
-    rasterImage(as.raster(tdata.copy), xleft, ybottom, 
-      xright, ytop, interpolate = FALSE)
+    
+    
     if (!is.null(plot1_rangesx)) {
       xmin <- plot1_rangesx[1]
       xmax <- plot1_rangesx[2]
       ymin <- plot1_rangesy[1]
       ymax <- plot1_rangesy[2]
+      
+      dimt <- image_info(tdata) %>% '['(1,2:3) %>% as.numeric
+      if (dimt[1] * dimt[2] >= 1.2e+07) {
+        xmin <- xmin/4
+        xmax <- xmax/4
+        ymin <- ymin/4
+        ymax <- ymax/4
+      }
       x <- c(xmin, xmax, xmax, xmin, xmin)
       y <- c(ymin, ymin, ymax, ymax, ymin)
       points(x, y, type = 'l', lty = 2, lwd = 1.5)
     }
   }
-  imgInput_crop <- function(tdata) {
-    img.name <- attributes(tdata)$img.name
-    dim.tdata <- dim(tdata)
-    dimcol <- dim.tdata[2]
-    dimrow <- dim.tdata[1]
+  imgInput_crop <- function(tdata, ver, hor) {
+    # 在这根据滚动条剪裁
+    dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
+    dimcol <- dim.tdata[1]
+    dimrow <- dim.tdata[2]
+    crop.x <- round(diff(hor)*dimcol/100)
+    crop.y <- round(diff(ver)*dimrow/1000)
+    ini.x <- round(hor[1]*dimcol/100)
+    ini.y <- round(ver[1]*dimrow/1000)
+    img.range <- paste0(as.character(crop.x), 'x', 
+                        as.character(crop.y), '+',
+                        as.character(ini.x), '+', 
+                        as.character(ini.y))
+    tdata <- image_crop(tdata, img.range)
+    # 新的维度
+    dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
     xleft <- 0
     ybottom <- 0
-    xright <- dimcol
-    ytop <- dimrow
-    par(mar = c(2.5, 2, 2, 0))
-    plot(x = c(xleft, xright), y = c(ybottom, ytop), 
-      xlim = c(xleft, xright), ylim = c(ybottom, ytop), 
-      main = img.name, xlab = "", ylab = "", 
-      type = "n", axes = F, cex.main = 1.2)
-    axis(1, col = "grey", cex.axis = 1)
-    axis(2, col = "grey", cex.axis = 1)
-    rasterImage(tdata, xleft, ybottom, 
-      xright, ytop, interpolate = FALSE)
+    xright <- dim.tdata[1]
+    ytop <- dim.tdata[2]
+    par(mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0))
+    # 0730
+    if(input$wh_ratio2) {
+      plot(tdata, xlim = c(xleft, xright), ylim = c(ybottom, ytop),
+           main = '', xlab = "", ylab = "", cex.main = 1.2)
+    } else {
+      plot(x = c(xleft, xright), y = c(ybottom, ytop),
+           xlim = c(xleft, xright), ylim = c(ybottom, ytop),
+           main = '', xlab = "", ylab = "",
+           type = "n", axes = F, cex.main = 1.2)
+      rasterImage(as.raster(tdata), xleft, ybottom,
+                  xright, ytop, interpolate = FALSE)
+    }
+    
+    # axis(1, col = "grey", cex.axis = 1)
+    # axis(2, col = "grey", cex.axis = 1)
     return(tdata)  
   }
   rotateImg <- function(tdata, degree) {
     tdata <- image_rotate(tdata, degree)
-    dim.tdata <- image_info(tdata) %>% '['(1,2:3) %>% as.numeric
+    dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
     attributes(tdata) <- c(attributes(tdata), list(dimt = dim.tdata))
     return(tdata)
   }
@@ -975,17 +1158,31 @@ createServer <- function(input, output, session)
   img.file.crop <- reactiveValues(data = NULL)
   img.file.copy <- reactiveValues(data = NULL)
   observeEvent(input$inmethod, {
+    # 图像
     img.file$data <- NULL
     img.file.copy$data <- NULL
     img.file.crop$data <- NULL
-    img.file.zoom$data <- NULL
+    # 边界
     df.loc$data <- NULL
     df.loc$ID <- NULL
+    # 刷子
     plot1_ranges$x <- NULL
     plot1_ranges$y <- NULL
     plot2_ranges$x <- NULL
     plot2_ranges$y <- NULL
+    # path
+    path.info$x <- NULL
+    path.info$y <- NULL
+    path.info$type <- NULL
+    path.info$ID <- NULL
+    path.info$horizontal <- NULL
+    path.info$incline <- NULL
+    path.info$h <- NULL
+    path.info$dpi <- NULL
+    path.info$max <- NULL
+    path.info$df <- NULL
     rw.dataframe$data <- NULL
+    
     updatePrettyRadioButtons(
       session = session, inputId = "cropcondition",
       choiceNames = 'UNCROPPED', choiceValues = list('a'),
@@ -1014,9 +1211,9 @@ createServer <- function(input, output, session)
     if (img.check1)
       img.check2 <- ifelse(nchar(img) > 1, TRUE, FALSE)
     if (any(!img.check1, !img.check2, is.null(img.file$data))) {
-      err.text <- paste('The preview image has not been generated')
+      et <- paste('The preview image has not been generated')
       sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
@@ -1024,15 +1221,26 @@ createServer <- function(input, output, session)
     img.file$data <- rotateImg(img.file$data, degree)
     img.file.crop$data <- img.file$data
     img.file.copy$data <- rotateImg(img.file.copy$data, degree)
-    img.file.zoom$data <- NULL
-    new.dimt <- attributes(img.file$data)[["dimt"]]
-    attributes(img.file.copy$data)[["dimt"]] <- new.dimt
+    # rotarteimg函数自带维度校正，此行代码似乎不需要
+    # new.dimt <- attributes(img.file$data)[["dimt"]]
+    # attributes(img.file.copy$data)[["dimt"]] <- new.dimt
     plot1_ranges$x <- NULL
     plot1_ranges$y <- NULL
     plot2_ranges$x <- NULL
     plot2_ranges$y <- NULL
     df.loc$data <- NULL
     df.loc$ID <- NULL
+    # path
+    path.info$x <- NULL
+    path.info$y <- NULL
+    path.info$type <- NULL
+    path.info$ID <- NULL
+    path.info$horizontal <- NULL
+    path.info$incline <- NULL
+    path.info$h <- NULL
+    path.info$dpi <- NULL
+    path.info$max <- NULL
+    path.info$df <- NULL
     rw.dataframe$data <- NULL
     updateTextInput(session, "m_line", value = '',
       label = 'Y-coordinate of the path')
@@ -1053,14 +1261,15 @@ createServer <- function(input, output, session)
         label = 'Magick OFF', value = FALSE)
     }
   })
+
   observeEvent(input$buttoninputimage, {
     magick.switch <- input$magick.switch
     if (!input$inmethod) {
       imgf <- input$selectfile
       if (is.null(imgf)) {
-        err.text <- paste('The image file has not been uploaded')
+        et <- paste('The image file has not been uploaded')
         sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
+          session = session, title = "Error", text = et, type = "error"
         )
         return()
       }
@@ -1070,9 +1279,9 @@ createServer <- function(input, output, session)
     if (input$inmethod) {
       img <- input$enter.path
       if (img == '') {
-        err.text <- paste('The file path has not been entered')
+        et <- paste('The file path has not been entered')
         sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
+          session = session, title = "Error", text = et, type = "error"
         )
         return()
       }
@@ -1094,15 +1303,24 @@ createServer <- function(input, output, session)
     plot2_ranges$y <- NULL
     df.loc$data <- NULL
     df.loc$ID <- NULL
+    # path
+    path.info$x <- NULL
+    path.info$y <- NULL
+    path.info$type <- NULL
+    path.info$ID <- NULL
+    path.info$horizontal <- NULL
+    path.info$incline <- NULL
+    path.info$h <- NULL
+    path.info$dpi <- NULL
+    path.info$max <- NULL
+    path.info$df <- NULL
     rw.dataframe$data <- NULL
     #cur.time <- as.character(Sys.time())
-    updateTextInput(session, "m_line", value = '',
-      label = 'Y-coordinate of the path')
-    updateTextInput(session, "tuid", value = '',
+    updateTextInput(session, "tuid", value = '001',
       label = 'Series ID')
-    updateTextInput(session, "sample_yr", value = '',
+    updateTextInput(session, "sample_yr", value = '2015',
       label = 'Sampling year')
-    updateTextInput(session, "dpi", value = '',
+    updateTextInput(session, "dpi", value = '1200',
       label = 'DPI of the image')
     updatePrettyRadioButtons(
       session = session, inputId = "cropcondition",
@@ -1114,7 +1332,6 @@ createServer <- function(input, output, session)
     img.file$data <- readImg(img, img.name, magick.switch)
     img.file.crop$data <- img.file$data
     #img.file.crop.copy$data <- as.raster(img.file$data)
-    img.file.zoom$data <- NULL
     dim.tdata <- attributes(img.file$data)[["dimt"]]
     dimcol <- dim.tdata[1]
     dimrow <- dim.tdata[2]
@@ -1130,9 +1347,9 @@ createServer <- function(input, output, session)
   plot1_ranges <- reactiveValues(x = NULL, y = NULL)
   observeEvent(input$buttoncrop, {
     if(is.null(img.file$data)){
-      err.text <- paste('The preview image have not been generated')
+      et <- paste('The preview image have not been generated')
       sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
@@ -1143,16 +1360,31 @@ createServer <- function(input, output, session)
     plot2_ranges$y <- NULL
     df.loc$data <- NULL
     df.loc$ID <- NULL
+    # path
+    path.info$x <- NULL
+    path.info$y <- NULL
+    path.info$type <- NULL
+    path.info$ID <- NULL
+    path.info$horizontal <- NULL
+    path.info$incline <- NULL
+    path.info$h <- NULL
+    path.info$dpi <- NULL
+    path.info$max <- NULL
+    path.info$df <- NULL
     rw.dataframe$data <- NULL
-    img.file.zoom$data <- NULL
-    updateTextInput(session, "m_line", value = '',
-      label = 'Y-coordinate of the path')
     updateTextInput(session, "tuid", value = '', label = 'Series ID')
     if (!is.null(plot1_brush)) {
       plot1_ranges$x <- c(round(plot1_brush$xmin), round(plot1_brush$xmax))
       plot1_ranges$y <- c(round(plot1_brush$ymin), round(plot1_brush$ymax))
-      dimcol <- attributes(img.file$data)[["dimt"]][1]
-      dimrow <- attributes(img.file$data)[["dimt"]][2]
+      #0730 解决超大图像切割出现错误的原因(刷子坐标乘以4倍)
+      dimt <- attributes(img.file$data)[["dimt"]]
+      dimcol <- dimt[1]
+      dimrow <- dimt[2]
+      if ((dimcol*dimrow) >= 1.2e+07) {
+        plot1_ranges$x <- plot1_ranges$x * 4
+        plot1_ranges$y <- plot1_ranges$y * 4
+      }
+
       if (plot1_ranges$x[1] <= 0) plot1_ranges$x[1] <- 0
       if (plot1_ranges$y[1] <= 0) plot1_ranges$y[1] <- 0
       if (plot1_ranges$x[2] >= dimcol) plot1_ranges$x[2] <- dimcol
@@ -1188,498 +1420,387 @@ createServer <- function(input, output, session)
     if (is.null(img.file$data)) return()
     imgInput(img.file$data, img.file.copy$data, plot1_ranges$x, plot1_ranges$y)
   })
+  
+  
   plot2_ranges <- reactiveValues(x = NULL, y = NULL)
-  img.file.zoom <- reactiveValues(data = NULL)
-  zoom.add <- reactiveValues(data = NULL)
   df.loc <- reactiveValues(data = NULL, ID = NULL)
-  observeEvent(input$buttoncreatpath, {
-    if (is.null(img.file.crop$data)) {
-      err.text <- 'Path creation fails because the image has not been plotted'
+  # 0801: 这个创建路径的按钮似乎没用了，应该改为图2上选择了
+  # 路径创建模式的鼠标悬浮和点击操作来进行
+  
+  # 可以升级路径数量
+  observeEvent(input$sel_sin_mul, {
+    if(input$sel_sin_mul == "Single Segment") {
+      updateNumericInput(session = session, inputId = 'num_seg', 
+                         value = 1, min = 1, max = 1, step = 1)
+    } else {
+      updateNumericInput(session = session, inputId = 'num_seg', 
+                         value = 1, min = 1, max = 9, step = 1)
+      # 同时取消horizontal选项
+      updatePrettyCheckbox(
+        session = session, inputId = "hor_path", value = FALSE)
+      # 取消倾斜
+      updatePrettyCheckbox(
+        session = session, inputId = "incline", value = FALSE)
+    }
+  })
+  
+  
+  
+  # 0803 删除一个线段
+  observeEvent(input$rm_last, {
+    if(is.null(path.info$x)) {
+      et <- 'The path to be removed does not exist.'
       sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
-    py <- as.numeric(input$m_line)
-    if (is.na(py)) {
-      err.text <- 'Please enter a valid y-coordinate of the path'
+    
+    if(length(path.info$x) == 1) {
+      path.info$x <- NULL
+      path.info$y <- NULL
+      path.info$type <- NULL
+      path.info$ID <- NULL
+      path.info$horizontal <- NULL
+      path.info$incline <- NULL
+      path.info$h <- NULL
+      path.info$dpi <- NULL
+      path.info$max <- NULL
+      et <- 'The path has been removed. You need to recreate a path.'
       sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
+        session = session, "Success", et, "success"
+      )
+      return()
+    }
+    
+    if(length(path.info$x) >= 2) {
+      path.info$x <- path.info$x[-length(path.info$x)]
+      path.info$y <- path.info$y[-length(path.info$y)]
+      et <- 'The last endpoint has been removed.'
+      sendSweetAlert(
+        session = session, "Success", et, "success"
+      )
+      return()
+    }
+  })
+  # 0803 删除所有线段
+  observeEvent(input$rm_all, {
+    if(is.null(path.info$x)) {
+      et <- 'The path to be removed does not exist.'
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    if(length(path.info$x) >= 1) {
+      path.info$x <- NULL
+      path.info$y <- NULL
+      path.info$type <- NULL
+      path.info$ID <- NULL
+      path.info$horizontal <- NULL
+      path.info$incline <- NULL
+      path.info$h <- NULL
+      path.info$dpi <- NULL
+      path.info$max <- NULL
+      df.loc$data <- NULL
+      df.loc$ID <- NULL
+      plot2_ranges$x <- NULL
+      plot2_ranges$y <- NULL
+      et <- 'The path has been removed. You need to recreate a path.'
+      sendSweetAlert(
+        session = session, "Success", et, "success"
+      )
+      return()
+    }
+    
+  })
+  
+  # 0818
+  # 删除边界点
+  observeEvent(input$rm_all_border, {
+    if(is.null(df.loc$data)) {
+      et <- 'Ring borders were not found'
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    df.loc$data <- NULL
+    et <- 'All ring borders have been removed'
+    sendSweetAlert(
+      session = session, "Success", et, "success"
+    )
+    return()
+  })
+  
+  # 加入一个值，用以记录拖动滑动条时候，图像左下角的坐标校正值
+  crop.offset.xy <- reactiveValues(x = NULL, y = NULL)
+  observeEvent(input$img_ver, {
+    if (is.null(img.file.crop$data))
+      return()
+    dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
+    dimrow <- dimt[2]
+    crop.offset.xy$y <- dimrow - round(input$img_ver[2]*dimrow/1000)
+
+  })
+
+  observeEvent(input$img_hor, {
+    if (is.null(img.file.crop$data))
+      return()
+    dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
+    dimcol <- dimt[1]
+    crop.offset.xy$x <- input$img_hor[1]*dimcol/100 %>% round
+  })
+  
+  observeEvent(img.file.crop$data, {
+    if (is.null(img.file.crop$data))
+      return()
+    dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
+    dimcol <- dimt[1]
+    dimrow <- dimt[2]
+    crop.offset.xy$x <- input$img_hor[1]*dimcol/100 %>% round
+    crop.offset.xy$y <- dimrow - round(input$img_ver[2]*dimrow/1000)
+  })
+  
+  # 记录鼠标悬浮值
+  hover.xy <- reactiveValues(x = NULL, y = NULL)
+  observeEvent(input$plot2_hover, {
+    hover.xy$x <- input$plot2_hover$x
+    hover.xy$y <- input$plot2_hover$y
+  })
+  
+  # 关掉水平路径或切换多路径时候自动关掉倾斜校正
+  observeEvent(input$hor_path, {
+    updatePrettyCheckbox(
+      session = session, inputId = "incline", 
+      value = FALSE)
+  })
+  
+  observeEvent(input$sel_sin_mul, {
+    updatePrettyCheckbox(
+      session = session, inputId = "incline", 
+      value = FALSE)
+  })
+  
+  ## 图2双击1：路径创建模式
+  path.info <- reactiveValues(x = NULL, y = NULL, type = NULL, ID = NULL,
+                              horizontal = NULL, incline = NULL, h = NULL, 
+                              dpi = NULL, max = NULL, df = NULL)
+  observeEvent(input$plot2_dblclick, 
+  {
+    if(input$sel_mode != "sel_path")
+      return()
+    if (is.null(img.file.crop$data)) {
+      et <- 'Path creation fails because the image has not been plotted'
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
     dpi <- as.numeric(input$dpi)
     if (is.na(dpi)) {
-      err.text <- 'Please enter the DPI of the image'
+      et <- 'Please enter the DPI of the image'
       sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
     seriesID <- input$tuid
     if (seriesID == '') {
-      err.text <- 'Please enter the series ID'
+      et <- 'Please enter a series ID'
       sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
-    incline <- input$incline
-    if(incline){
-      h.dis <- as.numeric(input$h.dis)
-      incline.cond <- 1
-    } else {
-      h.dis <- 0
-      incline.cond <- 0
-    }
-    dim.tdata <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
-    dimrow <- dim.tdata[2]
-    if (py >= dimrow) {
-      err.text <- paste('The Y-coordinate of the path is out of range.',
-        'Please type a valid Y-coordinate')
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return() 
-    }
-    f.df.loc <- c(dpi, incline.cond, 0, py, h.dis, 0) %>%
-      matrix(byrow = T, nrow = 2) %>%
-      as.data.frame(stringsAsFactors = F)
-    colnames(f.df.loc) <- c('x', 'y', 'z')
-    df.loc$data <- f.df.loc
-    df.loc$ID <- seriesID
-  })
-  observeEvent(input$buttoncreatpath2, {
-    if (is.null(img.file.crop$data)) {
-      err.text <- 'Path creation fails because the image has not been plotted'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    py <- as.numeric(input$m_line)
-    if (is.na(py)) {
-      err.text <- 'Please enter a valid y-coordinate of the path'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    dpi <- as.numeric(input$dpi)
-    if (is.na(dpi)) {
-      err.text <- 'Please enter the DPI of the image'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    seriesID <- input$tuid
-    if (seriesID == '') {
-      err.text <- 'Please enter the series ID'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    incline <- input$incline
-    if(incline){
-      h.dis <- as.numeric(input$h.dis)
-      incline.cond <- 1
-    } else {
-      h.dis <- 0
-      incline.cond <- 0
-    }
-    dim.tdata <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
-    dimrow <- dim.tdata[2]
-    if (py >= dimrow) {
-      err.text <- paste('The Y-coordinate of the path is out of range.',
-        'Please type a valid Y-coordinate')
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return() 
-    }
-    f.df.loc <- c(dpi, incline.cond, 0, py, h.dis, 0) %>%
-      matrix(byrow = T, nrow = 2) %>%
-      as.data.frame(stringsAsFactors = F)
-    colnames(f.df.loc) <- c('x', 'y', 'z')
-    df.loc$data <- f.df.loc
-    df.loc$ID <- seriesID
-  })
-  observeEvent(input$buttonsubimg, {
-    plot2_brush <- input$plot2_brush
-    if (is.null(img.file.crop$data)) {
-      err.text <- 'The tree ring image has not been plotted'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    if (!is.null(plot2_brush$xmin)) {
-      plot2_ranges$x <- c(round(plot2_brush$xmin), round(plot2_brush$xmax))
-      plot2_ranges$y <- c(round(plot2_brush$ymin), round(plot2_brush$ymax))
-      dim.tdata <- image_info(img.file.crop$data) %>% '['(1,2:3) %>% as.numeric
-      dimcol <- dim.tdata[1]
-      dimrow <- dim.tdata[2]
-      if (plot2_ranges$x[1] <= 0) plot2_ranges$x[1] <- 0
-      if (plot2_ranges$y[1] <= 0) plot2_ranges$y[1] <- 0
-      if (plot2_ranges$x[2] >= dimcol) plot2_ranges$x[2] <- dimcol
-      if (plot2_ranges$y[2] >= dimrow) plot2_ranges$y[2] <- dimrow
-      xmin <- plot2_ranges$x[1]
-      ymin <- plot2_ranges$y[1]
-      xmax <- plot2_ranges$x[2]
-      ymax <- plot2_ranges$y[2]
-      img.range <- paste0(as.character(xmax - xmin), 'x', 
-        as.character(ymax - ymin), '+',
-        as.character(xmin), '+',
-        as.character(dimrow - ymax))
-      img.file.zoom$data <- image_crop(img.file.crop$data, img.range)
-    } else {
-      plot2_ranges$x <- NULL
-      plot2_ranges$y <- NULL
-      img.file.zoom$data <- NULL
-      err.text <- 'You have not selected a part of the image by brushing'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-  })
-  observeEvent(input$plot2_dblclick, {
-    plot2_brush <- input$plot2_brush
-    if (is.null(img.file.crop$data)) {
-      err.text <- 'The tree ring image has not been plotted'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    if (!is.null(plot2_brush$xmin)) {
-      plot2_ranges$x <- c(round(plot2_brush$xmin), round(plot2_brush$xmax))
-      plot2_ranges$y <- c(round(plot2_brush$ymin), round(plot2_brush$ymax))
-      dim.tdata <- image_info(img.file.crop$data) %>% '['(1,2:3) %>% as.numeric
-      dimcol <- dim.tdata[1]
-      dimrow <- dim.tdata[2]
-      if (plot2_ranges$x[1] <= 0) plot2_ranges$x[1] <- 0
-      if (plot2_ranges$y[1] <= 0) plot2_ranges$y[1] <- 0
-      if (plot2_ranges$x[2] >= dimcol) plot2_ranges$x[2] <- dimcol
-      if (plot2_ranges$y[2] >= dimrow) plot2_ranges$y[2] <- dimrow
-      xmin <- plot2_ranges$x[1]
-      ymin <- plot2_ranges$y[1]
-      xmax <- plot2_ranges$x[2]
-      ymax <- plot2_ranges$y[2]
-      img.range <- paste0(as.character(xmax - xmin), 'x', 
-        as.character(ymax - ymin), '+',
-        as.character(xmin), '+',
-        as.character(dimrow - ymax))
-      img.file.zoom$data <- image_crop(img.file.crop$data, img.range)
-    } else {
-      plot2_ranges$x <- NULL
-      plot2_ranges$y <- NULL
-      img.file.zoom$data <- NULL
-      err.text <- 'You have not selected a part of the image by brushing'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-  })
-  observeEvent(input$zoom_dblclick, {
-    if (is.null(img.file.zoom$data)) {
-      err.text <- 'A zoomed-in image has not been created'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    } 
-    if (is.null(df.loc$data)) {
-      err.text <- paste('You can not add new ring borders',
-        'because a path has not been created')
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    } 
-    f.df.loc <- df.loc$data
-    plot.arg <- f.df.loc[1:2,]
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    py <- plot.arg[2, 1] - plot2_ranges$y[1]
-    bor <- input$zoom_dblclick
-    bor.x <- bor$x + plot2_ranges$x[1]
-    bor.y <- bor$y
-    if (!incline) 
-      f.df.loc <- rbind(f.df.loc, list(bor.x, bor.y, 0))
-    if (incline) {
-      if (bor.y == py) {
-        err.text <- 'Please click on the upper path or the lower path'
+    # 注意，画图时候图上坐标应减去滑动条的坐标范围
+    dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
+    dimrow <- dimt[2]
+    dimcol <- dimt[1]
+    # 如果已经点够了，不让点击了
+    if (!is.null(path.info$max)) {
+      if(length(path.info$x) >= path.info$max) {
+        et <- paste('You have already created a path')
         sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
+          session = session, title = "Error", text = et, type = "error"
         )
         return()
       }
-      if (bor.y > py) 
-        f.df.loc <- rbind(f.df.loc, list(bor.x, bor.y, 1))
-      if (bor.y < py) 
-        f.df.loc <- rbind(f.df.loc, list(bor.x, bor.y, -1))
     }
-    df.loc$data <- f.df.loc
-  })
-  # plot3_ranges <- reactiveValues(data = NULL)
-  observeEvent(input$buttonzoomdel, {
-    if (is.null(input$zoom_brush$xmin)) {
-      err.text <- 'You have not selected a part of the image by brushing'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    } 
-    if (is.null(df.loc$data)) {
-      err.text <- 'A path has not been created'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    } 
-    if (nrow(df.loc$data) <= 2) {
-      remove.text <- 'Ring border was NOT found along the path'
-      sendSweetAlert(
-        session = session, title = "Error", text = remove.text, type = "error"
-      )
-      return()
-    } 
-    xmin <- input$zoom_brush$xmin
-    xmax <- input$zoom_brush$xmax
-    ymin <- input$zoom_brush$ymin
-    ymax <- input$zoom_brush$ymax
-    plot.arg <- df.loc$data[1:2,]
-    dpi <- plot.arg[1, 1]
-    dp <- dpi/25.4
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    py <- plot.arg[2, 1]
-    h.dis <- plot.arg[2, 2]
-    x.ranges <- df.loc$data$x[-c(1:2)] - plot2_ranges$x[1]
-    delete.bor <- which(x.ranges >= xmin & x.ranges <= xmax)
-    if (length(delete.bor) == 0) {
-      err.text <- 'Ring border was NOT found in the area you selected'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    if (incline) {
-      number.of.pixels <- round((h.dis/2) * dp)
-      py.upper <- py + number.of.pixels
-      py.lower <- py - number.of.pixels
-      which.line <- df.loc$data$z[-c(1:2)][delete.bor]
-      y.value <- ifelse(which.line > 0, 
-        py.upper - plot2_ranges$y[1],
-        py.lower - plot2_ranges$y[1])
-      is.contain <- ymin <= y.value & ymax >= y.value
-      if (any(is.contain)) {
-        delete.bor <- delete.bor[is.contain] + 2
-        df.loc$data <- df.loc$data[-delete.bor,]
-      } else {
-        err.text <- 'Ring border was NOT found in the area you selected'
+    # 某点的x坐标不能小于前一个点
+    if(length(path.info$x) >= 1) {
+      cur.p.x <- round(input$plot2_dblclick$x + crop.offset.xy$x)
+      last.point <- path.info$x[length(path.info$x)]
+      if(last.point >= cur.p.x) {
+        et <- paste('The x-position of the current point must be greater',
+                    'than the x-position of the previous point')
         sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
+          session = session, title = "Error", text = et, type = "error"
         )
-      }
-    } else {
-      y.value <- py - plot2_ranges$y[1]
-      is.contain <- ymin <= y.value & ymax >= y.value
-      if (any(is.contain)) {
-        delete.bor <- delete.bor[is.contain] + 2
-        df.loc$data <- df.loc$data[-delete.bor,]
-      } else {
-        err.text <- 'Ring border was NOT found in the area you selected'
-        sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
-        )
+        return()
       }
     }
-  })
-  output$pre.img2 <- renderPlot({
-    if (is.null(img.file$data)) return()
-    imgInput_crop(as.raster(img.file.crop$data))
-    sample_yr <- as.numeric(input$sample_yr)
-    if (is.na(sample_yr)) return()
-    pch <- as.numeric(input$pch)
-    bor.color <- input$border.color
-    lab.color <- input$label.color
-    l.w <- as.numeric(input$linelwd)
-    label.cex <- as.numeric(input$label.cex)*0.7
-    if (is.null(df.loc$data)) return()
-    if (is.null(df.loc$ID)) return()
-    f.df.loc <- df.loc$data
-    plot.arg <- f.df.loc[1:2,]
-    dpi <- plot.arg[1, 1]
+    #双击时，储存路径
+    px <- round(input$plot2_dblclick$x + crop.offset.xy$x)
+    # 点击的点的x坐标不能超出左右的范围
+    if (px <= 0 | px >= dimcol) {
+      et <- paste('The X-coordinate of the endpoint is out of',
+                  'range. Please click on the image.')
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    # 检测点击的点之y坐标是否正确
+    crop.h <- round(diff(input$img_ver)*dimrow/1000)
+    if (input$plot2_dblclick$y >= crop.h | input$plot2_dblclick$y <= 0) {
+      et <- paste('The Y-coordinate of the endpoint is out of',
+                        'range. Please click on the image.')
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return() 
+    }
+    py <- round(input$plot2_dblclick$y + crop.offset.xy$y)
+    # 检测双路径是否能容下
     dp <- dpi/25.4
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    py <- plot.arg[2, 1]
-    h.dis <- plot.arg[2, 2]
-    img.name <- paste('Series ID:', df.loc$ID)
-    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color, 
-      lab.color, pch, label.cex, f.df.loc, T, img.name)
+    h.dis <- as.numeric(input$h.dis)
+    d <- h.dis*dp/2
+    incline <- input$incline
+    hor <- input$hor_path
+    if (hor & incline) {
+      if(py + d >= dimrow) {
+        et <- paste('The Y-coordinate of the upper path is out of range.',
+                    'Please decrease the distance between paths')
+        sendSweetAlert(
+          session = session, title = "Error", text = et, type = "error"
+        )
+        return()
+      }
+      if(py - d <= 0) {
+        et <- paste('The Y-coordinate of the lower path is out of range.',
+                    'Please decrease the distance between paths')
+        sendSweetAlert(
+          session = session, title = "Error", text = et, type = "error"
+        )
+        return()
+      }
+    }
+    
+    # 如果水平路径，把py改成第一次的
+    if(length(path.info$x) >= 1) {
+      if (path.info$horizontal) {
+        py <- path.info$y[1]
+      }
+    }
+    
+    path.info$x <- c(path.info$x, px)
+    path.info$y <- c(path.info$y, py)
+    if(length(path.info$x) == 1) {
+      rt <- paste('The beginning point of the path have been created.')
+      sendSweetAlert(
+        session = session, title = "Success", text = rt, type = "success"
+      )
+      # 只在第一次点击时候记录路径信息
+      path.info$type <- input$sel_sin_mul
+      path.info$ID <- seriesID
+      path.info$horizontal <- input$hor_path
+      path.info$incline <- input$incline
+      path.info$h <- as.numeric(input$h.dis)
+      path.info$dpi <- dpi
+      path.info$max <- input$num_seg + 1
+      df.loc$ID <- input$tuid
+    }
+    ## 0804 创建完路径之后，储存一个路径组成点的坐标
+    # 自动检测会提取路径点上下的图像像素值，用以边缘检测
+    if(length(path.info$x) == path.info$max) {
+      rt <- paste('The ending point of the path have been created.',
+                  'Please switch to another working mode.')
+      sendSweetAlert(
+        session = session, title = "Success", text = rt, type = "success"
+      )
+      px <- path.info$x
+      py <- path.info$y
+      path.df <- as.data.frame(matrix(ncol = 2, nrow = 0))
+      colnames(path.df) <- c('x', 'y')
+      len <- length(path.info$x) - 1
+      for (i in 1:len) {
+        p1 <- px[i]
+        p2 <- px[i+1]
+        lm1 <- lm(py[c(i, i + 1)] ~ c(p1, p2))
+        cf1 <- coef(lm1)
+        x1 <- p1:p2
+        y1 <- cf1[1] + cf1[2] * x1
+        c1 <- data.frame(x = x1, y = y1)
+        path.df <- rbind(path.df, c1)
+        
+      }
+      # 这里的坐标是相对于全图的
+      path.df$y <- round(path.df$y)
+      path.info$df <- path.df
+    }
+    
   })
-  output$zoom.img <- renderPlot({
-    if (is.null(plot2_ranges$x)) return()
-    if (is.null(img.file.zoom$data)) return()
-    # if (is.null(img.file.zoom.copy$data)) return()
-    imgInput_crop(as.raster(img.file.zoom$data))
-    sample_yr <- as.numeric(input$sample_yr)
-    if(is.na(sample_yr)) return()
-    pch <- as.numeric(input$pch)
-    bor.color <- input$border.color
-    lab.color <- input$label.color
-    l.w <- as.numeric(input$linelwd)
-    label.cex <- as.numeric(input$label.cex)
-    if(is.null(df.loc$data)) return()
-    if(is.null(df.loc$ID)) return()
-    f.df.loc <- df.loc$data
-    f.df.loc$x[-c(1, 2)] <- f.df.loc$x[-c(1, 2)] - plot2_ranges$x[1]
-    plot.arg <- f.df.loc[1:2, ]
-    dpi <- plot.arg[1, 1]
-    dp <- dpi/25.4
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    py <- plot.arg[2, 1] - plot2_ranges$y[1]
-    h.dis <- plot.arg[2, 2]
-    img.name <- paste('Series ID:', df.loc$ID)
-    plot.marker(py, incline, dp, sample_yr, h.dis, l.w, bor.color, 
-      lab.color, pch, label.cex, f.df.loc, T, img.name)
-  })
-  #autoresult <- reactiveValues(data = NULL, text = NULL)
-  #icon.value <- reactiveValues(data = 0)
+
+  ## 图2：检测模式: 直接检测路径附近的点
   observeEvent(input$button_run_auto, { 
-    if (is.null(input$plot2_brush)) {
-      brush.text <- paste('Please select a part of the image by brushing', 
-        'before running the automatic measurement')
+    if (is.null(path.info$df)) {
+      et <- 'A path has not been created.'
       sendSweetAlert(
-        session = session, title = "Error", text = brush.text, type = "error"
+        session = session, title = "Error", text = et, type = "error"
       )
       return()
     }
-    if (is.null(df.loc$data)) {
-      err.text <- 'A path has not been created'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
-      return()
-    }
-    f.df.loc <- df.loc$data
-    brush <- input$plot2_brush
-    x1 <- brush$xmin
-    x2 <- brush$xmax
-    y1 <- brush$ymin
-    y2 <- brush$ymax
     isrgb <- input$isrgb
     if (isrgb) {
       RGB <- c(0.299, 0.587, 0.114)
     } else {
       RGB <- strsplit(input$customRGB, ',')[[1]] %>% as.numeric
     }
-    plot.arg <- f.df.loc[1:2,]
-    dpi <- plot.arg[1, 1]
+    # 这些信息可以放到检测函数里面去
+    dpi <- path.info$dpi
     dp <- dpi/25.4
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    m_line <- plot.arg[2, 1]
-    h.dis <- plot.arg[2, 2]
-    m_line.upper <- m_line
-    m_line.lower <- m_line
-    if (incline) {
-      number.of.pixels <- round((h.dis/2) * dp)
-      m_line.lower <- m_line + number.of.pixels
-      m_line.upper <- m_line - number.of.pixels
-    }
-    img <- img.file.crop$data
-    method <- input$method
-    linear.warning <- FALSE
-    if (m_line.upper <= y1 | m_line.lower >= y2) {
-      result.text <- paste('The brushed area does not contain the',
-        'path. Please re-brush on the image')
-      sendSweetAlert(
-        session = session, title = "Error", text = result.text, type = "error"
-      )
-      return()
-    }
+    incline <- path.info$incline
+    h.dis <- path.info$h
+    ph <- path.info$horizontal
+    path.df <- path.info$df
+    px <- path.info$x
+    py <- path.info$y
+    
+    # 导入结构元素的信息
     defaultse <- input$defaultse
     if (defaultse) {
       struc.ele1 <- NULL
       struc.ele2 <- NULL
     } else {
-      struc.ele1 <- input$struc.ele1
-      struc.ele1 <- strsplit(struc.ele1, ',')[[1]] %>% as.numeric
-      if (length(struc.ele1) >= 3) {
-        err.t <- paste('The rectangular structuring element allows no more',
-          'than two non-negative integers. If entering two',
-          'integers, the first integer is the width of the',
-          'structuring element and the second is height. Use',
-          'a comma to separate integers. For example: 15,10')
-        sendSweetAlert(
-          session = session, title = "Error", text = err.t, type = "error"
-        )
-        return()
-      }
-      if (length(struc.ele1) == 0) {
-        err.text <- paste('The size of the first structuring',
-          'element has not been entered')
-        sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
-        )
-        return()
-      }
-      if (as.numeric(struc.ele1) %>% is.na %>% any) {
-        err.text <- paste('The size of the structuring element',
-          'should be non-negative integers')
-        sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
-        )
-        return()
-      }
-      if (length(struc.ele1) == 1)
-        struc.ele1 <- c(struc.ele1, struc.ele1)
-      struc.ele2 <- input$struc.ele2
-      struc.ele2 <- strsplit(struc.ele2, ',')[[1]] %>% as.numeric
-      if (length(struc.ele2) >= 3) {
-        err.t <- paste('The rectangular structuring element allows no more',
-          'than two non-negative integers. If entering two',
-          'integers, the first integer is the width of the',
-          'structuring element and the second is height. Use',
-          'a comma to separate integers. For example: 15,10')
-        sendSweetAlert(
-          session = session, title = "Error", text = err.t, type = "error"
-        )
-        return()
-      }
-      if (length(struc.ele2) == 0) {
-        err.text <- paste('The size of the second structuring',
-          'element has not been entered')
-        sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
-        )
-        return()
-      }
-      if (as.numeric(struc.ele2) %>% is.na %>% any) {
-        err.text <- paste('The size of the structuring element',
-          'should be non-negative integers')
-        sendSweetAlert(
-          session = session, title = "Error", text = err.text, type = "error"
-        )
-        return()
-      }
-      if(length(struc.ele2) == 1)
-        struc.ele2 <- c(struc.ele2, struc.ele2)
+      struc.ele1 <- c(input$struc.ele1, input$struc.ele1) %>% as.numeric
+      struc.ele2 <- c(input$struc.ele2, input$struc.ele2) %>% as.numeric
+    }  
+    
+    # 生成图像
+    # 图像考虑左/右边空余不能小于2个结构元素
+    img <- img.file.crop$data
+    method <- input$method
+    if(input$watershed.threshold == 'custom.waterthr'){
+      watershed.threshold <- input$watershed.threshold2
+    } else {
+      watershed.threshold <- input$watershed.threshold
     }
+    watershed.adjust <- input$watershed.adjust
+    
+    # 进度条
+    progressSweetAlert(
+      session = session, id = "detect_progress",
+      title = "Detection in progress",
+      display_pct = F, value = 0
+    )
+    
     if (method == 'watershed') {
-      if(input$watershed.threshold == 'custom.waterthr'){
-        watershed.threshold <- input$watershed.threshold2
-      } else {
-        watershed.threshold <- input$watershed.threshold
-      }
-      watershed.adjust <- input$watershed.adjust
-      df.loc$data <- automatic.det(img, incline, method, h.dis, dpi, m_line, 
-        RGB, x1, x2, y1, y2, plot.arg,
-        watershed.threshold, watershed.adjust, 
-        struc.ele1, struc.ele2)
+      
+      df.loc$data <- automatic.det(
+        img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
+        watershed.threshold, watershed.adjust, struc.ele1, struc.ele2
+      )
     }
     if (method == "canny") {
       default.canny <- input$defaultcanny
@@ -1688,104 +1809,223 @@ createServer <- function(input, output, session)
       canny.adjust <- input$canny.adjust
       canny.smoothing <- input$canny.smoothing
       df.loc$data <- automatic.det(
-        img, incline, method, h.dis, dpi, m_line, RGB, 
-        x1, x2, y1, y2, plot.arg, watershed.threshold, 
-        watershed.adjust, struc.ele1, struc.ele2, default.canny,
-        canny.t1, canny.t2, canny.adjust, canny.smoothing)
+        img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
+        watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
+        default.canny, canny.t1, canny.t2, canny.adjust, canny.smoothing
+      )
     }   
     if (method == "lineardetect") {
-      origin <- as.numeric(input$origin)
-      py.ld <- round((y1 + y2)/2)
-      updateTextInput(session, "m_line", value = as.character(round(py.ld)))
-      f.df.loc <- automatic.det(img, incline, method, h.dis, dpi, m_line, 
-        RGB, x1, x2, y1, y2, plot.arg, origin = origin)
-      if(incline){
-        updateCheckboxInput(session, 'incline', 'Inclined tree rings', F)
-        f.df.loc[1, 2] <- FALSE
-        linear.warning <- TRUE
+      if (incline | input$sel_sin_mul == "Multi Segments") {
+        rt <- paste('Note that the linear detection supports only Single',
+                    'Segment mode without ring width correction. Please',
+                    'remove the current path and recreate a new path')
+        sendSweetAlert(
+          session = session, title = "ERROR", text = rt, type = "warning"
+        )
+        return()
       }
-      f.df.loc[2, 1] <- py.ld 
+      origin <- as.numeric(input$origin)
+      f.df.loc <- automatic.det(
+        img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df, 
+        struc.ele1 = struc.ele1, struc.ele2 = struc.ele2, origin = origin
+      )
       df.loc$data <- f.df.loc
     }
-    number.border <- nrow(df.loc$data) - 2
+
+
+    number.border <- nrow(df.loc$data)
     if (number.border == 0) {
       rt <- 'Ring border was NOT detected'
+      closeSweetAlert(session = session)
       sendSweetAlert(
         session = session, title = "Error", text = rt, type = "error"
       )
     } else {
       rt <- paste(number.border, 'borders were detected')
+      closeSweetAlert(session = session)
       sendSweetAlert(
         session = session, title = "Finished", text = rt, type = "success"
       )
     }  
-    if (linear.warning) {
-      rt <- paste('If you use the linear detection, don\'t',
-        'tick the checkbox "Inclined tree rings".',
-        'This checkbox has been automatically corrected.')
+
+  })
+
+  ## 图2双击3：编辑模式
+  
+  # 自动检测模式下双击，提示错误
+  observeEvent(input$plot2_dblclick, {
+    if(input$sel_mode == "sel_det"){
+      et <- paste('If you want to add new ring borders by double-clicking,',
+                  'please switch to the "Ring Editing" mode')
       sendSweetAlert(
-        session = session, title = "TIPS", text = rt, type = "warning"
+        session = session, title = "Error", text = et, type = "error"
       )
+      return()
     }
+      
   })
-  observeEvent(input$buttonrcm, {
-    # plot1_ranges$x <- NULL
-    # plot1_ranges$y <- NULL
-    plot2_ranges$x <- NULL
-    plot2_ranges$y <- NULL
-    df.loc$data <- NULL
-    df.loc$ID <- NULL
-    updateTextInput(session, "m_line", value = '',
-      label = 'Y-coordinate of the path')
-    rt <- paste('The existing path and borders have been',
-      'removed. You need to re-create a path')
-    sendSweetAlert(
-      session = session, title = "Success", text = rt, type = "success"
-    )
-  })
-  observeEvent(input$buttonrcm2, {
-    plot2_ranges$x <- NULL
-    plot2_ranges$y <- NULL
-    df.loc$data <- NULL
-    df.loc$ID <- NULL
-    updateTextInput(session, "m_line", value = '',
-      label = 'Y-coordinate of the path')
-    rt <- paste('The existing path and borders have been',
-      'removed. You need to re-create a path')
-    sendSweetAlert(
-      session = session, title = "Success", text = rt, type = "success"
-    )
-  })
-  observeEvent(input$button_del, { 
+  
+  # 双击添加点
+  observeEvent(input$plot2_dblclick, 
+  {
+    if(input$sel_mode != "sel_edit")
+      return()
+    if (is.null(img.file.crop$data)) {
+      et <- paste('Adding new ring borders fails',
+                  'because the image has not been plotted')
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    if (is.null(path.info$df)) {
+      et <- paste('Adding new ring borders fails',
+                  'because a path has not been created')
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    # 有可能没有用自动检测，所以创建一个df.loc$data
     if (is.null(df.loc$data)) {
+      bor.df <- matrix(nrow = 0, ncol = 3) %>% as.data.frame
+      colnames(bor.df) <- c('x', 'y', 'z')
+    } else {
+      bor.df <- df.loc$data
+    }
+    
+    # 注意，画图时候图上坐标应减去滑动条的坐标范围
+    dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
+    dimrow <- dimt[2]
+    dimcol <- dimt[1]
+    # 鼠标信息
+    bor <- input$plot2_dblclick
+    px <- round(bor$x + crop.offset.xy$x)
+    y_cor <- round(bor$y + crop.offset.xy$y)
+    if (px <= path.info$x[1] | px >= path.info$x[length(path.info$x)]) {
+      et <- paste('The X-coordinate of the point you click is',
+                  'out of range. Please click on the path')
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    # 检测点击的点之y坐标是否正确
+    crop.h <- round(diff(input$img_ver)*dimrow/1000)
+    if (input$plot2_dblclick$y >= crop.h | input$plot2_dblclick$y <= 0) {
+      et <- paste('The Y-coordinate of the point you click is',
+                  'out of range. Please click on the image')
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return() 
+    }
+    # 0814待解决 
+    # 点击的点需呀根据x坐标找路径上对应的Y点，不能用原始y坐标
+    # 解决方案：找路径和点击点x坐标的交集
+    path.df <- path.info$df
+    if (path.info$horizontal & path.info$incline) {
+      # 这里每个X对应俩点
+      dpi <- path.info$dpi
+      dp <- dpi/25.4
+      h.dis <- path.info$h
+      py <- path.df$y[path.df$x == px]
+      py <- ifelse(y_cor > path.info$y[1], 
+                   py + round(h.dis * dp / 2),
+                   py - round(h.dis * dp / 2))
+      pz <- ifelse(y_cor > path.info$y[1], 'u', 'l')
+      temp.df <- data.frame(x = px, y = py, z = pz)
+      print(temp.df)
+    } else {
+      py <- path.df$y[path.df$x == px]
+      temp.df <- data.frame(x = px, y = py, z = 'u')
+    }
+    df.loc$data <- rbind(bor.df, temp.df)
+
+  })
+  
+  # 刷子+按钮删除点
+  observeEvent(input$buttonzoomdel, {
+    if (is.null(input$plot2_brush$xmin)) {
+      err.text <- 'You have not selected ring borders with a brush'
+      sendSweetAlert(
+        session = session, title = "Error", text = err.text, type = "error"
+      )
+      return()
+    } 
+    if (is.null(path.info$df)) {
+      err.text <- 'A path has not been created'
+      sendSweetAlert(
+        session = session, title = "Error", text = err.text, type = "error"
+      )
+      return()
+    } 
+    if (is.null(df.loc$data)) {
+      remove.text <- 'Ring border was NOT found along the path'
+      sendSweetAlert(
+        session = session, title = "Error", text = remove.text, type = "error"
+      )
+      return()
+    } 
+    xmin <- round(input$plot2_brush$xmin + crop.offset.xy$x)
+    xmax <- round(input$plot2_brush$xmax + crop.offset.xy$x)
+    ymin <- round(input$plot2_brush$ymin + crop.offset.xy$y)
+    ymax <- round(input$plot2_brush$ymax + crop.offset.xy$y)
+    x.ranges <- df.loc$data$x
+    delete.bor <- x.ranges >= xmin & x.ranges <= xmax
+    y.ranges <- df.loc$data$y
+    is.contain <- ymin <= y.ranges & ymax >= y.ranges
+    delete.bor <- delete.bor & is.contain
+    if (any(delete.bor)) {
+      df.loc$data <- df.loc$data[!delete.bor,]
+    } else {
+      err.text <- 'Ring border was NOT found in the area you selected'
+      sendSweetAlert(
+        session = session, title = "Error", text = err.text, type = "error"
+      )
+    }
+  })
+  
+  output$ring_edit <- renderPlot({
+    if (is.null(img.file$data)) return()
+    imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
+    sample_yr <- as.numeric(input$sample_yr)
+    if (is.na(sample_yr)) return()
+    pch <- as.numeric(input$pch)
+    bor.color <- input$border.color
+    lab.color <- input$label.color
+    l.w <- as.numeric(input$linelwd)
+    label.cex <- as.numeric(input$label.cex)*0.7
+    plot.marker(path.info, hover.xy, sample_yr, l.w, pch,
+                bor.color, lab.color, label.cex)
+  })
+  
+  observeEvent(input$button_del, { 
+    if (is.null(path.info$df)) {
       rt <- paste('You can not remove ring borders because',
-        'the path has not been created.')
+                  'the path has not been created.')
       sendSweetAlert(
         session = session, title = "Error", text = rt, type = "error"
       )
       return()
     }
-    f.df.loc <- df.loc$data
-    plot.arg <- f.df.loc[1:2, ]
-    dpi <- plot.arg[1, 1]
-    dp <- dpi/25.4
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    m_line <- plot.arg[2, 1]
-    h.dis <- plot.arg[2, 2]
-    if (nrow(f.df.loc) < 3) {
-      rt <- 'Ring border was not found along the path'
+    if (is.null(df.loc$data)) {
+      rt <- paste('Ring borders were not found')
       sendSweetAlert(
         session = session, title = "Error", text = rt, type = "error"
       )
       return()
     }
-    bx <- f.df.loc$x[-c(1, 2)]
-    where.bx <- f.df.loc$z[-c(1, 2)]
-    where.bx <- where.bx[order(bx)]
+    incline <- path.info$incline
+    bx <- df.loc$data$x
+    by <- df.loc$data$y
+    bz <- df.loc$data$z
+    bz <- bz[order(bx)]
+    by <- by[order(bx)]
     bx <- sort(bx)
     if (incline) {
       if (input$del.u == '' & input$del.l == '') {
-        rt <- 'Please enter at least one border number'
+        rt <- 'Please enter border numbers'
         sendSweetAlert(
           session = session, title = "Error", text = rt, type = "error"
         )
@@ -1798,12 +2038,14 @@ createServer <- function(input, output, session)
       if(del.l != '')
         del.l <- strsplit(del.l, ",")[[1]] %>% as.numeric
       # ndf <- length(del.u) + length(del.l)
-      up <- which(where.bx > 0)
+      up <- which(bz == 'u')
       lenup <- length(up)
       bx.u <- bx[up]
+      by.u <- by[up]
       if (lenup >= 1 & input$del.u != '') {
         if (max(del.u) <= lenup) {
           bx.u <- bx.u[-del.u]
+          by.u <- by.u[-del.u]
         } else {
           rt <- 'The border number you entered did not exist'
           sendSweetAlert(
@@ -1812,12 +2054,14 @@ createServer <- function(input, output, session)
           return()
         }
       }
-      lower <- which(where.bx < 0)
+      lower <- which(bz == 'l')
       lenlo <- length(lower)
       bx.l <- bx[lower]
+      by.l <- by[lower]
       if (lenlo >= 1 & input$del.l != '') {
         if (max(del.l) <= lenlo) {
           bx.l <- bx.l[-del.l]
+          by.l <- by.l[-del.l]
         } else {
           rt <- 'The border number you entered did not exist'
           sendSweetAlert(
@@ -1826,9 +2070,9 @@ createServer <- function(input, output, session)
           return()
         }
       }
-      df.u <- data.frame(x = bx.u, y = m_line, z = 1) 
-      df.l <- data.frame(x = bx.l, y = m_line, z = -1)
-      df.loc$data <- rbind(plot.arg, df.u, df.l)
+      df.u <- data.frame(x = bx.u, y = by.u, z = 'u')
+      df.l <- data.frame(x = bx.l, y = by.l, z = 'l')
+      df.loc$data <- rbind(df.u, df.l)
       updateTextInput(session, "del.u",
         label = 'Border number in the upper portion',
         value = '')
@@ -1837,7 +2081,7 @@ createServer <- function(input, output, session)
         value = '')
     } else { 
       if (input$del == '') {
-        rt <- 'Please enter at least one border number'
+        rt <- 'You have not entered any border number'
         sendSweetAlert(
           session = session, title = "Error", text = rt, type = "error"
         )
@@ -1846,8 +2090,8 @@ createServer <- function(input, output, session)
       del <- strsplit(input$del, ",")[[1]] %>% as.numeric
       if (max(del) <= length(bx)) {
         bx <- bx[-del]
-        df <- data.frame(x = bx, y = m_line, z = 0)
-        df.loc$data <- rbind(plot.arg, df)
+        by <- by[-del]
+        df.loc$data <- data.frame(x = bx, y = by, z = 'u')
         updateTextInput(session, "del", label = 'Border number', value = '')
       } else {
         rt <- 'The border number you entered did not exist'
@@ -1858,6 +2102,7 @@ createServer <- function(input, output, session)
       }
     }
   }) 
+  
   rw.dataframe <- reactiveValues(data = NULL)
   observeEvent(input$button_results, {
     if (is.null(df.loc$data)) {
@@ -1867,9 +2112,9 @@ createServer <- function(input, output, session)
       )
       return()
     } 
-    if (nrow(df.loc$data) <= 3) {
+    if (nrow(df.loc$data) <= 1) {
       error.text <- paste('A minimum of two ring borders on each path',
-        'was required to generate a ring-width series')
+                          'was required to generate a ring-width series')
       sendSweetAlert(
         session = session, title = "Error", text = error.text, type = "error"
       )
@@ -1883,17 +2128,21 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    plot.arg <- df.loc$data[1:2, ]
-    dpi <- plot.arg[1, 1]
+    
+    dpi <- path.info$dpi
     dp <- dpi/25.4
-    incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-    py <- plot.arg[2, 1]
-    h.dis <- plot.arg[2, 2]
+    incline <- path.info$incline
+    h.dis <- path.info$h
+    ph <- path.info$horizontal
+    path.df <- path.info$df
+    px <- path.info$x
+    py <- path.info$y
+    
     if (incline) {
-      incline.cond <- df.loc$data$z[-c(1:2)] %>% table %>% as.numeric
+      incline.cond <- df.loc$data$z %>% table %>% as.numeric
       if (length(incline.cond) == 1) {
         rt <- paste('A minimum of two ring borders on each path',
-          'was required to generate a ring-width series')
+                    'was required to generate a ring-width series')
         sendSweetAlert(
           session = session, title = "Error", text = rt, type = "error"
         )
@@ -1901,26 +2150,26 @@ createServer <- function(input, output, session)
       }
       if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
         rw.dataframe$data <- f.rw(df.loc$data, sample_yr, 
-          incline, py, dpi, h.dis)
+                                  incline, dpi, h.dis)
       } else {
         if (any(incline.cond < 2)) {
-          err.text <- paste('A minimum of two ring borders on each path',
-            'was required to generate a ring-width series')
+          et <- paste('A minimum of two ring borders on each path',
+                      'was required to generate a ring-width series')
           sendSweetAlert(
-            session = session, title = "Error", text = err.text, type = "error"
+            session = session, title = "Error", text = et, type = "error"
           )
         } else {
-          err.text <-  paste("If you tick the checkbox \"Inclined tree",
-            "rings\", the upper and lower paths should",
-            "have the same number of ring borders.")
+          et <-  paste("If you tick the checkbox \"Inclined tree",
+                       "rings\", the upper and lower paths should",
+                       "have the same number of ring borders.")
           sendSweetAlert(
-            session = session, title = "Error", text = err.text, type = "error"
+            session = session, title = "Error", text = et, type = "error"
           )
         }
       }   
     } else {
       rw.dataframe$data <- f.rw(df.loc$data, sample_yr, 
-        incline, py, dpi, h.dis)
+                                incline, dpi, h.dis)
     } 
   })
   output$results <- renderTable({
@@ -1943,7 +2192,7 @@ createServer <- function(input, output, session)
   output$RingWidth.csv <- downloadHandler(
     filename =  function() {
       if (is.null(img.file$data)) {
-        img.name <- 'Download Unavailable'
+        img.name <- 'Download Fail'
         return(paste0(img.name, '.csv'))
       } else {
         img.name <- input$tuid
@@ -1954,46 +2203,46 @@ createServer <- function(input, output, session)
     },
     content = function(filename) {
       if (is.null(df.loc$data)) {
-        rt <- 'Make sure you have added ring borders to the image'
+        error.text <- 'Ring border was not found along the path'
         sendSweetAlert(
-          session = session, title = "Error", text = rt, type = "error"
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      } 
+      if (nrow(df.loc$data) <= 1) {
+        error.text <- paste('A minimum of two ring borders on each path',
+                            'was required to generate a ring-width series')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
         )
         return()
       } 
       sample_yr <- as.numeric(input$sample_yr)
       if (is.na(sample_yr)) {
-        error.text <- 'Please check the argument \'Sampling year\''
+        error.text <- paste('Please check the argument \'Sampling year\' ')
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
         )
         return()
       }
-      plot.arg <- df.loc$data[1:2, ]
-      dpi <- plot.arg[1, 1]
-      # dp <- dpi/25.4
-      incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-      py <- plot.arg[2, 1]
-      h.dis <- plot.arg[2, 2]
-      if (nrow(df.loc$data) <= 3) {
-        error.text <- paste('A minimum of two ring borders on each path',
-          'was required to generate a ring-width series')
-        sendSweetAlert(
-          session = session, title = "Error", text = error.text, type = "error"
-        )
-        return()
-      } 
+      
+      dpi <- path.info$dpi
+      dp <- dpi/25.4
+      incline <- path.info$incline
+      h.dis <- path.info$h
+
       if (incline) {
-        incline.cond <- df.loc$data$z[-c(1:2)] %>% table %>% as.numeric
+        incline.cond <- df.loc$data$z %>% table %>% as.numeric
         if (length(incline.cond) == 1) {
           rt <- paste('A minimum of two ring borders on each path',
-            'was required to generate a ring-width series')
+                      'was required to generate a ring-width series')
           sendSweetAlert(
             session = session, title = "Error", text = rt, type = "error"
           )
           return()
         }
         if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
-          df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
           write.csv(df.rw, filename, quote = FALSE, na = '--')
         } else {
           if (any(incline.cond < 2)) {
@@ -2004,8 +2253,9 @@ createServer <- function(input, output, session)
             )
             return()
           } else {
-            rt <- paste("If incline = TRUE, the upper and lower paths", 
-              "should have the same number of ring borders")
+            rt <-  paste("If you tick the checkbox \"Inclined tree",
+                         "rings\", the upper and lower paths should",
+                         "have the same number of ring borders.")
             sendSweetAlert(
               session = session, title = "Error", text = rt, type = "error"
             )
@@ -2013,7 +2263,7 @@ createServer <- function(input, output, session)
           }
         }
       } else {
-        df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
+        df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
         write.csv(df.rw, filename, quote = FALSE, na = '--')
       } 
     },
@@ -2035,7 +2285,7 @@ createServer <- function(input, output, session)
   })
   output$RingWidth.rwl <- downloadHandler(
     filename = function() {
-      if (is.null(img.file$data)) {
+      if (is.null(df.loc$data)) {
         img.name <- 'Download Unavailable'
         return(paste0(img.name, '.rwl'))
       } else {
@@ -2049,14 +2299,22 @@ createServer <- function(input, output, session)
       seriesID <- df.loc$ID
       miss.id1 <- seriesID == ''
       if (miss.id1) {
-        rt <- 'The series ID has not been entered'
+        rt <- 'Please enter a series ID'
         sendSweetAlert(
           session = session, title = "Error", text = rt, type = "error"
         )
         return()
       }
       if (is.null(df.loc$data)) {
-        error.text <- 'Make sure you have added ring borders to the image'
+        error.text <- 'Ring border was not found along the path'
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      } 
+      if (nrow(df.loc$data) <= 1) {
+        error.text <- paste('A minimum of two ring borders on each path',
+                            'was required to generate a ring-width series')
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
         )
@@ -2064,49 +2322,42 @@ createServer <- function(input, output, session)
       } 
       sample_yr <- as.numeric(input$sample_yr)
       if (is.na(sample_yr)) {
-        error.text <- paste('Please check the argument \'Sampling year\'')
+        error.text <- paste('Please check the argument \'Sampling year\' ')
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
         )
         return()
       }
-      if (nrow(df.loc$data) <= 3) {
-        error.text <- paste('A minimum of two ring borders on each path ',
-          'was required to generate a ring-width series')
-        sendSweetAlert(
-          session = session, title = "Error", text = error.text, type = "error"
-        )
-      } 
-      plot.arg <- df.loc$data[1:2, ]
-      dpi <- plot.arg[1, 1]
-      # dp <- dpi/25.4
-      incline <- ifelse(plot.arg[1, 2] == 0, FALSE, TRUE)
-      py <- plot.arg[2, 1]
-      h.dis <- plot.arg[2, 2]
+      
+      dpi <- path.info$dpi
+      dp <- dpi/25.4
+      incline <- path.info$incline
+      h.dis <- path.info$h
       df.rw <- NULL
+      
       if (incline) {
-        incline.cond <- df.loc$data$z[-c(1:2)] %>% table %>% as.numeric
+        incline.cond <- df.loc$data$z %>% table %>% as.numeric
         if (length(incline.cond) == 1) {
           rt <- paste('A minimum of two ring borders on each path',
-            'was required to generate a ring-width series')
+                      'was required to generate a ring-width series')
           sendSweetAlert(
             session = session, title = "Error", text = rt, type = "error"
           )
           return()
         }
         if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
-          df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
         } else {
           if (any(incline.cond < 2)) {
             rt <- paste('A minimum of two ring borders on each path',
-              'was required to generate a ring-width series')
+                        'was required to generate a ring-width series')
             sendSweetAlert(
               session = session, title = "Error", text = rt, type = "error"
             )
             return()
           } else {
             rt <- paste("If incline = TRUE, the upper and lower paths", 
-              "should have the same number of ring borders")
+                        "should have the same number of ring borders")
             sendSweetAlert(
               session = session, title = "Error", text = rt, type = "error"
             )
@@ -2114,7 +2365,7 @@ createServer <- function(input, output, session)
           }
         }
       } else {
-        df.rw <- f.rw(df.loc$data, sample_yr, incline, py, dpi, h.dis)
+        df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
       }
       df.rwl <- data.frame(df.rw$ring.width, row.names = df.rw$year)
       tuprec <- as.numeric(input$tuprec)
