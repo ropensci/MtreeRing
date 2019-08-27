@@ -35,7 +35,9 @@ You can upload an image with the following steps:
 5. Rotate and crop the image (Optional).
 
     Note that the bark side should be placed on the left side of the graphical window. When cores are scanned side by side, crop the image to remove unwanted cores and unnecessary objects (such as wooden mounts). The subsequent analysis will be performed within the cropped area.
-
+    
+    `MtreeRing` app allows for file sizes up to 150 MB. Although this app supports image cropping, the use of extremely large image files is not recommended. A tree-ring image should not contain irrelevant or redundant features (e.g., wooden mounts where cores are glued). Because such a file will consume unnecessary memory space and the subsequent image rendering will also spend too much time.
+    
 ## 2. Path creation
 
 After image uploading, you can click on the **Measurement** button in the sidebar, and it switches content in the main body. The new page has a graphics window named **Main Window**. This graphics window constitutes the core of MtreeRing. It enables the display of path, detected tree rings, and different types of user-defined markers.
