@@ -35,7 +35,7 @@ createUI <- function()
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
       prettyCheckbox(
         inputId = "wh_ratio", 
-        label = div(style = 'color:#000000;font-weight: bolder;',
+        label = div(style = 'color:black;font-weight: bolder;',
                     'Maintain original width/height ratio'), 
         shape = "curve", value = F, status = "success"),
       hr(),
@@ -59,16 +59,16 @@ createUI <- function()
         value = TRUE, fill = TRUE, status = "success"),
       helpText('Image upload is limited to 150 MB per file. Supported',
         ' formats include png, jpg, tif and bmp.',
-        style = 'color:#000000;font-size:90%'),
+        style = 'color:black;font-size:90%'),
       prettyCheckbox(
         inputId = "inmethod", 
-        label = div(style = 'color:#000000;font-weight: bolder;','Image Path'), 
+        label = div(style = 'color:black;font-weight: bolder;','Image Path'), 
         shape = "curve", value = F, status = "success"),
       conditionalPanel(
         condition = 'input.inmethod',
         textInput('enter.path', 'Enter file path', ''),
         helpText('For example: C:/Users/shiny/img01.png',
-          style = 'color:#000000;font-size:90%'),
+          style = 'color:black;font-size:90%'),
         hr()
       ),
       actionButton(
@@ -92,8 +92,8 @@ createUI <- function()
         fill = TRUE, inline = TRUE),
       helpText("Rotation angle in degrees. Note that the bark ",
         "side should be placed at the left side of the ",
-        "graphical window and the pith side at the right.",
-        style = 'color:#000000;font-size:90%;text-align:justify;'),
+        "graphics window and the pith side at the right.",
+        style = 'color:black;font-size:90%;text-align:justify;'),
       actionButton(
         'buttonrotate', 'Rotate',
         class = "btn btn-primary btn-md",
@@ -108,14 +108,14 @@ createUI <- function()
       helpText("To remove unwanted cores and irrelevant objects, ",
         "move the mouse to the core you wish to measure and",
         "create a rectangle by brushing, see details below.",
-        style = 'color:#000000;font-size:90%;text-align:justify;'),
+        style = 'color:black;font-size:90%;text-align:justify;'),
       prettyRadioButtons(inputId = "cropcondition", label = "",
         choiceNames = 'UNCROPPED', choiceValues = list('a'),
         status = "danger", shape = "square",
         fill = FALSE, inline = FALSE),
       prettyCheckbox(
         inputId = "showcropp", 
-        label = div(style = 'color:#000000;font-weight: bolder;', 'Show Help'),
+        label = div(style = 'color:black;font-weight: bolder;', 'Show Help'),
         shape = "curve", value = F, status = "success"
       ),
       conditionalPanel(
@@ -124,12 +124,12 @@ createUI <- function()
           "The operation \"brush\" allows users to create a transparent ", 
           "rectangle on the image and drag it around. For cores scanned ", 
           "side by side, the user can choose a core of interest by brushing.", 
-          style = 'color:#000000;text-align:justify;'),
+          style = 'color:black;text-align:justify;'),
         helpText(
           "After brushing, click on the button \"Crop\" to create a",
           " cropped area. The measurement will be performed within", 
           " this area, rather than the whole (uncropped) image.",
-          style = 'color:#000000;text-align:justify;'),
+          style = 'color:black;text-align:justify;'),
         helpText(
           "To cancel this operation, click on the button \"Cancel\".",
           " If the transparent rectangle exists, the user should first ",
@@ -149,7 +149,7 @@ createUI <- function()
   page2.1 <- fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Options'), height = "auto",
+        font-weight: bolder', 'Path Options'), height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       textInput('tuid', 'Series ID', '001', width = '75%'),
       textInput('dpi', 'DPI', '700', '75%'),
@@ -158,7 +158,7 @@ createUI <- function()
       pickerInput(
         inputId = "sel_sin_mul", 
         div(
-          style = 'color:#000000;font-weight:bolder;font-size:90%', 
+          style = 'color:black;font-weight:bolder;font-size:90%', 
           'Path Mode'), 
         width = '87%',
         choices = c("Single Segment", "Multi Segments"),
@@ -169,14 +169,14 @@ createUI <- function()
         prettyCheckbox(
           inputId = "hor_path", 
           label = div(
-            style = 'color:#000000;font-weight: bolder;font-size:90%', 
+            style = 'color:black;font-weight: bolder;font-size:90%', 
             'Horizontal path'), 
           shape = "curve", value = T, status = "success"
         )
       ),
       # 默认的是2个点，如果切换多路径可以升级
       numericInput('num_seg', 
-        div(style = 'color:#000000;font-weight:bolder;font-size:90%', 
+        div(style = 'color:black;font-weight:bolder;font-size:90%', 
             'Number of segments'),
         value = 1, min = 1, max = 1, step = 1, width = "75%"),
       
@@ -186,7 +186,7 @@ createUI <- function()
         prettyCheckbox(
           inputId = "incline", 
           label = div(
-            style = 'color:#000000;font-weight: bolder;font-size:90%', 
+            style = 'color:black;font-weight: bolder;font-size:90%', 
             'Inclined tree rings'), 
           shape = "curve", value = F, status = "success"
         ),
@@ -200,7 +200,7 @@ createUI <- function()
     ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Options'), height = "auto",
+        font-weight: bolder', 'Label Options'), height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       sliderInput('linelwd', 'Path width', 
         0.2, 3, 1, 0.1, width = '80%'),
@@ -245,12 +245,12 @@ createUI <- function()
     ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-                  font-weight: bolder', 'Options'),  height = "auto",
+                  font-weight: bolder', 'Detection Options'),  height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       prettyCheckbox(
         inputId = "isrgb", 
         label = div(
-          style = 'color:#000000;;font-size:90%;font-weight:bolder;', 
+          style = 'color:black;;font-size:90%;font-weight:bolder;', 
           "Default RGB"), 
         shape = "curve", value = T, status = "success"
       ),
@@ -259,12 +259,12 @@ createUI <- function()
         textInput('customRGB', 'Custom RGB', '0.299,0.587,0.114'),
         helpText('Note:The three numbers correspond to',
                  'R, G and B components,respectively.',
-                 style = 'color:#000000;font-weight: bolder'),
+                 style = 'color:black;font-weight: bolder'),
         hr()
       ),
       radioGroupButtons(
         inputId = "method",
-        label = div(style = 'color:#000000;font-weight: bolder;font-size:85%',
+        label = div(style = 'color:black;font-weight: bolder;font-size:85%',
                     'Ring detection method'),
         status = "btn btn-primary btn-md",
         #individual = T,
@@ -309,7 +309,7 @@ createUI <- function()
         prettyCheckbox(
           inputId = "defaultcanny", 
           label = div(
-            style = 'color:#000000;font-size:90%;font-weight: bolder;',
+            style = 'color:black;font-size:90%;font-weight: bolder;',
             "Auto threshold (Recommanded)"), 
           shape = "curve", value = T, status = "success"),
         conditionalPanel(
@@ -332,8 +332,8 @@ createUI <- function()
         condition = 'input.method!="lineardetect"',
         prettyCheckbox(inputId = "defaultse", 
                        label = div(
-                         style = 'color:#000000;font-size:90%;font-weight: bolder;',
-                         "Default structuring elements"), 
+                       style = 'color:black;font-size:90%;font-weight:bolder;',
+                       "Default structuring elements"), 
                        shape = "curve", value = T, status = "success"),
         conditionalPanel(
           condition = '!input.defaultse',
@@ -353,8 +353,8 @@ createUI <- function()
       ),
       helpText('Automatic detection may take a few seconds.',
                # 'depending on the image size and complexity of the sample.',
-               # style = 'color:#000000;font-size:95%;text-align:justify;')
-               style = 'color:#000000;font-size:90%;')
+               # style = 'color:black;font-size:95%;text-align:justify;')
+               style = 'color:black;font-size:90%;')
     ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:100%;
@@ -362,7 +362,7 @@ createUI <- function()
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
       radioGroupButtons(inputId = "sel_mode", status = "primary",
         label = 
-          div(style = 'color:#000000;font-weight: bolder;font-size:110%',
+          div(style = 'color:black;font-weight: bolder;font-size:110%',
               'Working mode selector'),
         choiceNames = list(
           div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
@@ -393,7 +393,7 @@ createUI <- function()
         br(),
         prettyCheckbox(
           inputId = "pre_path", 
-          label = div(style = 'color:#000000;font-weight: bolder;',
+          label = div(style = 'color:black;font-weight: bolder;',
                       'Show the preview path'), 
           shape = "curve", value = F, status = "success")
       ),
@@ -430,7 +430,7 @@ createUI <- function()
       ),
       prettyCheckbox(
         inputId = "wh_ratio2", 
-        label = div(style = 'color:#000000;font-weight: bolder;',
+        label = div(style = 'color:black;font-weight: bolder;',
                     'Maintain original width/height ratio'), 
         shape = "curve", value = F, status = "success"),
       hr(),
@@ -443,7 +443,7 @@ createUI <- function()
                               id = "plot2_brush", resetOnNew = TRUE
                             ),
                             hover = hoverOpts(
-                              id = "plot2_hover", delay = 200,
+                              id = "plot2_hover", delay = 300,
                               delayType = "debounce"
                             )
                  )
@@ -493,7 +493,7 @@ createUI <- function()
           helpText(
             "To perform a mass deletion of ring borders, use commas ",
             "to separate border numbers, e.g. 1, 2, 3, 4",
-            style = 'color:#000000;text-align:justify;'
+            style = 'color:black;text-align:justify;'
           ),
           br(),
           br(),
@@ -507,13 +507,13 @@ createUI <- function()
       tabBox(
         #title = tagList(shiny::icon("gear"), 'Output'),
         title = div(
-          style = 'color:#000000;font-weight: bolder;',
+          style = 'color:black;font-weight: bolder;',
           icon('cog', class = 'fa-spin', lib = 'font-awesome'), 'Output'),
         width = 6,
         tabPanel(
-          div(style = 'color:#000000;font-weight: bolder;',
+          div(style = 'color:black;font-weight: bolder;',
             icon('list-ol', 'fa-1x'), ' Results'),
-          #HTML("<p style = 'color:#000000;'><b>Results</b></p>"),
+          #HTML("<p style = 'color:black;'><b>Results</b></p>"),
           actionButton(
             'button_results', 'Generate Series',
             class = "btn btn-primary btn-md",
@@ -530,12 +530,12 @@ createUI <- function()
           tableOutput('results')
         ),
         tabPanel(
-          div(style = 'color:#000000;font-weight: bolder;',
+          div(style = 'color:black;font-weight: bolder;',
             icon('arrow-down', 'fa-1x'), ' CSV'
           ),
           textInput('csv.name', 'Name of the csv file', '', width = '50%'),
           helpText(
-            style = 'color:#000000;font-weight: normal;',
+            style = 'color:black;font-weight: normal;',
             'The filename extension is not required. ',
             'Leave blank to use the current series ID.'
           ),
@@ -546,7 +546,7 @@ createUI <- function()
             ' within a browser.'
           ),
           hr(),
-          #HTML("<p style = 'color:#000000;'><b>CSV</b></p>"),
+          #HTML("<p style = 'color:black;'><b>CSV</b></p>"),
           downloadButton(
             'RingWidth.csv', 'Download CSV',
             class = "btn btn-primary btn-md",
@@ -554,10 +554,10 @@ createUI <- function()
           )
         ),
         tabPanel(
-          div(style = 'color:#000000;font-weight: bolder;',
+          div(style = 'color:black;font-weight: bolder;',
             icon('arrow-down', 'fa-1x'), ' RWL'),
           textInput('rwl.name', 'Name of the rwl file', '', width = '50%'),
-          helpText(style = 'color:#000000;font-weight: normal;',
+          helpText(style = 'color:black;font-weight: normal;',
             'The filename extension is not required. ',
             ' Leave blank to use the current series ID.'),
           helpText(style = 'color:#FF0000;font-weight: normal;',
@@ -568,7 +568,7 @@ createUI <- function()
           selectInput('tuprec', 'Precision of the rwl file',
             c('0.01' = '0.01', '0.001' = '0.001'),
             selected = '0.01', width = '50%'),
-          helpText(style = 'color:#000000;font-weight: normal;', 
+          helpText(style = 'color:black;font-weight: normal;', 
             'Units are in mm.'),
           hr(),
           checkboxInput('tuheader', 'Header of the File', F),
@@ -581,12 +581,12 @@ createUI <- function()
               style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
             )
           ),
-          helpText(style = 'color:#000000;font-weight: normal;',
+          helpText(style = 'color:black;font-weight: normal;',
             'For more details about the header, please', 
             'read reference manual of the R package dplR.', 
             'The output file is Tucson format.'),
           hr(),
-          #HTML("<p style = 'color:#000000;'><b>RWL</b></p>"),
+          #HTML("<p style = 'color:black;'><b>RWL</b></p>"),
           downloadButton(
             'RingWidth.rwl', 'Download RWL',
             class = "btn btn-primary btn-md",
@@ -815,6 +815,7 @@ createServer <- function(input, output, session)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           year.u <- c(sample_yr:(sample_yr - length(by) + 1))
+
           text(bx, by, year.u, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenbx
@@ -824,6 +825,7 @@ createServer <- function(input, output, session)
       }
     }
   }
+  
   f.rw <- function(outfile, sample_yr, incline, dpi, h.dis) {
     df.loc <- outfile
     bx <- df.loc$x
@@ -1434,7 +1436,7 @@ createServer <- function(input, output, session)
                          value = 1, min = 1, max = 1, step = 1)
     } else {
       updateNumericInput(session = session, inputId = 'num_seg', 
-                         value = 1, min = 1, max = 9, step = 1)
+                         value = 1, min = 1, max = 10, step = 1)
       # 同时取消horizontal选项
       updatePrettyCheckbox(
         session = session, inputId = "hor_path", value = FALSE)
@@ -1815,7 +1817,7 @@ createServer <- function(input, output, session)
       )
     }   
     if (method == "lineardetect") {
-      if (incline | input$sel_sin_mul == "Multi Segments") {
+      if (incline | path.info$type == "Multi Segments") {
         rt <- paste('Note that the linear detection supports only Single',
                     'Segment mode without ring width correction. Please',
                     'remove the current path and recreate a new path')
@@ -1847,7 +1849,6 @@ createServer <- function(input, output, session)
         session = session, title = "Finished", text = rt, type = "success"
       )
     }  
-
   })
 
   ## 图2双击3：编辑模式
@@ -1984,6 +1985,7 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = err.text, type = "error"
       )
     }
+    
   })
   
   output$ring_edit <- renderPlot({

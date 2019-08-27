@@ -1,7 +1,7 @@
 ---
 title: "A Simple Workflow for Shiny App"
 author: "Jingning Shi"
-date: "2019-05-01"
+date: "2019-09-01"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{A Simple Workflow for Shiny App}
@@ -20,11 +20,11 @@ MtreeRing::ring_app_launch()
 
 ## 1. Image upload
 
-Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named `001.png`, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (https://github.com/ropensci/MtreeRing/raw/master/inst/001.png). In the following sections, this image is used to demonstrate the ring-width measurement. 
+Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named `001.png`, with the resolution of 1200 dpi can be found in the library directory where you install the package. It can also be downloaded from a GitHub repository (https://github.com/ropensci/MtreeRing/raw/master/inst/001.png). In the following sections, this image is used to demonstrate the ring-width measurement. 
 
 You can upload an image with the following steps:
 
-1. When you start the app, click on the **Image Loading** button in the sidebar (This is the default mode. In most cases, you do not need to do this).
+1. When you start the app, click on the **Image Loading** button in the sidebar (It defaults to this page).
 
 2. Click on the **Browse...** button in the **Image Upload** window.
 
@@ -32,59 +32,85 @@ You can upload an image with the following steps:
 
 4. Click on the **Load** button.
 
+5. Rotate and crop the image (Optional).
+
+    Note that the bark side should be placed on the left side of the graphical window. When cores are scanned side by side, crop the image to remove unwanted cores and unnecessary objects (such as wooden mounts). The subsequent analysis will be performed within the cropped area.
+
 ## 2. Path creation
 
-After image uploading, you can click on the **Measurement** button in the sidebar, and it switches content in the main body. The new page has two graphics windows, named **Tree Ring Detection** and **Tree Ring Editing**. These two graphics windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.
+After image uploading, you can click on the **Measurement** button in the sidebar, and it switches content in the main body. The new page has a graphics window named **Main Window**. This graphics window constitutes the core of MtreeRing. It enables the display of path, detected tree rings, and different types of user-defined markers.
 
 A path creation consists of the following steps:
 
-1. Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.
+1. Enter valid path information, including Series ID, DPI and Sampling year.
+  
+    The series ID is a string with a maximum length of 6 characters. For example, it can be "ZYX011" which indicates the site "ZYX", tree 01 and core 1. For more details on how to name a ring-width series, see **read.ids** in the reference manual of R package **dplR**.
 
-2. Click on the blue "**Create Path**" button at the top left corner of the **Tree Ring Detection**.
+2. Choose the desired path mode. 
 
-See this example:
+    Paths are made of one or more line segments and can have any desired direction. A path is usually placed at the center of the core sample and is adjustable both in width and color. Tree rings are identified along the path. `MtreeRing` app provides three path modes: 
+
++ **A. Singe Segment**
+
+    This is the default path mode. If the box **Horizontal path** is checked (default), a path is placed along the horizontal direction of the graphics window. To create a path in any direction, uncheck the box **Horizontal path**. Here is an example:
+
++ **B. Singe Segment with width correction**
+
+    When **Horizontal path** is checked, you can check the box **Inclined tree rings**. In that case, two parallel paths will be created and you can mark two ring borders on the same ring. See this example:
+    
+    The line segment connecting two dots on the same ring should match the tangent of a tree ring border. Corrected ring widths are estimated from the distance between adjacent rings and orientation of ring borders. 
+
++ **C. Multi Segments**
+     
+    A Multi-segment path is made of two or more connected line segments (up to 10). When creating paths, their orientation can change from one segment to another at their junction, and should match the direction of wood growth.
 
 <img src="img/PathCreation3.gif" width = 80% height = 80% /> 
 
-In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.
+3. Create path(s) with mouse clicks
+
+    1) Once you have chosen the desired path mode, move the mouse to **Working mode selector** in the top left corner of the **Main Window** and click the **Path Creation** button.
+    
+    2) For a single-segment path, move the mouse to the bark side and double click the left mouse button once to add a beginning point of the path. `MtreeRing` app will display this point. Then, move the mouse right and double click once to add an ending point of the path.
+    
+        If you create a horizontal single-segment path, the ending point you click will be moved automatically so that it has the same y-coordinate as the beginning point.
+    
+    3) For a multi-segment path, the ending point of the previous segment is used as the beginning point of the next segment. Just repeat the previous step.
+    
+    4) Introduction to path creation options:
+      
+        **Remove Last**: Remove the last endpoint added.
+        
+        **Remove All**: Remove all endpoints of the path. If you click on this button, you need to re-create a new path.
+        
+        **Show the preview path**: When you move the mouse over the image, a preview path is drawn with dotted lines. It may help you create a path which follows the growth direction.
+    
+    5) When you have added all endpoints, a pop-up window appears stating the path creation has been completed successfully. See this example:
 
 ## 3. Ring detection
 
-Let's start by introducing a new action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of **brush**.
-
-
-<img src="img/Brush2.gif" width = 60% height = 60% /> 
-
 If ring borders are clearly visible, follow the steps below to detect tree rings:
 
-1. Click on the "**Automation**" button (if this button is not selected). 
+1. Click on the **Ring Detection** button next to the **Path Creation** button. 
 
-    After clicking on this button, `MtreeRing` will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
+2. Set detection parameters.
 
-2. Create a blue rectangle mentioned above in the first graphics window (**Tree Ring Detection**) by brushing.
+    Automatic detection parameters can be set in **Detection Options** in the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.
+    
+    If you are not familiar with image processing techniques, use the default settings.
 
 3. Click on the green "**Run Detection**" button. 
     
-    The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process. 
+    The app will detect ring borders along the path. Detected ring borders are tagged with years and border numbers.
 
 See this example:
 
-
-<img src="img/RingDetection2.gif" width = 75% height = 75% /> 
-
 ## 4. Edit tree rings
 
-If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphics window (**Tree Ring Editing**) is used to add (remove) tree ring borders to (from) the image.
-
-You may have noticed that the graphics windows **Tree Ring Editing** has no image. To generate a zoomed-in image in this windows, follow these steps:
-
-1. Create a blue rectangle in the **Tree Ring Detection** by brushing.
-
-2. **Double click** on this rectangle, or Click on the blue "**Create Sub-image**" button below.
+If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. To switch to the ring editing mode, click on the **Ring Editing** button next to the **Path Creation** button. 
 
 ### 4.1 Add tree rings
 
-After creating the zoomed-in image, you can add a ring by **double clicking** on the path. 
+In the ring editing mode, you can add a ring by **double clicking** on the path. 
 
 See this example:
 
@@ -92,11 +118,15 @@ See this example:
 
 ### 4.2 Remove tree rings
 
+Let's start by introducing a mouse action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of **brush**.
+
+<img src="img/Brush2.gif" width = 60% height = 60% /> 
+
 Follow these steps to remove tree rings: 
 
-1. Create a rectangle in the **Tree Ring Editing** by brushing.
+1. Create a rectangular region on the image by brushing.
 
-2. Click on the red "**Delete Border**" button at the top left corner of the **Tree Ring Editing**.
+2. Click on the red "**Delete Border**" button at the top left corner of the **Main Window**.
 
     This operation will delete all ring borders covered by the rectangular region. 
 
@@ -104,7 +134,7 @@ See this example:
 
 <img src="img/RemoveRing.gif" width = 75% height = 75% /> 
 
-You can also perform a mass deletion of borders using the input control below the **Tree Ring Editing**.
+You can also perform a mass deletion of borders using the input control below the **Main Window**.
 
 ## 5. File download
 

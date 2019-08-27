@@ -25,7 +25,7 @@
 #' It requires one of the following values:
 #' \code{0}, \code{90}, \code{180} or \code{270}.
 #' @param magick A logical value. If \code{TRUE}, \code{magick} is used to
-#' read the image file whose size is over 10MB. If \code{FALSE},
+#' read the tree ring image. If \code{FALSE},
 #' packages \code{png}, \code{jpg} and \code{tiff} are used instead.
 #' See details below.
 #' @return A magick image object containing the image data.
@@ -39,12 +39,11 @@
 #' of a graphics window. Use \code{rotate} to change its position.
 #' 
 #' It is highly recommended to use the default value \code{magick = TRUE}, 
-#' because the package \code{magick} can significantly reduce the memory usage
+#' because \code{magick} can significantly reduce the memory usage
 #' when reading a large file.
-#' In a few cases where image data is stored in a non-standard format, 
-#' \code{magick} may return an error when reading files. 
-#' If \code{ring_read} fails reading a large file,
-#' you can set \code{magick = FALSE} to avoid the use of \code{magick}.
+#' If image data is stored in a non-standard format, image reading may fail.
+#' In that case you can set \code{magick = FALSE} to 
+#' avoid the use of \code{magick}.
 #' 
 #' @examples
 #' img.path <- system.file("001.png", package = "MtreeRing")
