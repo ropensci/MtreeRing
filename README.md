@@ -94,10 +94,6 @@ The dashboard has three components: a header, sidebar and body, like this
 
 A workflow for the Shiny app can be found at https://ropensci.github.io/MtreeRing/articles/app-MtreeRing.html. Most steps are demonstrated with a gif to make the workflow more understandable.
 
-```r
-vignette('app-MtreeRing')
-```
-
 ## Ring width correction
 
 If an increment borer is used to extract samples, it is well known that the auger sometimes fails to traverse the pith of the sampled tree but passes through one side of the pith at a certain distance. Tangent lines of rings close to the pith are therefore not perpendicular to the horizontal path, which may lead to considerable errors in ring widths.
