@@ -110,6 +110,6 @@ Any feedback, bug reports or suggestions are welcomed. If you have a comment on 
 
 ## Code of conduct
 
-Please note that the 'MtreeRing' project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+I will try to add new features based on user feedback. It is hoped that others will contribute additional useful features. Please note that the 'MtreeRing' project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
 [![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
