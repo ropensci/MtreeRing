@@ -54,13 +54,13 @@ A path creation consists of the following steps:
 
     Paths are made of one or more line segments and can have any desired direction. A path is usually placed at the center of the core sample and is adjustable both in width and color. Tree rings are identified along the path. `MtreeRing` app provides three path modes: 
 
-+ **A. Singe Segment**
++ **A. Single Segment**
 
     This is the default path mode. If the box **Horizontal path** is checked (default), a path is placed along the horizontal direction of the graphics window. To create a path in any direction, uncheck the box **Horizontal path**. See this example:
 
 <center><img src="img/path1.png" width = 63% height = 63% /></center>
 
-+ **B. Singe Segment with width correction**
++ **B. Single Segment with width correction**
 
     When **Horizontal path** is checked, you can check the box **Inclined tree rings**. In that case, two parallel paths will be created and you can mark two ring borders on the same ring.
     
@@ -70,7 +70,7 @@ A path creation consists of the following steps:
 
 + **C. Multi Segments**
      
-    A Multi-segment path is made of two or more connected line segments (up to 10). When creating paths, their orientation can change from one segment to another at their junction, and should match the direction of wood growth.
+    A multi-segment path is made of two or more connected line segments (up to 10). When creating paths, their orientation can change from one segment to another at their junction, and should match the direction of wood growth.
 
 <center><img src="img/path3.png" width = 85% height = 85% /></center>
 
