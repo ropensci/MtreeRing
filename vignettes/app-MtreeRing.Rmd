@@ -62,7 +62,7 @@ A path creation consists of the following steps:
 
 + **B. Singe Segment with width correction**
 
-    When **Horizontal path** is checked, you can check the box **Inclined tree rings**. In that case, two parallel paths will be created and you can mark two ring borders on the same ring. See this example:
+    When **Horizontal path** is checked, you can check the box **Inclined tree rings**. In that case, two parallel paths will be created and you can mark two ring borders on the same ring.
     
     The line segment connecting two dots on the same ring should match the tangent of a tree ring border. Corrected ring widths are estimated from the distance between adjacent rings and orientation of ring borders. 
     
@@ -92,7 +92,7 @@ A path creation consists of the following steps:
         
         **Show the preview path**: When you move the mouse over the image, a preview path is drawn with dotted lines. It may help you create a path which follows the growth direction.
     
-    5) When you have added all endpoints, a pop-up window appears stating the path creation has been completed successfully. See this example:
+    5) When you have added all endpoints, a pop-up window appears stating the path creation has been completed successfully.
 
 ## 3. Ring detection
 
@@ -109,8 +109,6 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 3. Click on the green "**Run Detection**" button. 
     
     The app will detect ring borders along the path. Detected ring borders are tagged with years and border numbers.
-
-See this example:
 
 ## 4. Edit tree rings
 
