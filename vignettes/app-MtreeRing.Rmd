@@ -36,7 +36,9 @@ You can upload an image with the following steps:
 
     Note that the bark side should be placed on the left side of the graphical window. When cores are scanned side by side, crop the image to remove unwanted cores and unnecessary objects (such as wooden mounts). The subsequent analysis will be performed within the cropped area.
     
-    `MtreeRing` app allows for file sizes up to 150 MB. Although this app supports image cropping, the use of extremely large image files is not recommended. A tree-ring image should not contain irrelevant or redundant features (e.g., wooden mounts where cores are glued). Because such a file will consume unnecessary memory space and the subsequent image rendering will also spend too much time.
+    `MtreeRing` app allows for file sizes up to 150 MB. Although this app supports image cropping, the use of extremely large image files is not recommended. A tree-ring image should not contain irrelevant or redundant features (e.g., wooden mounts where cores are glued). Because such a file will consume unnecessary memory space and the subsequent image rendering will also spend too much time. 
+    
+    A recommended dpi value is in the range of 800 to 2540 (1200 or higher for dendrochronology), as a compromise between the measurement accuracy and computer performance.
     
 ## 2. Path creation
 
@@ -54,25 +56,29 @@ A path creation consists of the following steps:
 
 + **A. Singe Segment**
 
-    This is the default path mode. If the box **Horizontal path** is checked (default), a path is placed along the horizontal direction of the graphics window. To create a path in any direction, uncheck the box **Horizontal path**. Here is an example:
+    This is the default path mode. If the box **Horizontal path** is checked (default), a path is placed along the horizontal direction of the graphics window. To create a path in any direction, uncheck the box **Horizontal path**. See this example:
+
+<center><img src="img/path1.png" width = 63% height = 63% /></center>
 
 + **B. Singe Segment with width correction**
 
     When **Horizontal path** is checked, you can check the box **Inclined tree rings**. In that case, two parallel paths will be created and you can mark two ring borders on the same ring. See this example:
     
     The line segment connecting two dots on the same ring should match the tangent of a tree ring border. Corrected ring widths are estimated from the distance between adjacent rings and orientation of ring borders. 
+    
+<center><img src="img/path2.png" width = 45% height = 45% /></center>
 
 + **C. Multi Segments**
      
     A Multi-segment path is made of two or more connected line segments (up to 10). When creating paths, their orientation can change from one segment to another at their junction, and should match the direction of wood growth.
 
-<img src="img/PathCreation3.gif" width = 80% height = 80% /> 
+<center><img src="img/path3.png" width = 85% height = 85% /></center>
 
 3. Create path(s) with mouse clicks
 
     1) Once you have chosen the desired path mode, move the mouse to **Working mode selector** in the top left corner of the **Main Window** and click the **Path Creation** button.
     
-    2) For a single-segment path, move the mouse to the bark side and double click the left mouse button once to add a beginning point of the path. `MtreeRing` app will display this point. Then, move the mouse right and double click once to add an ending point of the path.
+    2) For a single-segment path, move the mouse to the bark side and **double click** the left mouse button once to add a beginning point of the path. `MtreeRing` app will display this point. Then, move the mouse right and **double click** once to add an ending point of the path.
     
         If you create a horizontal single-segment path, the ending point you click will be moved automatically so that it has the same y-coordinate as the beginning point.
     
@@ -116,13 +122,13 @@ In the ring editing mode, you can add a ring by **double clicking** on the path.
 
 See this example:
 
-<img src="img/AddRing2.gif" width = 60% height = 60% /> 
+<img src="img/AddRing.gif" width = 60% height = 60% /> 
 
 ### 4.2 Remove tree rings
 
 Let's start by introducing a mouse action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of **brush**.
 
-<img src="img/Brush2.gif" width = 60% height = 60% /> 
+<img src="img/Brush.gif" width = 60% height = 60% /> 
 
 Follow these steps to remove tree rings: 
 
@@ -134,7 +140,7 @@ Follow these steps to remove tree rings:
 
 See this example:
 
-<img src="img/RemoveRing.gif" width = 75% height = 75% /> 
+<img src="img/RemoveRing.gif" width = 65% height = 65% /> 
 
 You can also perform a mass deletion of borders using the input control below the **Main Window**.
 

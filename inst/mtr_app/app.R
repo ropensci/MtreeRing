@@ -748,20 +748,21 @@ createServer <- function(input, output, session)
       points(p.x, p.y, pch = 16, col = lab.color)
     
     # 有俩点及以上，画实线路径
-    if (len >= 2) 
-      points(p.x, p.y, type = 'l', col = lab.color, lty = 1)
+    if (len >= 2 & !incline) 
+      points(p.x, p.y, type = 'l', col = lab.color, lty = 1, lwd = l.w)
     # 倾斜的双路径
     if(incline){
       dp <- dpi/25.4
       d <- h.dis*dp/2
-      points(p.x, p.y + d, type = 'l', col = lab.color, lty = 2)
-      points(p.x, p.y - d, type = 'l', col = lab.color, lty = 2)
+      points(p.x, p.y + d, type = 'l', col = lab.color, lty = 1, lwd = l.w)
+      points(p.x, p.y - d, type = 'l', col = lab.color, lty = 1, lwd = l.w)
       
       if(len == 2) {
+        points(p.x, p.y, type = 'l', col = lab.color, lty = 2, lwd = l.w)
         points(c(p.x[1], p.x[1]), c(p.y[1] + d, p.y[1] - d), 
-               type = 'l', col = lab.color, lty = 2)
+               type = 'l', col = lab.color, lty = 2, lwd = l.w)
         points(c(p.x[len], p.x[len]), c(p.y[len] + d, p.y[len] - d), 
-               type = 'l', col = lab.color, lty = 2)
+               type = 'l', col = lab.color, lty = 2, lwd = l.w)
       }
     }
     
@@ -769,7 +770,7 @@ createServer <- function(input, output, session)
     if(input$sel_mode == 'sel_path' & len < p.max & len >= 1 & input$pre_path){
       y <- ifelse(p.hor, p.y[len], hover.xy$y)
       points(c(p.x[len], hover.xy$x), c(p.y[len], y), 
-             type = 'l', col = lab.color, lty = 2)
+             type = 'l', col = lab.color, lty = 2, lwd = l.w)
     }
 
     # 开始画边界点
