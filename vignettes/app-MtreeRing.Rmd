@@ -78,13 +78,17 @@ A path creation consists of the following steps:
 
     1) Once you have chosen the desired path mode, move the mouse to **Working mode selector** in the top left corner of the **Main Window** and click the **Path Creation** button.
     
-    2) For a single-segment path, move the mouse to the bark side and **double click** the left mouse button once to add a beginning point of the path. `MtreeRing` app will display this point. Then, move the mouse right and **double click** once to add an ending point of the path.
+    2) For a single-segment path, move the mouse to the bark side and **double click** the left mouse button once to add a beginning point of the path. `MtreeRing` app will display this point. Then, move the mouse right and **double click** once to add an ending point of the path. See this example:
+    
+        <left><img src="img/PathCreation4.gif" width = 110% height = 110% /></left>
     
         If you create a horizontal single-segment path, the ending point you click will be moved automatically so that it has the same y-coordinate as the beginning point.
     
     3) For a multi-segment path, the ending point of the previous segment is used as the beginning point of the next segment. Just repeat the previous step.
     
-    4) Introduction to path creation options:
+    4) When you have added all endpoints, a pop-up window appears stating the path creation has been completed successfully.
+    
+    5) Introduction to path creation options:
       
         **Remove Last**: Remove the last endpoint added.
         
@@ -92,7 +96,7 @@ A path creation consists of the following steps:
         
         **Show the preview path**: When you move the mouse over the image, a preview path is drawn with dotted lines. It may help you create a path which follows the growth direction.
     
-    5) When you have added all endpoints, a pop-up window appears stating the path creation has been completed successfully.
+
 
 ## 3. Ring detection
 
