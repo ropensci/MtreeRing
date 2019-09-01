@@ -114,31 +114,47 @@ If ring borders are clearly visible, follow the steps below to detect tree rings
 
 If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. To switch to the ring editing mode, click on the **Ring Editing** button next to the **Path Creation** button. 
 
-### 4.1 Add tree rings
+### 4.1 Zoom in/out and scroll an image
+
+Two sliders are located at the bottom and right of the **Main Window**. They are used to zoom in/out and scroll a tree ring image. A draggable button can be found on both ends of a slider.
+
+<center><img src="img/slider1.png" width = 75% height = 75% /></center>
+
+To zoom in an image horizontally, click on any of the draggable buttons on **Slider 1** and drag it to the desired position. Here we select the right-side button because we want to zoom in the left side of the image. See this example:
+
+<center><img src="img/zoom1.png" width = 75% height = 75% /></center>
+
+To scroll the image, you can drag the slider and then move it to the desired position.
+
+<center><img src="img/scroll1.png" width = 75% height = 75% /></center>
+
+You can perform similar operations with **Slider 2**. These operations could zoom in/out or scroll an image in the vertical direction.
+
+### 4.2 Add tree rings
 
 In the ring editing mode, you can add a ring by **double clicking** on the path. 
 
 See this example:
 
-<img src="img/AddRing.gif" width = 60% height = 60% /> 
+<img src="img/AddRing.gif" width = 70% height = 70% /> 
 
-### 4.2 Remove tree rings
+### 4.3 Remove tree rings
 
 Let's start by introducing a mouse action. The Shiny-based app provides a mouse event, called "**brush**". You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of **brush**.
 
-<img src="img/Brush.gif" width = 60% height = 60% /> 
+<img src="img/Brush.gif" width = 70% height = 70% /> 
 
 Follow these steps to remove tree rings: 
 
 1. Create a rectangular region on the image by brushing.
 
-2. Click on the red "**Delete Border**" button at the top left corner of the **Main Window**.
+2. Click on the yellow "**Delete Border**" button at the top left corner of the **Main Window**.
 
     This operation will delete all ring borders covered by the rectangular region. 
 
 See this example:
 
-<img src="img/RemoveRing.gif" width = 65% height = 65% /> 
+<img src="img/RingDel.gif" width = 111% height = 111% /> 
 
 You can also perform a mass deletion of borders using the input control below the **Main Window**.
 
