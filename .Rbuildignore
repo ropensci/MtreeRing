@@ -7,5 +7,6 @@
 ^docs$
 ^doc$
 ^_pkgdown\.yml$
+^\.Rhistory$
 
 
