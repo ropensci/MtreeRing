@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MtreeRing</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
       <h1>A Simple Workflow for Shiny App</h1>
                         <h4 class="author">Jingning Shi</h4>
             
-            <h4 class="date">2019-05-01</h4>
+            <h4 class="date">2019-09-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/MtreeRing/blob/master/vignettes/app-MtreeRing.Rmd"><code>vignettes/app-MtreeRing.Rmd</code></a></small>
       <div class="hidden name"><code>app-MtreeRing.Rmd</code></div>
@@ -104,84 +104,153 @@
 <div id="image-upload" class="section level2">
 <h2 class="hasAnchor">
 <a href="#image-upload" class="anchor"></a>1. Image upload</h2>
-<p>Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named <code>001.png</code>, with the resolution of 1200 dpi can be found in the library directory where you install the package. This image can also be downloaded from a GitHub repository (<a href="https://github.com/ropensci/MtreeRing/raw/master/inst/001.png" class="uri">https://github.com/ropensci/MtreeRing/raw/master/inst/001.png</a>). In the following sections, this image is used to demonstrate the ring-width measurement.</p>
+<p>Once you launch the app, you can upload tree ring images from local hard disk. A sample image, named <code>001.png</code>, with the resolution of 1200 dpi can be found in the library directory where you install the package. It can also be downloaded at <a href="https://github.com/ropensci/MtreeRing/raw/master/inst/001.png" class="uri">https://github.com/ropensci/MtreeRing/raw/master/inst/001.png</a>. In the following sections, this image is used to demonstrate a ring-width measurement.</p>
 <p>You can upload an image with the following steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>When you start the app, click on the <strong>Image Loading</strong> button in the sidebar (This is the default mode. In most cases, you do not need to do this).</p></li>
+<li><p>When you start the app, click on the <strong>Image Loading</strong> button in the sidebar (It defaults to this page).</p></li>
 <li><p>Click on the <strong>Browse…</strong> button in the <strong>Image Upload</strong> window.</p></li>
 <li><p>Choose an image from hard disk.</p></li>
 <li><p>Click on the <strong>Load</strong> button.</p></li>
+<li>
+<p>Rotate and crop the image (Optional).</p>
+<p>Note that the bark side should be placed on the left side of the graphical window. When cores are scanned side by side, crop the image to remove unwanted cores. Irrelevant or redundant features (e.g., wooden mounts where cores are glued) should be removed as well. The subsequent analysis will be performed within the cropped area.</p>
+<p><code>MtreeRing</code> app allows for file sizes up to 150 MB. Although this app supports image cropping, the use of extremely large image files (exceeding 10 MB) is not recommended. Because such a file will consume unnecessary memory space, and the subsequent image rendering and ring detection will also spend too much time.</p>
+<p>A recommended dpi value is in the range of 800 to 2540 (1200 to 2540 for dendrochronology), as a compromise between the measurement accuracy and computer performance.</p>
+</li>
 </ol>
 </div>
 <div id="path-creation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#path-creation" class="anchor"></a>2. Path creation</h2>
-<p>After image uploading, you can click on the <strong>Measurement</strong> button in the sidebar, and it switches content in the main body. The new page has two graphics windows, named <strong>Tree Ring Detection</strong> and <strong>Tree Ring Editing</strong>. These two graphics windows constitute the core of MtreeRing and enable the display of detected tree rings and different types of user-defined markers.</p>
+<p>After image uploading, you can click on the <strong>Measurement</strong> button in the sidebar, and it switches content in the main body. The new page has a graphics window named <strong>Main Window</strong>. This graphics window constitutes the core of MtreeRing. It enables the display of path, detected tree rings, and different types of user-defined markers.</p>
 <p>A path creation consists of the following steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>Enter valid path information, including Series ID, DPI, Sampling year and Y-coordinate of the path.</p></li>
-<li><p>Click on the blue “<strong>Create Path</strong>” button at the top left corner of the <strong>Tree Ring Detection</strong>.</p></li>
+<li>
+<p>Enter valid path information, including Series ID, DPI and Sampling year.</p>
+<p>The series ID is a string with a maximum length of 6 characters. For example, it can be “ZYX011” which indicates the site “ZYX”, tree 01 and core 1. For more details on how to name a ring-width series, see <strong>read.ids</strong> in the reference manual of R package <strong>dplR</strong>.</p>
+</li>
+<li>
+<p>Choose the desired path mode.</p>
+<p>Paths are made of one or more line segments and can have any desired direction. A path is usually placed at the center of the core sample and is adjustable both in width and color. Tree rings are identified along the path. <code>MtreeRing</code> app provides three path modes:</p>
+</li>
 </ol>
-<p>See this example:</p>
-<p><img src="img/PathCreation3.gif" width="80%" height="80%"></p>
-<p>In the current version, the path is a horizontal dashed line (see Figure 1 above). The path is usually placed at the center of the core sample and is adjustable both in width and color.</p>
+<ul>
+<li>
+<p><strong>A. Single Segment</strong></p>
+<p>This is the default path mode. If the box <strong>Horizontal path</strong> is checked (default), a path is placed along the horizontal direction of the graphics window. To create a path in any direction, uncheck the box <strong>Horizontal path</strong>. See this example:</p>
+</li>
+</ul>
+<center>
+<img src="img/path1.png" width="63%" height="63%">
+</center>
+<ul>
+<li>
+<p><strong>B. Single Segment with width correction</strong></p>
+<p>When <strong>Horizontal path</strong> is checked, you can check the box <strong>Inclined tree rings</strong>. In that case, two parallel paths will be created and you can mark two ring borders on the same ring.</p>
+<p>The line segment connecting two dots on the same ring should match the tangent of a tree ring border. Corrected ring widths are estimated from the distance between adjacent rings and orientation of ring borders.</p>
+</li>
+</ul>
+<center>
+<img src="img/path2.png" width="45%" height="45%">
+</center>
+<ul>
+<li>
+<p><strong>C. Multi Segments</strong></p>
+<p>A multi-segment path is made of two or more connected line segments (up to 10). When creating paths, their orientation can change from one segment to another at their junction, and should match the direction of wood growth.</p>
+</li>
+</ul>
+<center>
+<img src="img/path3.png" width="85%" height="85%">
+</center>
+<ol start="3" style="list-style-type: decimal">
+<li>
+<p>Create path(s) with mouse clicks</p>
+<ol style="list-style-type: decimal">
+<li><p>Once you have chosen the desired path mode, move the mouse to <strong>Working mode selector</strong> in the top left corner of the <strong>Main Window</strong> and click the <strong>Path Creation</strong> button.</p></li>
+<li>
+<p>For a single-segment path, move the mouse to the bark side and <strong>double click</strong> the left mouse button once to add a beginning point of the path. <code>MtreeRing</code> app will display this point. Then, move the mouse right and <strong>double click</strong> once to add an ending point of the path. See this example:</p>
+<p><left><img src="img/PathCreation4.gif" width="110%" height="110%"></left></p>
+<p>If you create a horizontal single-segment path, the ending point you click will be moved automatically so that it has the same y-coordinate as the beginning point.</p>
+</li>
+<li><p>For a multi-segment path, the ending point of the previous segment is used as the beginning point of the next segment. Just repeat the previous step.</p></li>
+<li><p>When you have added all endpoints, a pop-up window appears stating the path creation has been completed successfully.</p></li>
+<li>
+<p>Introduction to path creation options:</p>
+<p><strong>Remove Last</strong>: Remove the last endpoint added.</p>
+<p><strong>Remove All</strong>: Remove all endpoints of the path. If you click on this button, you need to re-create a new path.</p>
+<p><strong>Show the preview path</strong>: When you move the mouse over the image, a preview path is drawn with dotted lines. It may help you create a path which follows the growth direction.</p>
+</li>
+</ol>
+</li>
+</ol>
 </div>
 <div id="ring-detection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ring-detection" class="anchor"></a>3. Ring detection</h2>
-<p>Let’s start by introducing a new action. The Shiny-based app provides a mouse event, called “<strong>brush</strong>”. You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of <strong>brush</strong>.</p>
-<p><img src="img/Brush2.gif" width="60%" height="60%"></p>
 <p>If ring borders are clearly visible, follow the steps below to detect tree rings:</p>
 <ol style="list-style-type: decimal">
+<li><p>Click on the <strong>Ring Detection</strong> button next to the <strong>Path Creation</strong> button.</p></li>
 <li>
-<p>Click on the “<strong>Automation</strong>” button (if this button is not selected).</p>
-<p>After clicking on this button, <code>MtreeRing</code> will show a new box at the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.</p>
+<p>Set detection parameters.</p>
+<p>Automatic detection parameters can be set in <strong>Detection Options</strong> in the top right corner of the app. This box provides a series of input controls for image processing, such as morphological operators and different approaches to edge detection.</p>
+<p>If you are not familiar with image processing techniques, use the default settings.</p>
 </li>
-<li><p>Create a blue rectangle mentioned above in the first graphics window (<strong>Tree Ring Detection</strong>) by brushing.</p></li>
 <li>
 <p>Click on the green “<strong>Run Detection</strong>” button.</p>
-<p>The app will detect ring borders within the rectangular region. Detected ring borders are placed along the path, and are tagged with years and border numbers. We suggest creating a narrow rectangle to accelerate the detecting process.</p>
+<p>The app will detect ring borders along the path. Detected ring borders are tagged with years and border numbers.</p>
 </li>
 </ol>
-<p>See this example:</p>
-<p><img src="img/RingDetection2.gif" width="75%" height="75%"></p>
 </div>
 <div id="edit-tree-rings" class="section level2">
 <h2 class="hasAnchor">
 <a href="#edit-tree-rings" class="anchor"></a>4. Edit tree rings</h2>
-<p>If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. In this case, the second graphics window (<strong>Tree Ring Editing</strong>) is used to add (remove) tree ring borders to (from) the image.</p>
-<p>You may have noticed that the graphics windows <strong>Tree Ring Editing</strong> has no image. To generate a zoomed-in image in this windows, follow these steps:</p>
-<ol style="list-style-type: decimal">
-<li><p>Create a blue rectangle in the <strong>Tree Ring Detection</strong> by brushing.</p></li>
-<li><p><strong>Double click</strong> on this rectangle, or Click on the blue “<strong>Create Sub-image</strong>” button below.</p></li>
-</ol>
+<p>If non-edge pixels are incorrectly detected as ring borders, or the wood sample is not suitable for automatic detection, you may need to mark tree rings manually. To switch to the ring editing mode, click on the <strong>Ring Editing</strong> button next to the <strong>Path Creation</strong> button.</p>
+<div id="zoom-inout-and-scroll-an-image" class="section level3">
+<h3 class="hasAnchor">
+<a href="#zoom-inout-and-scroll-an-image" class="anchor"></a>4.1 Zoom in/out and scroll an image</h3>
+<p>Two sliders are located at the bottom and right of the <strong>Main Window</strong>. They are used to zoom in/out and scroll a tree ring image. A draggable button can be found on both ends of a slider.</p>
+<center>
+<img src="img/slider1.png" width="75%" height="75%">
+</center>
+<p>To zoom in an image horizontally, click on any of the draggable buttons on <strong>Slider 1</strong> and drag it to the desired position. Here we select the right-side button because we want to zoom in the left side of the image. See this example:</p>
+<center>
+<img src="img/zoom1.png" width="75%" height="75%">
+</center>
+<p>To scroll the image, you can drag the slider and then move it to the desired position.</p>
+<center>
+<img src="img/scroll1.png" width="75%" height="75%">
+</center>
+<p>You can perform similar operations with <strong>Slider 2</strong>. These operations could zoom in/out or scroll an image in the vertical direction.</p>
+</div>
 <div id="add-tree-rings" class="section level3">
 <h3 class="hasAnchor">
-<a href="#add-tree-rings" class="anchor"></a>4.1 Add tree rings</h3>
-<p>After creating the zoomed-in image, you can add a ring by <strong>double clicking</strong> on the path.</p>
+<a href="#add-tree-rings" class="anchor"></a>4.2 Add tree rings</h3>
+<p>In the ring editing mode, you can add a ring by <strong>double clicking</strong> on the path.</p>
 <p>See this example:</p>
-<p><img src="img/AddRing2.gif" width="60%" height="60%"></p>
+<p><img src="img/AddRing.gif" width="70%" height="70%"></p>
 </div>
 <div id="remove-tree-rings" class="section level3">
 <h3 class="hasAnchor">
-<a href="#remove-tree-rings" class="anchor"></a>4.2 Remove tree rings</h3>
+<a href="#remove-tree-rings" class="anchor"></a>4.3 Remove tree rings</h3>
+<p>Let’s start by introducing a mouse action. The Shiny-based app provides a mouse event, called <strong>brush</strong>. You can select certain portions of the image by left-clicking the mouse button and dragging the mouse over the graphics window. This action will create a blue rectangle. Here is an example of <strong>brush</strong>.</p>
+<p><img src="img/Brush.gif" width="70%" height="70%"></p>
 <p>Follow these steps to remove tree rings:</p>
 <ol style="list-style-type: decimal">
-<li><p>Create a rectangle in the <strong>Tree Ring Editing</strong> by brushing.</p></li>
+<li><p>Create a rectangular region on the image by brushing.</p></li>
 <li>
-<p>Click on the red “<strong>Delete Border</strong>” button at the top left corner of the <strong>Tree Ring Editing</strong>.</p>
+<p>Click on the yellow <strong>Delete Border</strong> button at the top left corner of the <strong>Main Window</strong>.</p>
 <p>This operation will delete all ring borders covered by the rectangular region.</p>
 </li>
 </ol>
 <p>See this example:</p>
-<p><img src="img/RemoveRing.gif" width="75%" height="75%"></p>
-<p>You can also perform a mass deletion of borders using the input control below the <strong>Tree Ring Editing</strong>.</p>
+<p><img src="img/RingDel.gif" width="111%" height="111%"></p>
+<p>You can also perform a mass deletion of borders using the input control below the <strong>Main Window</strong>.</p>
 </div>
 </div>
 <div id="file-download" class="section level2">
 <h2 class="hasAnchor">
 <a href="#file-download" class="anchor"></a>5. File download</h2>
-<p>When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue “<strong>Generate Series</strong>” button at the bottom right corner of the app.</p>
+<p>When the analysis of a sample is complete, you can generate a preview ring-width series by clicking on the blue <strong>Generate Series</strong> button at the bottom right corner of the app.</p>
 <p>To download a file, click on the <strong>RWL</strong> tab or <strong>CSV</strong> tab. You can provide additional <strong>headers</strong> for the RWL file to record more useful information, such as species, elevation, and site.</p>
 </div>
   </div>

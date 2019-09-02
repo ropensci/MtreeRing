@@ -1,7 +1,7 @@
 MtreeRing News
 =======
 ### MtreeRing 1.4.0 (2019-09-01)
-- Redesign the interface and measurement process for the Shiny app.
+- Redesign the interface and measurement process for the Shiny app
 - Update documentation for the redesigned Shiny app
 - Add a Support section in the README file
 - Replace all vignettes with GitHub links

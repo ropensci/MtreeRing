@@ -502,7 +502,7 @@ createUI <- function()
             class = "btn btn-danger btn-md", icon = icon('eraser'),
             style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
           )
-          )
+        )
       ),
       tabBox(
         #title = tagList(shiny::icon("gear"), 'Output'),

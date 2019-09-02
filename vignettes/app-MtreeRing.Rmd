@@ -38,7 +38,7 @@ You can upload an image with the following steps:
     
     `MtreeRing` app allows for file sizes up to 150 MB. Although this app supports image cropping, the use of extremely large image files (exceeding 10 MB) is not recommended. Because such a file will consume unnecessary memory space, and the subsequent image rendering and ring detection will also spend too much time. 
     
-    A recommended dpi value is in the range of 800 to 2540 (1200 or higher for dendrochronology), as a compromise between the measurement accuracy and computer performance.
+    A recommended dpi value is in the range of 800 to 2540 (1200 to 2540 for dendrochronology), as a compromise between the measurement accuracy and computer performance.
     
 ## 2. Path creation
 
