@@ -15,7 +15,6 @@ library(spatstat)
 library(measuRing)
 library(dplyr)
 
-
 # Run the application
 createUI <- function()
 {
@@ -174,13 +173,10 @@ createUI <- function()
           shape = "curve", value = T, status = "success"
         )
       ),
-      # 默认的是2个点，如果切换多路径可以升级
       numericInput('num_seg', 
         div(style = 'color:black;font-weight:bolder;font-size:90%', 
             'Number of segments'),
         value = 1, min = 1, max = 1, step = 1, width = "75%"),
-      
-      # 倾斜校正只对水平路径可用
       conditionalPanel(
         condition = 'input.hor_path',
         prettyCheckbox(
@@ -205,7 +201,7 @@ createUI <- function()
       sliderInput('linelwd', 'Path width', 
         0.2, 3, 1, 0.1, width = '80%'),
       sliderInput('label.cex', 'Magnification for labels',
-        0.2, 3, 1, 0.1, width = '80%'),
+        0.2, 3, 1.5, 0.1, width = '80%'),
       radioGroupButtons(
         inputId = "pch", 
         label = 'Symbol for borders', status = "btn btn-primary btn-md",
@@ -397,7 +393,6 @@ createUI <- function()
                       'Show the preview path'), 
           shape = "curve", value = F, status = "success")
       ),
-      # 检测的按钮
       conditionalPanel(
         condition = "input.sel_mode == 'sel_det'",
         actionButton(
@@ -409,7 +404,6 @@ createUI <- function()
         br(),
         br()
       ),
-      # 编辑的按钮
       conditionalPanel(
         condition = "input.sel_mode == 'sel_edit'",
         actionButton(
@@ -732,7 +726,6 @@ createServer <- function(input, output, session)
   {
     if(is.null(path.info$x))
       return()
-    # 导入path信息
     p.max <- path.info$max
     p.x <- path.info$x - crop.offset.xy$x
     p.y <- path.info$y - crop.offset.xy$y
@@ -742,21 +735,16 @@ createServer <- function(input, output, session)
     h.dis <- path.info$h
     dpi <- path.info$dpi
     len <- length(p.x)
-    
-    # 画路径起始点
+    # plot path
     if (len == 1)
       points(p.x, p.y, pch = 16, col = lab.color)
-    
-    # 有俩点及以上，画实线路径
     if (len >= 2 & !incline) 
       points(p.x, p.y, type = 'l', col = lab.color, lty = 1, lwd = l.w)
-    # 倾斜的双路径
     if(incline){
       dp <- dpi/25.4
       d <- h.dis*dp/2
       points(p.x, p.y + d, type = 'l', col = lab.color, lty = 1, lwd = l.w)
       points(p.x, p.y - d, type = 'l', col = lab.color, lty = 1, lwd = l.w)
-      
       if(len == 2) {
         points(p.x, p.y, type = 'l', col = lab.color, lty = 2, lwd = l.w)
         points(c(p.x[1], p.x[1]), c(p.y[1] + d, p.y[1] - d), 
@@ -765,19 +753,16 @@ createServer <- function(input, output, session)
                type = 'l', col = lab.color, lty = 2, lwd = l.w)
       }
     }
-    
-    # 画悬浮路径
     if(input$sel_mode == 'sel_path' & len < p.max & len >= 1 & input$pre_path){
       y <- ifelse(p.hor, p.y[len], hover.xy$y)
       points(c(p.x[len], hover.xy$x), c(p.y[len], y), 
              type = 'l', col = lab.color, lty = 2, lwd = l.w)
     }
-
-    # 开始画边界点
+    
+    # plot border point
     if(is.null(df.loc$data))
       return()
     df.loc <- df.loc$data
-    
     if (nrow(df.loc) >= 1) {
       bx <- df.loc$x - crop.offset.xy$x
       by <- df.loc$y - crop.offset.xy$y
@@ -871,7 +856,6 @@ createServer <- function(input, output, session)
     return(df.rw)
   }
   
-  # 计算结构元素
   calc.se <- function(se, dpi, order) {
     if (is.null(se)) {
       if(order == 1)
@@ -883,7 +867,7 @@ createServer <- function(input, output, session)
     return(se)
   }
   
-  # 0804 这个函数返回对于全图坐标的xy边界点
+  # 0804
   automatic.det <- function(
     img, incline, method, h.dis, dpi, RGB, px, py, path.hor, path.df,
     watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
@@ -894,38 +878,34 @@ createServer <- function(input, output, session)
     dimt <- image_info(img) %>% '['(1, 2:3) %>% as.numeric
     dimcol <- dimt[1]
     dimrow <- dimt[2]
-    ##
     struc.ele1 <- calc.se(struc.ele1, dpi, 1)
     struc.ele2 <- calc.se(struc.ele2, dpi, 2)
-    ##
-
+    
+    # X direction
     pxmin <- min(px) - round(1.5 * struc.ele2[1])
     if (pxmin <= 0)
       pxmin <- 0
     pxmax <- max(px) + round(1.5 * struc.ele2[1])
     if (pxmax >= dimcol)
       pxmax <- dimcol
-    # Y轴上多一点
+    # Y direction
     pymin <- min(py) - 2 * struc.ele2[1]
     if (incline & path.hor)
       pymin <- pymin - round(h.dis * dp / 2)
     if (pymin <= 0)
       pymin <- 0
-    
     pymax <- max(py) + 2 * struc.ele2[1]
     if (incline & path.hor)
       pymax <- pymax + round(h.dis * dp / 2)
     if (pymax >= dimrow)
       pymax <- dimrow
     
-    # 剪裁图像用于自动检测
+    # crop an image
     img.range <- paste0(as.character(pxmax - pxmin), 'x', 
                         as.character(pymax - pymin), '+',
                         as.character(pxmin), '+', 
                         as.character(dimrow - pymax))
-    
     img <- image_crop(img, img.range)
-    
     rd.martix <- img[[1]]
     hex2dec <- function(rd.martix) apply(rd.martix, 1, as.numeric)
     rd.channel <- dim(rd.martix)[1]
@@ -951,7 +931,6 @@ createServer <- function(input, output, session)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
       marker.img <- water.im(black.hat, T)
       seg.data <- watershed.im(marker.img, seg.mor)
-      # 错位相减
       s2 <- seg.data[, -1]
       s2 <- cbind(s2, matrix(max(s2), ncol = 1, nrow = nrow(s2)))
       seg.data <- as.cimg(s2 - seg.data)
@@ -969,14 +948,13 @@ createServer <- function(input, output, session)
       # seg.data <- canny.seg[, , 1, 1]
     } 
     
-    # 求结果图里面路径点和边界点的交集
+    # intersection operations
     if (method != 'lineardetect') {
-      bor_xy <- where(seg.data == TRUE) # 注意：他的xy是反着的，要交换
+      bor_xy <- where(seg.data == TRUE)
       bor_xy <- bor_xy[, c(2, 1)]
       colnames(bor_xy) <- c('x', 'y')
       bor_xy$x <- bor_xy$x + pxmin - 1
       bor_xy$y <- nrow(seg.data) - bor_xy$y + pymin
-      # 单路径和双路径的交集不一样
       if (path.hor & incline) {
         df.upper <- path.df
         df.lower <- path.df
@@ -994,42 +972,37 @@ createServer <- function(input, output, session)
         bor_xy <- f.sort(bor_xy, dp)
         bor_xy$z <- 'u'
       }
-    }
-    # 为了防止canny检测错误，过滤从暗到亮的边缘
-    filter_edge <- function(bor_xy, tdata, pxmin, pymin, dp) {
-      bor_row <- nrow(tdata) - bor_xy$y + pymin
-      bor_col <- bor_xy$x - pxmin
-      num_dp <- dp * 0.2
-      num_dp <- ifelse(num_dp %% 2 ==0, num_dp + 1, num_dp)
-      mat <- matrix(c(bor_row, bor_col - (num_dp - 1) / 2), ncol = 2)
-      pixel_mat <- matrix(nrow = length(bor_row), ncol = 0)
+      # filter falsely identified borders
+      filter_edge <- function(bor_xy, tdata, pxmin, pymin, dp) {
+        bor_row <- nrow(tdata) - bor_xy$y + pymin
+        bor_col <- bor_xy$x - pxmin
+        num_dp <- dp * 0.2
+        num_dp <- ifelse(num_dp %% 2 ==0, num_dp + 1, num_dp)
+        mat <- matrix(c(bor_row, bor_col - (num_dp - 1) / 2), ncol = 2)
+        pixel_mat <- matrix(nrow = length(bor_row), ncol = 0)
+        
+        # calculate slope
+        for(i in 1:num_dp) {
+          pixel_mat <- cbind(pixel_mat, tdata[mat])
+          mat[,2] <- mat[,2] + 1
+        }
+        calc_slope <- function(x){
+          lm(x ~ c(1:num_dp)) %>% coef %>% as.numeric
+        }
+        slope <- apply(pixel_mat, 1, calc_slope)
+        bor_xy <- bor_xy[slope[2,] < 0,]
+      }
       
-      # 提取前后0.2mm的点，求slope
-      for(i in 1:num_dp) {
-        pixel_mat <- cbind(pixel_mat, tdata[mat])
-        mat[,2] <- mat[,2] + 1
-      }
-      calc_slope <- function(x){
-        lm(x~c(1:num_dp)) %>% coef %>% as.numeric
-      }
-      slope <- apply(pixel_mat, 1, calc_slope)
-      bor_xy <- bor_xy[slope[2,] < 0,]
+      bor_xy <- filter_edge(bor_xy, tdata, pxmin, pymin, dp)
     }
-    
-    bor_xy <- filter_edge(bor_xy, tdata, pxmin, pymin, dp)
-  
     if (method == 'lineardetect') {
       attributes(seg.data)['image'] <- 'img'
       smoothed <- graySmoothed(seg.data, ppi = dpi, rgb = RGB)
       borders <- linearDetect(smoothed, origin = origin)
       borders <- borders + pxmin
-      print(py[1])
-      print(pymin)
       bor_xy <- data.frame(x = borders, y = py[1], z = 'u')
-      print(bor_xy)
     }
     return(bor_xy)
-
   } 
   readImg <- function(img, img.name, magick.switch = TRUE) {
     img.size <- file.size(img)/1024^2
@@ -1080,7 +1053,6 @@ createServer <- function(input, output, session)
     if(input$wh_ratio){
       plot(tdata.copy, xlim = c(xleft, xright), ylim = c(ybottom, ytop),
            main = img.name, xlab = "", ylab = "", cex.main = 1.2)
-      
     } else {
       plot(x = c(xleft, xright), y = c(ybottom, ytop),
            xlim = c(xleft, xright), ylim = c(ybottom, ytop),
@@ -1089,18 +1061,14 @@ createServer <- function(input, output, session)
       rasterImage(as.raster(tdata.copy), xleft, ybottom,
                   xright, ytop, interpolate = FALSE)
     }
-    
     axis(1, col = "grey", cex.axis = 1)
     axis(2, col = "grey", cex.axis = 1)
-    
-    
     if (!is.null(plot1_rangesx)) {
       xmin <- plot1_rangesx[1]
       xmax <- plot1_rangesx[2]
       ymin <- plot1_rangesy[1]
       ymax <- plot1_rangesy[2]
-      
-      dimt <- image_info(tdata) %>% '['(1,2:3) %>% as.numeric
+      dimt <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
       if (dimt[1] * dimt[2] >= 1.2e+07) {
         xmin <- xmin/4
         xmax <- xmax/4
@@ -1113,7 +1081,7 @@ createServer <- function(input, output, session)
     }
   }
   imgInput_crop <- function(tdata, ver, hor) {
-    # 在这根据滚动条剪裁
+    # crop an image based on slider info
     dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
     dimcol <- dim.tdata[1]
     dimrow <- dim.tdata[2]
@@ -1126,7 +1094,7 @@ createServer <- function(input, output, session)
                         as.character(ini.x), '+', 
                         as.character(ini.y))
     tdata <- image_crop(tdata, img.range)
-    # 新的维度
+    # new dimension
     dim.tdata <- image_info(tdata) %>% '['(1, 2:3) %>% as.numeric
     xleft <- 0
     ybottom <- 0
@@ -1145,9 +1113,6 @@ createServer <- function(input, output, session)
       rasterImage(as.raster(tdata), xleft, ybottom,
                   xright, ytop, interpolate = FALSE)
     }
-    
-    # axis(1, col = "grey", cex.axis = 1)
-    # axis(2, col = "grey", cex.axis = 1)
     return(tdata)  
   }
   rotateImg <- function(tdata, degree) {
@@ -1156,24 +1121,24 @@ createServer <- function(input, output, session)
     attributes(tdata) <- c(attributes(tdata), list(dimt = dim.tdata))
     return(tdata)
   }
+  # Functions listed above are used for shiny app
+  
   options(shiny.maxRequestSize = 150*(1024^2))
+  
   img.file <- reactiveValues(data = NULL)
   img.file.crop <- reactiveValues(data = NULL)
   img.file.copy <- reactiveValues(data = NULL)
+  
   observeEvent(input$inmethod, {
-    # 图像
     img.file$data <- NULL
     img.file.copy$data <- NULL
     img.file.crop$data <- NULL
-    # 边界
     df.loc$data <- NULL
     df.loc$ID <- NULL
-    # 刷子
     plot1_ranges$x <- NULL
     plot1_ranges$y <- NULL
     plot2_ranges$x <- NULL
     plot2_ranges$y <- NULL
-    # path
     path.info$x <- NULL
     path.info$y <- NULL
     path.info$type <- NULL
@@ -1224,7 +1189,6 @@ createServer <- function(input, output, session)
     img.file$data <- rotateImg(img.file$data, degree)
     img.file.crop$data <- img.file$data
     img.file.copy$data <- rotateImg(img.file.copy$data, degree)
-    # rotarteimg函数自带维度校正，此行代码似乎不需要
     # new.dimt <- attributes(img.file$data)[["dimt"]]
     # attributes(img.file.copy$data)[["dimt"]] <- new.dimt
     plot1_ranges$x <- NULL
@@ -1255,6 +1219,7 @@ createServer <- function(input, output, session)
     )
     updateActionButton(session, "buttoncrop", label = "Crop")
   })
+  
   observeEvent(input$magick.switch, {
     if(input$magick.switch){
       updatePrettySwitch(session, inputId = 'magick.switch', 
@@ -1319,11 +1284,11 @@ createServer <- function(input, output, session)
     path.info$df <- NULL
     rw.dataframe$data <- NULL
     #cur.time <- as.character(Sys.time())
-    updateTextInput(session, "tuid", value = '001',
+    updateTextInput(session, "tuid", value = '',
       label = 'Series ID')
-    updateTextInput(session, "sample_yr", value = '2015',
+    updateTextInput(session, "sample_yr", value = '',
       label = 'Sampling year')
-    updateTextInput(session, "dpi", value = '1200',
+    updateTextInput(session, "dpi", value = '',
       label = 'DPI of the image')
     updatePrettyRadioButtons(
       session = session, inputId = "cropcondition",
@@ -1341,13 +1306,15 @@ createServer <- function(input, output, session)
     if ((dimcol*dimrow) >= 1.2e+07) {
       resize.ratio <- 0.25
       resize.str <- paste0(round(dimcol*resize.ratio), 'x', 
-        round(dimrow*resize.ratio))
+                           round(dimrow*resize.ratio))
       img.file.copy$data <- image_resize(img.file$data, resize.str)
     } else {
       img.file.copy$data <- img.file$data
     }
   })
+  
   plot1_ranges <- reactiveValues(x = NULL, y = NULL)
+  
   observeEvent(input$buttoncrop, {
     if(is.null(img.file$data)){
       et <- paste('The preview image have not been generated')
@@ -1379,11 +1346,11 @@ createServer <- function(input, output, session)
     if (!is.null(plot1_brush)) {
       plot1_ranges$x <- c(round(plot1_brush$xmin), round(plot1_brush$xmax))
       plot1_ranges$y <- c(round(plot1_brush$ymin), round(plot1_brush$ymax))
-      #0730 解决超大图像切割出现错误的原因(刷子坐标乘以4倍)
+      #0730
       dimt <- attributes(img.file$data)[["dimt"]]
       dimcol <- dimt[1]
       dimrow <- dimt[2]
-      if ((dimcol*dimrow) >= 1.2e+07) {
+      if (dimcol * dimrow >= 1.2e+07) {
         plot1_ranges$x <- plot1_ranges$x * 4
         plot1_ranges$y <- plot1_ranges$y * 4
       }
@@ -1397,9 +1364,9 @@ createServer <- function(input, output, session)
       xmax <- plot1_ranges$x[2]
       ymax <- plot1_ranges$y[2]
       img.range <- paste0(as.character(xmax-xmin), 'x', 
-        as.character(ymax-ymin), '+',
-        as.character(xmin), '+',
-        as.character(dimrow-ymax))
+                          as.character(ymax-ymin), '+',
+                          as.character(xmin), '+',
+                          as.character(dimrow-ymax))
       img.file.crop$data <- image_crop(img.file$data, img.range)
       updateActionButton(session, "buttoncrop", label = "Cancel")
       updatePrettyRadioButtons(
@@ -1419,37 +1386,35 @@ createServer <- function(input, output, session)
       ) 
     }
   })
+  
   output$pre.img <- renderPlot({
     if (is.null(img.file$data)) return()
     imgInput(img.file$data, img.file.copy$data, plot1_ranges$x, plot1_ranges$y)
   })
-  
-  
+
   plot2_ranges <- reactiveValues(x = NULL, y = NULL)
   df.loc <- reactiveValues(data = NULL, ID = NULL)
-  # 0801: 这个创建路径的按钮似乎没用了，应该改为图2上选择了
-  # 路径创建模式的鼠标悬浮和点击操作来进行
   
-  # 可以升级路径数量
+  # update path options
   observeEvent(input$sel_sin_mul, {
     if(input$sel_sin_mul == "Single Segment") {
       updateNumericInput(session = session, inputId = 'num_seg', 
                          value = 1, min = 1, max = 1, step = 1)
+      updatePrettyCheckbox(
+        session = session, inputId = "hor_path", value = TRUE)
+      updatePrettyCheckbox(
+        session = session, inputId = "incline", value = FALSE)
     } else {
       updateNumericInput(session = session, inputId = 'num_seg', 
-                         value = 1, min = 1, max = 10, step = 1)
-      # 同时取消horizontal选项
+                         value = 2, min = 1, max = 10, step = 1)
       updatePrettyCheckbox(
         session = session, inputId = "hor_path", value = FALSE)
-      # 取消倾斜
       updatePrettyCheckbox(
         session = session, inputId = "incline", value = FALSE)
     }
   })
-  
-  
-  
-  # 0803 删除一个线段
+
+  # 0803 delete a segment
   observeEvent(input$rm_last, {
     if(is.null(path.info$x)) {
       et <- 'The path to be removed does not exist.'
@@ -1479,14 +1444,14 @@ createServer <- function(input, output, session)
     if(length(path.info$x) >= 2) {
       path.info$x <- path.info$x[-length(path.info$x)]
       path.info$y <- path.info$y[-length(path.info$y)]
-      et <- 'The last endpoint has been removed.'
+      et <- 'The last endpoint added has been removed.'
       sendSweetAlert(
         session = session, "Success", et, "success"
       )
       return()
     }
   })
-  # 0803 删除所有线段
+  # 0803 delete all segments
   observeEvent(input$rm_all, {
     if(is.null(path.info$x)) {
       et <- 'The path to be removed does not exist.'
@@ -1515,11 +1480,9 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    
   })
-  
-  # 0818
-  # 删除边界点
+
+  # del border points
   observeEvent(input$rm_all_border, {
     if(is.null(df.loc$data)) {
       et <- 'Ring borders were not found'
@@ -1536,7 +1499,7 @@ createServer <- function(input, output, session)
     return()
   })
   
-  # 加入一个值，用以记录拖动滑动条时候，图像左下角的坐标校正值
+  # record slider info
   crop.offset.xy <- reactiveValues(x = NULL, y = NULL)
   observeEvent(input$img_ver, {
     if (is.null(img.file.crop$data))
@@ -1544,9 +1507,7 @@ createServer <- function(input, output, session)
     dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
     dimrow <- dimt[2]
     crop.offset.xy$y <- dimrow - round(input$img_ver[2]*dimrow/1000)
-
   })
-
   observeEvent(input$img_hor, {
     if (is.null(img.file.crop$data))
       return()
@@ -1554,7 +1515,6 @@ createServer <- function(input, output, session)
     dimcol <- dimt[1]
     crop.offset.xy$x <- input$img_hor[1]*dimcol/100 %>% round
   })
-  
   observeEvent(img.file.crop$data, {
     if (is.null(img.file.crop$data))
       return()
@@ -1565,27 +1525,26 @@ createServer <- function(input, output, session)
     crop.offset.xy$y <- dimrow - round(input$img_ver[2]*dimrow/1000)
   })
   
-  # 记录鼠标悬浮值
+  # record mouse position to generate a preview path
   hover.xy <- reactiveValues(x = NULL, y = NULL)
   observeEvent(input$plot2_hover, {
     hover.xy$x <- input$plot2_hover$x
     hover.xy$y <- input$plot2_hover$y
   })
   
-  # 关掉水平路径或切换多路径时候自动关掉倾斜校正
+  # turn off ring width correction when switching to another mode
   observeEvent(input$hor_path, {
     updatePrettyCheckbox(
       session = session, inputId = "incline", 
       value = FALSE)
   })
-  
   observeEvent(input$sel_sin_mul, {
     updatePrettyCheckbox(
       session = session, inputId = "incline", 
       value = FALSE)
   })
   
-  ## 图2双击1：路径创建模式
+  ## create path with mouse clicks
   path.info <- reactiveValues(x = NULL, y = NULL, type = NULL, ID = NULL,
                               horizontal = NULL, incline = NULL, h = NULL, 
                               dpi = NULL, max = NULL, df = NULL)
@@ -1616,11 +1575,9 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    # 注意，画图时候图上坐标应减去滑动条的坐标范围
     dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
     dimrow <- dimt[2]
     dimcol <- dimt[1]
-    # 如果已经点够了，不让点击了
     if (!is.null(path.info$max)) {
       if(length(path.info$x) >= path.info$max) {
         et <- paste('You have already created a path')
@@ -1630,7 +1587,6 @@ createServer <- function(input, output, session)
         return()
       }
     }
-    # 某点的x坐标不能小于前一个点
     if(length(path.info$x) >= 1) {
       cur.p.x <- round(input$plot2_dblclick$x + crop.offset.xy$x)
       last.point <- path.info$x[length(path.info$x)]
@@ -1643,9 +1599,7 @@ createServer <- function(input, output, session)
         return()
       }
     }
-    #双击时，储存路径
     px <- round(input$plot2_dblclick$x + crop.offset.xy$x)
-    # 点击的点的x坐标不能超出左右的范围
     if (px <= 0 | px >= dimcol) {
       et <- paste('The X-coordinate of the endpoint is out of',
                   'range. Please click on the image.')
@@ -1654,7 +1608,6 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    # 检测点击的点之y坐标是否正确
     crop.h <- round(diff(input$img_ver)*dimrow/1000)
     if (input$plot2_dblclick$y >= crop.h | input$plot2_dblclick$y <= 0) {
       et <- paste('The Y-coordinate of the endpoint is out of',
@@ -1665,7 +1618,6 @@ createServer <- function(input, output, session)
       return() 
     }
     py <- round(input$plot2_dblclick$y + crop.offset.xy$y)
-    # 检测双路径是否能容下
     dp <- dpi/25.4
     h.dis <- as.numeric(input$h.dis)
     d <- h.dis*dp/2
@@ -1689,14 +1641,11 @@ createServer <- function(input, output, session)
         return()
       }
     }
-    
-    # 如果水平路径，把py改成第一次的
     if(length(path.info$x) >= 1) {
       if (path.info$horizontal) {
         py <- path.info$y[1]
       }
     }
-    
     path.info$x <- c(path.info$x, px)
     path.info$y <- c(path.info$y, py)
     if(length(path.info$x) == 1) {
@@ -1704,7 +1653,7 @@ createServer <- function(input, output, session)
       sendSweetAlert(
         session = session, title = "Success", text = rt, type = "success"
       )
-      # 只在第一次点击时候记录路径信息
+      # record path info only the first time you click
       path.info$type <- input$sel_sin_mul
       path.info$ID <- seriesID
       path.info$horizontal <- input$hor_path
@@ -1714,8 +1663,7 @@ createServer <- function(input, output, session)
       path.info$max <- input$num_seg + 1
       df.loc$ID <- input$tuid
     }
-    ## 0804 创建完路径之后，储存一个路径组成点的坐标
-    # 自动检测会提取路径点上下的图像像素值，用以边缘检测
+    # record xy-coordinates of the path
     if(length(path.info$x) == path.info$max) {
       rt <- paste('The ending point of the path have been created.',
                   'Please switch to another working mode.')
@@ -1736,16 +1684,13 @@ createServer <- function(input, output, session)
         y1 <- cf1[1] + cf1[2] * x1
         c1 <- data.frame(x = x1, y = y1)
         path.df <- rbind(path.df, c1)
-        
       }
-      # 这里的坐标是相对于全图的
       path.df$y <- round(path.df$y)
       path.info$df <- path.df
     }
-    
   })
 
-  ## 图2：检测模式: 直接检测路径附近的点
+  ## run auto detection
   observeEvent(input$button_run_auto, { 
     if (is.null(path.info$df)) {
       et <- 'A path has not been created.'
@@ -1760,7 +1705,6 @@ createServer <- function(input, output, session)
     } else {
       RGB <- strsplit(input$customRGB, ',')[[1]] %>% as.numeric
     }
-    # 这些信息可以放到检测函数里面去
     dpi <- path.info$dpi
     dp <- dpi/25.4
     incline <- path.info$incline
@@ -1769,8 +1713,6 @@ createServer <- function(input, output, session)
     path.df <- path.info$df
     px <- path.info$x
     py <- path.info$y
-    
-    # 导入结构元素的信息
     defaultse <- input$defaultse
     if (defaultse) {
       struc.ele1 <- NULL
@@ -1779,9 +1721,6 @@ createServer <- function(input, output, session)
       struc.ele1 <- c(input$struc.ele1, input$struc.ele1) %>% as.numeric
       struc.ele2 <- c(input$struc.ele2, input$struc.ele2) %>% as.numeric
     }  
-    
-    # 生成图像
-    # 图像考虑左/右边空余不能小于2个结构元素
     img <- img.file.crop$data
     method <- input$method
     if(input$watershed.threshold == 'custom.waterthr'){
@@ -1790,16 +1729,12 @@ createServer <- function(input, output, session)
       watershed.threshold <- input$watershed.threshold
     }
     watershed.adjust <- input$watershed.adjust
-    
-    # 进度条
     progressSweetAlert(
       session = session, id = "detect_progress",
       title = "Detection in progress",
       display_pct = F, value = 0
     )
-    
     if (method == 'watershed') {
-      
       df.loc$data <- automatic.det(
         img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
         watershed.threshold, watershed.adjust, struc.ele1, struc.ele2
@@ -1818,10 +1753,10 @@ createServer <- function(input, output, session)
       )
     }   
     if (method == "lineardetect") {
-      if (incline | path.info$type == "Multi Segments") {
-        rt <- paste('Note that the linear detection supports only Single',
-                    'Segment mode without ring width correction. Please',
-                    'remove the current path and recreate a new path')
+      if (incline | path.info$type == "Multi Segments" | !ph) {
+        rt <- paste('The linear detection supports only Single Segment',
+                    'mode (without ring width correction). Please recreate',
+                    'a horizontal single-segment path.')
         sendSweetAlert(
           session = session, title = "ERROR", text = rt, type = "warning"
         )
@@ -1834,8 +1769,6 @@ createServer <- function(input, output, session)
       )
       df.loc$data <- f.df.loc
     }
-
-
     number.border <- nrow(df.loc$data)
     if (number.border == 0) {
       rt <- 'Ring border was NOT detected'
@@ -1852,9 +1785,7 @@ createServer <- function(input, output, session)
     }  
   })
 
-  ## 图2双击3：编辑模式
-  
-  # 自动检测模式下双击，提示错误
+  ## Ring editing mode
   observeEvent(input$plot2_dblclick, {
     if(input$sel_mode == "sel_det"){
       et <- paste('If you want to add new ring borders by double-clicking,',
@@ -1864,12 +1795,9 @@ createServer <- function(input, output, session)
       )
       return()
     }
-      
   })
-  
-  # 双击添加点
-  observeEvent(input$plot2_dblclick, 
-  {
+  # add a point by double clicking
+  observeEvent(input$plot2_dblclick, {
     if(input$sel_mode != "sel_edit")
       return()
     if (is.null(img.file.crop$data)) {
@@ -1888,19 +1816,16 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    # 有可能没有用自动检测，所以创建一个df.loc$data
     if (is.null(df.loc$data)) {
       bor.df <- matrix(nrow = 0, ncol = 3) %>% as.data.frame
       colnames(bor.df) <- c('x', 'y', 'z')
     } else {
       bor.df <- df.loc$data
     }
-    
-    # 注意，画图时候图上坐标应减去滑动条的坐标范围
     dimt <- image_info(img.file.crop$data) %>% '['(1, 2:3) %>% as.numeric
     dimrow <- dimt[2]
     dimcol <- dimt[1]
-    # 鼠标信息
+    # mouse position info
     bor <- input$plot2_dblclick
     px <- round(bor$x + crop.offset.xy$x)
     y_cor <- round(bor$y + crop.offset.xy$y)
@@ -1912,22 +1837,18 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    # 检测点击的点之y坐标是否正确
+    # check y-coordinates
     crop.h <- round(diff(input$img_ver)*dimrow/1000)
     if (input$plot2_dblclick$y >= crop.h | input$plot2_dblclick$y <= 0) {
       et <- paste('The Y-coordinate of the point you click is',
-                  'out of range. Please click on the image')
+                  'out of range. Please click on the path')
       sendSweetAlert(
         session = session, title = "Error", text = et, type = "error"
       )
       return() 
     }
-    # 0814待解决 
-    # 点击的点需呀根据x坐标找路径上对应的Y点，不能用原始y坐标
-    # 解决方案：找路径和点击点x坐标的交集
     path.df <- path.info$df
     if (path.info$horizontal & path.info$incline) {
-      # 这里每个X对应俩点
       dpi <- path.info$dpi
       dp <- dpi/25.4
       h.dis <- path.info$h
@@ -1937,16 +1858,14 @@ createServer <- function(input, output, session)
                    py - round(h.dis * dp / 2))
       pz <- ifelse(y_cor > path.info$y[1], 'u', 'l')
       temp.df <- data.frame(x = px, y = py, z = pz)
-      print(temp.df)
     } else {
       py <- path.df$y[path.df$x == px]
       temp.df <- data.frame(x = px, y = py, z = 'u')
     }
     df.loc$data <- rbind(bor.df, temp.df)
-
   })
   
-  # 刷子+按钮删除点
+  # delete points with a brush
   observeEvent(input$buttonzoomdel, {
     if (is.null(input$plot2_brush$xmin)) {
       err.text <- 'You have not selected ring borders with a brush'
