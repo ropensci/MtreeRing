@@ -777,10 +777,10 @@ createServer <- function(input, output, session)
           points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           year.u <- c(sample_yr:(sample_yr - lenup + 1))
-          text(bx[up], by[up], year.u, adj = c(1.5, 0.5), 
+          text(bx[up], by[up], year.u, adj = c(-0.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenup
-          text(bx[up], by[up], border.num, adj = c(0.5, -1.25), 
+          text(bx[up], by[up], border.num, adj = c(0.5, 2.25), 
                col = lab.color, cex = label.cex)
         }
         lower <- which(bz == 'l')
