@@ -150,9 +150,9 @@ createUI <- function()
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Path Options'), height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
-      textInput('tuid', 'Series ID', '001', width = '75%'),
-      textInput('dpi', 'DPI', '700', '75%'),
-      textInput('sample_yr', 'Sampling year', '2015', '75%'),
+      textInput('tuid', 'Series ID', '', width = '75%'),
+      textInput('dpi', 'DPI', '', '75%'),
+      textInput('sample_yr', 'Sampling year', '', '75%'),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
       pickerInput(
         inputId = "sel_sin_mul", 
