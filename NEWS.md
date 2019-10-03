@@ -1,5 +1,11 @@
 MtreeRing News
 =======
+### MtreeRing 1.4.2 (2019-10-03)
+- Update GitHub links in `ring_app_launch` function
+
+### MtreeRing 1.4.1 (2019-09-23)
+- Update README file
+
 ### MtreeRing 1.4.0 (2019-09-01)
 - Redesign the interface and measurement process for the Shiny app
 - Update documentation for the redesigned Shiny app
