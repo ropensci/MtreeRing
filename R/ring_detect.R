@@ -277,6 +277,7 @@ ring_detect <- function(ring.data, seg = 1, auto.path = TRUE, manual = FALSE,
       attributes(seg.data)['image'] <- 'img'
       smoothed <- graySmoothed(seg.data, ppi = x.dpi, rgb = RGB)
       bor.col <- linearDetect(smoothed, origin = origin)
+      print(bar.col)
       bor.col <- bor.col + px2 - 1
     }
   }

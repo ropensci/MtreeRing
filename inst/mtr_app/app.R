@@ -1,3 +1,5 @@
+
+
 library(shiny)
 library(shinyWidgets)
 library(shinydashboard)
@@ -14,6 +16,9 @@ library(dplR)
 library(spatstat)
 library(measuRing)
 library(dplyr)
+library(rhandsontable)
+library(xRing)
+library(shinyMatrix)
 
 # Run the application
 createUI <- function()
@@ -45,6 +50,7 @@ createUI <- function()
           resetOnNew = TRUE)
       )
       ), 
+    
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Upload'),
@@ -102,6 +108,19 @@ createUI <- function()
       ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
+        font-weight: bolder', 'Light calibration'),
+      width = 3, status = 'primary', solidHeader = T, collapsible = T,
+      tableOutput("static"),
+      helpText("Introduce thickness parameters",
+               "as well as image intensity, number of steps",
+               "and the material density.",
+               style = 'color:black;font-size:90%;text-align:justify;'),
+      numrows <- numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
+      numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
+      uiOutput("matrixcontrol")
+      ),
+    box(
+      title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Cropping'),
       width = 3, status = 'primary', solidHeader = T, collapsible = T,
       helpText("To remove unwanted cores and irrelevant objects, ",
@@ -136,6 +155,7 @@ createUI <- function()
           " rectangle disappear) and then click on the button \"Cancel\".",
           style = 'color:#FF0000;text-align:justify;')
       ),  
+      
       hr(),
       actionButton(
         'buttoncrop', 'Crop',
@@ -143,7 +163,8 @@ createUI <- function()
         icon = icon('crop',"fa-1x"),
         style = 'color:#FFFFFF;text-align:center;
         font-weight: bolder;font-size:110%;')
-      )
+      ),
+    
       )
   page2.1 <- fluidRow(
     box(
@@ -1001,6 +1022,11 @@ createServer <- function(input, output, session)
       borders <- linearDetect(smoothed, origin = origin)
       borders <- borders + pxmin
       bor_xy <- data.frame(x = borders, y = py[1], z = 'u')
+      first_column <- bor_xy[,1]
+      second_column <- bor_xy[,2]
+      bor_row <- nrow(tdata) - bor_xy$y + pymin
+      bor_col <- bor_xy$x - pxmin
+      pix <- 255*tdata[bor_row,bor_col][1,]
     }
     return(bor_xy)
   } 
@@ -1129,6 +1155,15 @@ createServer <- function(input, output, session)
   img.file.crop <- reactiveValues(data = NULL)
   img.file.copy <- reactiveValues(data = NULL)
   
+  output$matrixcontrol <- renderUI({
+      matrixInput("thickness_matrix",
+        value = matrix(0, input$nsteps, 2,dimnames = list(NULL,c("Thickness","Density"))),
+        rows = list(
+          editableNames = TRUE),
+        cols = list(names = TRUE)
+      )
+  })
+  
   observeEvent(input$inmethod, {
     img.file$data <- NULL
     img.file.copy$data <- NULL
@@ -1229,7 +1264,6 @@ createServer <- function(input, output, session)
         label = 'Magick OFF', value = FALSE)
     }
   })
-
   observeEvent(input$buttoninputimage, {
     magick.switch <- input$magick.switch
     if (!input$inmethod) {
