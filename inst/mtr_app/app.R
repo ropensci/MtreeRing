@@ -49,15 +49,7 @@ createUI <- function()
           opacity = 0.25,
           resetOnNew = TRUE)
       )
-      ), 
-    # Box for diplaying light calibration plot
-    box(
-      title = div(style = 'color:#FFFFFF;font-size:80%; 
-        font-weight: bolder', 'Light Calibration'),
-      width = 12, status = 'primary', solidHeader = T, collapsible = T,
-      hr(),
-      plotOutput("light")
-    ),
+      ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Upload'),
@@ -93,65 +85,16 @@ createUI <- function()
       ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Image Rotation'),
-      width = 3, status = 'primary', solidHeader = T, collapsible = T,
-      prettyRadioButtons(inputId = "rotatede", label = "",
-        choices = c("0 degrees" = "rotate0",
-          "90 degrees" = "rotate90",
-          "180 degrees" = "rotate180",
-          "270 degrees" = "rotate270"),
-        shape = "curve", status = "success",
-        fill = TRUE, inline = TRUE),
-      helpText("Rotation angle in degrees. Note that the bark ",
-        "side should be placed at the left side of the ",
-        "graphics window and the pith side at the right.",
-        style = 'color:black;font-size:90%;text-align:justify;'),
-      actionButton(
-        'buttonrotate', 'Rotate',
-        class = "btn btn-primary btn-md",
-        icon = icon('repeat',"fa-1x"),
-        style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;')
-      ),
-    # New box to fill in data for light calibration
-    box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Light calibration'),
-      width = 3, status = 'primary', solidHeader = T, collapsible = T,
-      tableOutput("static"),
-      helpText("Introduce thickness parameters",
-               "as well as image intensity, number of steps",
-               "and the material density.",
-               style = 'color:black;font-size:90%;text-align:justify;'),
-      numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
-      numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
-      matrixInput("thickness_matrix",
-                  value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
-                  rows = list(
-                    editableNames = TRUE),
-                  class = "numeric",
-                  cols = list(names = TRUE)
-      ),
-      uiOutput("matrixcontrol"),
-      actionButton(
-        'buttondensity', 'Plot',
-        class = "btn btn-primary btn-md",
-        icon = icon('upload',  "fa-1x"),
-        style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;'),
-      ),
-    box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Cropping'),
       width = 3, status = 'primary', solidHeader = T, collapsible = T,
       helpText("To remove unwanted cores and irrelevant objects, ",
-        "move the mouse to the core you wish to measure and",
-        "create a rectangle by brushing, see details below.",
-        style = 'color:black;font-size:90%;text-align:justify;'),
+               "move the mouse to the core you wish to measure and",
+               "create a rectangle by brushing, see details below.",
+               style = 'color:black;font-size:90%;text-align:justify;'),
       prettyRadioButtons(inputId = "cropcondition", label = "",
-        choiceNames = 'UNCROPPED', choiceValues = list('a'),
-        status = "danger", shape = "square",
-        fill = FALSE, inline = FALSE),
+                         choiceNames = 'UNCROPPED', choiceValues = list('a'),
+                         status = "danger", shape = "square",
+                         fill = FALSE, inline = FALSE),
       prettyCheckbox(
         inputId = "showcropp", 
         label = div(style = 'color:black;font-weight: bolder;', 'Show Help'),
@@ -184,9 +127,62 @@ createUI <- function()
         icon = icon('crop',"fa-1x"),
         style = 'color:#FFFFFF;text-align:center;
         font-weight: bolder;font-size:110%;')
+    ),
+    box(
+      title = div(style = 'color:#FFFFFF;font-size:80%;
+        font-weight: bolder', 'Image Rotation'),
+      width = 3, status = 'primary', solidHeader = T, collapsible = T,
+      prettyRadioButtons(inputId = "rotatede", label = "",
+                         choices = c("0 degrees" = "rotate0",
+                                     "90 degrees" = "rotate90",
+                                     "180 degrees" = "rotate180",
+                                     "270 degrees" = "rotate270"),
+                         shape = "curve", status = "success",
+                         fill = TRUE, inline = TRUE),
+      helpText("Rotation angle in degrees. Note that the bark ",
+               "side should be placed at the left side of the ",
+               "graphics window and the pith side at the right.",
+               style = 'color:black;font-size:90%;text-align:justify;'),
+      actionButton(
+        'buttonrotate', 'Rotate',
+        class = "btn btn-primary btn-md",
+        icon = icon('repeat',"fa-1x"),
+        style = 'color:#FFFFFF;text-align:center;
+        font-weight: bolder;font-size:110%;')
+    ),
+    # New box to fill in data for light calibration
+    box(
+      title = div(style = 'color:#FFFFFF;font-size:80%;
+        font-weight: bolder', 'Light calibration'), status = 'primary', solidHeader = T, collapsible = T, width = 5,
+      tableOutput("static"),
+      helpText("Introduce thickness parameters",
+               "as well as image intensity, number of steps",
+               "and the material density.",
+               style = 'color:black;font-size:90%;text-align:justify;'),
+      numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
+      numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
+      matrixInput("thickness_matrix",
+                  value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
+                  rows = list(
+                    editableNames = TRUE),
+                  class = "numeric",
+                  cols = list(names = TRUE)
       ),
-    
-      )
+      uiOutput("matrixcontrol"),
+      actionButton(
+        'buttondensity', 'Plot',
+        class = "btn btn-primary btn-md",
+        icon = icon('upload',  "fa-1x"),
+        style = 'color:#FFFFFF;text-align:center;
+        font-weight: bolder;font-size:110%;'),
+    ), 
+    # Box for diplaying light Calibration
+    box(
+      title = div(style = 'color:#FFFFFF;font-size:80%; 
+        font-weight: bolder', 'Light Calibration'),width = 6, status = 'primary', solidHeader = T, collapsible = T,
+      hr(),
+      plotOutput("light")
+    ),)
   page2.1 <- fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
