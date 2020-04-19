@@ -115,9 +115,22 @@ createUI <- function()
                "as well as image intensity, number of steps",
                "and the material density.",
                style = 'color:black;font-size:90%;text-align:justify;'),
-      numrows <- numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
+      numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
       numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
-      uiOutput("matrixcontrol")
+      matrixInput("thickness_matrix",
+                  value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
+                  rows = list(
+                    editableNames = TRUE),
+                  class = "numeric",
+                  cols = list(names = TRUE)
+      ),
+      uiOutput("matrixcontrol"),
+      actionButton(
+        'buttondensity', 'Plot',
+        class = "btn btn-primary btn-md",
+        icon = icon('upload',  "fa-1x"),
+        style = 'color:#FFFFFF;text-align:center;
+        font-weight: bolder;font-size:110%;'),
       ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
@@ -1156,13 +1169,7 @@ createServer <- function(input, output, session)
   img.file.copy <- reactiveValues(data = NULL)
   
   output$matrixcontrol <- renderUI({
-      matrixInput("thickness_matrix",
-        value = matrix(0, input$nsteps, 2,dimnames = list(NULL,c("Thickness","Density"))),
-        rows = list(
-          editableNames = TRUE),
-        cols = list(names = TRUE)
-      )
-  })
+    updateMatrixInput(session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Density"))))})
   
   observeEvent(input$inmethod, {
     img.file$data <- NULL
@@ -1263,6 +1270,33 @@ createServer <- function(input, output, session)
       updatePrettySwitch(session, inputId = 'magick.switch', 
         label = 'Magick OFF', value = FALSE)
     }
+  })
+  observeEvent(input$buttondensity,{
+    if (!input$inmethod) {
+      imgf <- input$selectfile
+      if (is.null(imgf)) {
+        et <- paste('The image file has not been uploaded')
+        sendSweetAlert(
+          session = session, title = "Error", text = et, type = "error"
+        )
+        return()
+      }
+      img <- as.character(imgf["datapath"])
+      img.name <- as.character(imgf["name"])
+    }
+    if (input$inmethod) {
+      img <- input$enter.path
+      if (img == '') {
+        et <- paste('The file path has not been entered')
+        sendSweetAlert(
+          session = session, title = "Error", text = et, type = "error"
+        )
+        return()
+      }
+      img.name <- basename(img)
+    }
+    im <- imRead(img)
+    calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)
   })
   observeEvent(input$buttoninputimage, {
     magick.switch <- input$magick.switch
