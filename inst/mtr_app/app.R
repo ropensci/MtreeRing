@@ -50,7 +50,14 @@ createUI <- function()
           resetOnNew = TRUE)
       )
       ), 
-    
+    # Box for diplaying light calibration plot
+    box(
+      title = div(style = 'color:#FFFFFF;font-size:80%; 
+        font-weight: bolder', 'Light Calibration'),
+      width = 12, status = 'primary', solidHeader = T, collapsible = T,
+      hr(),
+      plotOutput("light")
+    ),
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Upload'),
@@ -106,6 +113,7 @@ createUI <- function()
         style = 'color:#FFFFFF;text-align:center;
         font-weight: bolder;font-size:110%;')
       ),
+    # New box to fill in data for light calibration
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Light calibration'),
@@ -1168,6 +1176,7 @@ createServer <- function(input, output, session)
   img.file.crop <- reactiveValues(data = NULL)
   img.file.copy <- reactiveValues(data = NULL)
   
+  # It modifies the entries of the matrix based on the number of steps the user wants
   output$matrixcontrol <- renderUI({
     updateMatrixInput(session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Density"))))})
   
@@ -1271,7 +1280,10 @@ createServer <- function(input, output, session)
         label = 'Magick OFF', value = FALSE)
     }
   })
-  observeEvent(input$buttondensity,{
+  # This event reacts to activating button plot from light calibration, when activated it saves 
+  # the plot in variable lightplot
+  lightplot <- eventReactive(input$buttondensity,{
+    #  It first determines if the img is loaded
     if (!input$inmethod) {
       imgf <- input$selectfile
       if (is.null(imgf)) {
@@ -1295,9 +1307,16 @@ createServer <- function(input, output, session)
       }
       img.name <- basename(img)
     }
+    # If its loaded it reads it with imRead(black and white)
     im <- imRead(img)
+    # Runs the calibration with the input data from thickness_matrix and density
     calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)
   })
+  
+  output$light <- renderPlot({
+    lightplot()
+  })
+  
   observeEvent(input$buttoninputimage, {
     magick.switch <- input$magick.switch
     if (!input$inmethod) {
