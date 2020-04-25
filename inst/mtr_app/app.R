@@ -758,7 +758,7 @@ createServer <- function(input, output, session)
     bor_xy <- bor_xy[filter.col,]
     return(bor_xy)
   }
-
+  # Plots borders on top of img
   plot.marker <- function(path.info, hover.xy, sample_yr, l.w, pch,
                           bor.color, lab.color, label.cex)
   {
@@ -801,6 +801,7 @@ createServer <- function(input, output, session)
     if(is.null(df.loc$data))
       return()
     df.loc <- df.loc$data
+    # Here we have the data of the borders and path pixels
     if (nrow(df.loc) >= 1) {
       bx <- df.loc$x - crop.offset.xy$x
       by <- df.loc$y - crop.offset.xy$y
@@ -906,6 +907,7 @@ createServer <- function(input, output, session)
   }
   
   # 0804
+  # Here img contains the img cropped
   automatic.det <- function(
     img, incline, method, h.dis, dpi, RGB, px, py, path.hor, path.df,
     watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
@@ -937,7 +939,6 @@ createServer <- function(input, output, session)
       pymax <- pymax + round(h.dis * dp / 2)
     if (pymax >= dimrow)
       pymax <- dimrow
-    
     # crop an image
     img.range <- paste0(as.character(pxmax - pxmin), 'x', 
                         as.character(pymax - pymin), '+',
@@ -962,8 +963,8 @@ createServer <- function(input, output, session)
       seg.data <- rd.m.array[, , 1]
     if (rd.channel >= 3)
       seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
-    
     tdata <- seg.data
+    # tdata contiene la foto en grises de la parte cortada, habría que coger las x de df.loc$data y coger todos los pixels de esa fila.
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
@@ -1990,11 +1991,14 @@ createServer <- function(input, output, session)
     }
     
   })
-  
+  # Prints  the core with the borders (if any). img.file.crop$data contains the data of the img. df.loc$data contiene los puntos donde est los bordes.
   output$ring_edit <- renderPlot({
     if (is.null(img.file$data)) return()
     imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
     sample_yr <- as.numeric(input$sample_yr)
+    print(img.file.crop$data[[1]])
+    print(df.loc$data)
+    print(path.info)
     if (is.na(sample_yr)) return()
     pch <- as.numeric(input$pch)
     bor.color <- input$border.color
