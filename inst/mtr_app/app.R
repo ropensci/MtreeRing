@@ -148,33 +148,47 @@ createUI <- function()
         class = "btn btn-primary btn-md",
         icon = icon('repeat',"fa-1x"),
         style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;')
+        font-weight: bolder;font-size:110%;'),
+      
     ),
     # New box to fill in data for light calibration
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Light calibration'), status = 'primary', solidHeader = T, collapsible = T, width = 5,
-      tableOutput("static"),
       helpText("Introduce thickness parameters",
                "as well as image intensity, number of steps",
                "and the material density.",
                style = 'color:black;font-size:90%;text-align:justify;'),
-      numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
       numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
-      matrixInput("thickness_matrix",
-                  value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
-                  rows = list(
-                    editableNames = TRUE),
-                  class = "numeric",
-                  cols = list(names = TRUE)
+      conditionalPanel(
+        condition = '!input.loadMatrix',
+        tableOutput("static"),
+        numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
+        matrixInput("thickness_matrix",
+                    value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
+                    rows = list(
+                      editableNames = TRUE),
+                    class = "numeric",
+                    cols = list(names = TRUE)
+        ),
+        uiOutput("matrixcontrol")),
+      
+      prettyCheckbox(
+        inputId = "loadMatrix", 
+        label = div(style = 'color:black;font-weight: bolder;','Matrix Path'), 
+        shape = "curve", value = F, status = "success"),
+      conditionalPanel(
+        condition = 'input.loadMatrix',
+        fileInput('path_matrix', 'Choose a txt file of the matrix',
+                  buttonLabel = 'Browse...', width = '80%')
       ),
-      uiOutput("matrixcontrol"),
       actionButton(
         'buttondensity', 'Plot',
         class = "btn btn-primary btn-md",
         icon = icon('upload',  "fa-1x"),
         style = 'color:#FFFFFF;text-align:center;
         font-weight: bolder;font-size:110%;'),
+        hr()
     ), 
     # Box for diplaying light Calibration
     box(
@@ -964,7 +978,7 @@ createServer <- function(input, output, session)
     if (rd.channel >= 3)
       seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
     tdata <- seg.data
-    # tdata contiene la foto en grises de la parte cortada, habría que coger las x de df.loc$data y coger todos los pixels de esa fila.
+    # img contiene la foto en grises de la parte cortada, habria que coger las x de df.loc$data y coger todos los pixels de esa fila.
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
@@ -1002,7 +1016,7 @@ createServer <- function(input, output, session)
         bor_xy_u <- intersect(bor_xy, df.upper)
         bor_xy_u <- f.sort(bor_xy_u, dp)
         bor_xy_u$z <- 'u'
-        bor_xy_l <- intersect(bor_xy, df.lower)
+        # bor_xy_l <- intersect(bor_xy, df.lower)
         bor_xy_l <- f.sort(bor_xy_l, dp)
         bor_xy_l$z <- 'l'
         bor_xy <- rbind(bor_xy_u, bor_xy_l)
@@ -1046,6 +1060,12 @@ createServer <- function(input, output, session)
       bor_col <- bor_xy$x - pxmin
       pix <- 255*tdata[bor_row,bor_col][1,]
     }
+    bor_row <- nrow(tdata) - bor_xy$y + pymin
+    bor_col <- bor_xy$x - pxmin
+    path_pixes<- 255*tdata[bor_row,][1,]
+    bor_pix <- 255*tdata[bor_row,bor_col][1,]
+    print(predict(calibration,expand.grid(path_pixes)))
+    plot(predict(calibration,expand.grid(path_pixes)),type = "l",main="density")
     return(bor_xy)
   } 
   readImg <- function(img, img.name, magick.switch = TRUE) {
@@ -1175,7 +1195,8 @@ createServer <- function(input, output, session)
   
   # It modifies the entries of the matrix based on the number of steps the user wants
   output$matrixcontrol <- renderUI({
-    updateMatrixInput(session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Density"))))})
+    if(!input$loadMatrix){
+    updateMatrixInput(session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Density"))))}})
   
   observeEvent(input$inmethod, {
     img.file$data <- NULL
@@ -1306,8 +1327,14 @@ createServer <- function(input, output, session)
     }
     # If its loaded it reads it with imRead(black and white)
     im <- imRead(img)
+    if(!input$loadMatrix){
     # Runs the calibration with the input data from thickness_matrix and density
-    calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)
+    calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
+    if(input$loadMatrix){
+      print(input$path_matrix)
+      density_matrix = read.table(input$path_matrix["datapath"] %>% as.character)
+      calibration <- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
+    }
   })
   
   output$light <- renderPlot({
@@ -1996,9 +2023,6 @@ createServer <- function(input, output, session)
     if (is.null(img.file$data)) return()
     imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
     sample_yr <- as.numeric(input$sample_yr)
-    print(img.file.crop$data[[1]])
-    print(df.loc$data)
-    print(path.info)
     if (is.na(sample_yr)) return()
     pch <- as.numeric(input$pch)
     bor.color <- input$border.color
