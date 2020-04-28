@@ -172,16 +172,35 @@ createUI <- function()
                     cols = list(names = TRUE)
         ),
         uiOutput("matrixcontrol")),
-      
+      conditionalPanel(
+        condition = 'input.loadMatrix',
+        fileInput('path_matrix', 'Choose a txt file of the matrix',
+                  buttonLabel = 'Browse...', width = '80%'),
+      ),
+      conditionalPanel(
+        condition = '!input.loadMatrix',
+        prettyCheckbox(
+          inputId = "saveMatrix", 
+          label = div(style = 'color:black;font-weight: bolder;','Save Matrix'), 
+          shape = "curve", value = F, status = "success")),
+      conditionalPanel(
+        helpText("Save matrix to a file",
+                 style = 'color:black;font-size:90%;text-align:justify;'),
+        textInput("filenameMatrix","Enter filename:"),
+        condition = 'input.saveMatrix && !input.loadMatrix',actionButton(
+          'savematrix', 'Save',
+          class = "btn btn-primary btn-md",
+          icon = icon('upload',  "fa-1x"),
+          style = 'color:#FFFFFF;text-align:center;
+        font-weight: bolder;font-size:110%;'),
+        br(),
+        br()),
       prettyCheckbox(
         inputId = "loadMatrix", 
         label = div(style = 'color:black;font-weight: bolder;','Matrix Path'), 
         shape = "curve", value = F, status = "success"),
-      conditionalPanel(
-        condition = 'input.loadMatrix',
-        fileInput('path_matrix', 'Choose a txt file of the matrix',
-                  buttonLabel = 'Browse...', width = '80%')
-      ),
+      br(),
+      br(),
       actionButton(
         'buttondensity', 'Plot',
         class = "btn btn-primary btn-md",
@@ -1237,6 +1256,10 @@ createServer <- function(input, output, session)
       prettyOptions = list(shape = "curve", status = "success",
         fill = F, inline = F)
     )
+  })
+  observeEvent(input$savematrix, {
+    print(input$thickness_matrix)
+    write.table(input$thickness_matrix, file = paste(input$filenameMatrix,".txt"), col.names = FALSE,quote=FALSE,row.names =FALSE)
   })
   observeEvent(input$buttonrotate, {
     if (!input$inmethod)
