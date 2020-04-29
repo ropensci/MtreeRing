@@ -165,7 +165,7 @@ createUI <- function()
         tableOutput("static"),
         numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
         matrixInput("thickness_matrix",
-                    value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
+                    value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Intensity"))),
                     rows = list(
                       editableNames = TRUE),
                     class = "numeric",
@@ -223,7 +223,10 @@ createUI <- function()
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       textInput('tuid', 'Series ID', '', width = '75%'),
       textInput('dpi', 'DPI', '', '75%'),
-      textInput('sample_yr', 'Sampling year', '', '75%'),
+      textInput('sample_yr', 'Year', '', '75%'),
+      textInput('sample_site', 'Site', '', '75%'),
+      textInput('sample_plot', 'Plot', '', '75%'),
+      textInput('sample_species', 'Species', '', '75%'),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
       pickerInput(
         inputId = "sel_sin_mul", 
@@ -834,7 +837,7 @@ createServer <- function(input, output, session)
     if(is.null(df.loc$data))
       return()
     df.loc <- df.loc$data
-    # Here we have the data of the borders and path pixels
+    # Here we have the data of the borders and path pixels and yr printing
     if (nrow(df.loc) >= 1) {
       bx <- df.loc$x - crop.offset.xy$x
       by <- df.loc$y - crop.offset.xy$y
@@ -1083,7 +1086,6 @@ createServer <- function(input, output, session)
     bor_col <- bor_xy$x - pxmin
     path_pixes<- 255*tdata[bor_row,][1,]
     bor_pix <- 255*tdata[bor_row,bor_col][1,]
-    print(predict(calibration,expand.grid(path_pixes)))
     plot(predict(calibration,expand.grid(path_pixes)),type = "l",main="density")
     return(bor_xy)
   } 
@@ -1213,9 +1215,9 @@ createServer <- function(input, output, session)
   img.file.copy <- reactiveValues(data = NULL)
   
   # It modifies the entries of the matrix based on the number of steps the user wants
-  output$matrixcontrol <- renderUI({
+  output$matrixcontrol <- renderDataTable({
     if(!input$loadMatrix){
-    updateMatrixInput(session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Density"))))}})
+    updateMatrixInput(session=session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Intensity"))))}})
   
   observeEvent(input$inmethod, {
     img.file$data <- NULL
@@ -1258,7 +1260,6 @@ createServer <- function(input, output, session)
     )
   })
   observeEvent(input$savematrix, {
-    print(input$thickness_matrix)
     write.table(input$thickness_matrix, file = paste(input$filenameMatrix,".txt"), col.names = FALSE,quote=FALSE,row.names =FALSE)
   })
   observeEvent(input$buttonrotate, {
@@ -1354,7 +1355,6 @@ createServer <- function(input, output, session)
     # Runs the calibration with the input data from thickness_matrix and density
     calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
     if(input$loadMatrix){
-      print(input$path_matrix)
       density_matrix = read.table(input$path_matrix["datapath"] %>% as.character)
       calibration <- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
     }
