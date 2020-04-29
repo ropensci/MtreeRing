@@ -32,7 +32,8 @@ createUI <- function()
         icon = icon('gear', lib = 'font-awesome'))
     )
   )
-  page1 <- fluidRow(
+  page1 <- fluidPage(
+    fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%; 
         font-weight: bolder', 'Image Preview'),
@@ -49,7 +50,8 @@ createUI <- function()
           opacity = 0.25,
           resetOnNew = TRUE)
       )
-      ),
+      )),
+    fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Upload'),
@@ -150,7 +152,8 @@ createUI <- function()
         style = 'color:#FFFFFF;text-align:center;
         font-weight: bolder;font-size:110%;'),
       
-    ),
+    ),),
+    fluidRow(
     # New box to fill in data for light calibration
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
@@ -163,7 +166,7 @@ createUI <- function()
       conditionalPanel(
         condition = '!input.loadMatrix',
         tableOutput("static"),
-        numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
+        numericInput("nsteps", "Number of Steps:", 2, min = 1, max = 30),
         matrixInput("thickness_matrix",
                     value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Intensity"))),
                     rows = list(
@@ -215,7 +218,7 @@ createUI <- function()
         font-weight: bolder', 'Light Calibration'),width = 6, status = 'primary', solidHeader = T, collapsible = T,
       hr(),
       plotOutput("light")
-    ),)
+    ),))
   page2.1 <- fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
