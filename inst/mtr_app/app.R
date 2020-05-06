@@ -19,6 +19,7 @@ library(dplyr)
 library(rhandsontable)
 library(xRing)
 library(shinyMatrix)
+library(openxlsx)
 
 # Run the application
 createUI <- function()
@@ -626,6 +627,16 @@ createUI <- function()
         ),
         tabPanel(
           div(style = 'color:black;font-weight: bolder;',
+              icon('arrow-down', 'fa-1x'), ' Excel'),
+          textInput('excel.name', 'Name of the excel file', '', width = '50%'),
+          downloadButton(
+            'RingWidth.xlsx', 'Download excel',
+            class = "btn btn-primary btn-md",
+            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+          )
+        ),
+        tabPanel(
+          div(style = 'color:black;font-weight: bolder;',
             icon('arrow-down', 'fa-1x'), ' RWL'),
           textInput('rwl.name', 'Name of the rwl file', '', width = '50%'),
           helpText(style = 'color:black;font-weight: normal;',
@@ -878,8 +889,9 @@ createServer <- function(input, output, session)
           lenbx <- length(bx)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
+          #year.u <- c(seq(sample_yr,(sample_yr - (length(by) + 1)*10),by=-10))
           year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-
+          print(year.u)
           text(bx, by, year.u, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenbx
@@ -1085,11 +1097,15 @@ createServer <- function(input, output, session)
       bor_col <- bor_xy$x - pxmin
       pix <- 255*tdata[bor_row,bor_col][1,]
     }
-    bor_row <- nrow(tdata) - bor_xy$y + pymin
-    bor_col <- bor_xy$x - pxmin
-    path_pixes<- 255*tdata[bor_row,][1,]
-    bor_pix <- 255*tdata[bor_row,bor_col][1,]
-    plot(predict(calibration,expand.grid(path_pixes)),type = "l",main="density")
+    if(exists("calibration")){
+      bor_row <- nrow(tdata) - bor_xy$y + pymin
+      bor_col <- bor_xy$x - pxmin
+      path_pixes<- 255*tdata[bor_row,][1,]
+      bor_pix <- 255*tdata[bor_row,bor_col][1,]
+      calibration_profile<-predict(calibration, (path_pixes))
+      calibration_profile[is.na(calibration_profile)] <- 0
+      plot(calibration_profile,main="density Profile")
+    }
     return(bor_xy)
   } 
   readImg <- function(img, img.name, magick.switch = TRUE) {
@@ -1356,10 +1372,10 @@ createServer <- function(input, output, session)
     im <- imRead(img)
     if(!input$loadMatrix){
     # Runs the calibration with the input data from thickness_matrix and density
-    calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
+    calibration <<- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
     if(input$loadMatrix){
       density_matrix = read.table(input$path_matrix["datapath"] %>% as.character)
-      calibration <- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
+      calibration <<- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
     }
   })
   
@@ -2327,6 +2343,113 @@ createServer <- function(input, output, session)
       } 
     },
     contentType = 'csv'
+  )
+  output$RingWidth.xlsx <- downloadHandler(
+    filename =  function() {
+      if (is.null(img.file$data)) {
+        img.name <- 'Download Fail'
+        return(paste0(img.name, '.xlsx'))
+      } else {
+        img.name <- input$tuid
+      }
+      if (input$excel.name != '')
+        img.name <- input$excel.name
+      return(paste0(img.name, '.xlsx'))
+    },
+    content = function(filename) {
+      if (is.null(df.loc$data)) {
+        error.text <- 'Ring border was not found along the path'
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      } 
+      if (nrow(df.loc$data) <= 1) {
+        error.text <- paste('A minimum of two ring borders on each path',
+                            'was required to generate a ring-width series')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      } 
+      sample_yr <- as.numeric(input$sample_yr)
+      sample_site <- input$sample_site
+      sample_plot <- input$sample_plot
+      sample_species <- input$sample_species
+      if (is.na(sample_yr)) {
+        error.text <- paste('Please check the argument \'Sampling year\' ')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      }
+      if (sample_site=="") {
+        error.text <- paste('Please check the argument \'Site\' ')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      }
+      if (sample_plot=="") {
+        error.text <- paste('Please check the argument \'Plot\' ')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      }
+      if (sample_species=="") {
+        error.text <- paste('Please check the argument \'Species\' ')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      }
+      dpi <- path.info$dpi
+      dp <- dpi/25.4
+      incline <- path.info$incline
+      h.dis <- path.info$h
+      
+      if (incline) {
+        incline.cond <- df.loc$data$z %>% table %>% as.numeric
+        if (length(incline.cond) == 1) {
+          rt <- paste('A minimum of two ring borders on each path',
+                      'was required to generate a ring-width series')
+          sendSweetAlert(
+            session = session, title = "Error", text = rt, type = "error"
+          )
+          return()
+        }
+        if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+          tree_info <- data.frame(sample_plot, sample_site, sample_species)
+          list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
+          write.xlsx(list_of_datasets, file = filename)
+        } else {
+          if (any(incline.cond < 2)) {
+            rt <- paste('A minimum of two ring borders on each path ',
+                        'was required to generate a ring-width series')
+            sendSweetAlert(
+              session = session, title = "Error", text = rt, type = "error"
+            )
+            return()
+          } else {
+            rt <-  paste("If you tick the checkbox \"Inclined tree",
+                         "rings\", the upper and lower paths should",
+                         "have the same number of ring borders.")
+            sendSweetAlert(
+              session = session, title = "Error", text = rt, type = "error"
+            )
+            return()
+          }
+        }
+      } else {
+        df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+        tree_info <- data.frame(sample_plot, sample_site, sample_species)
+        list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
+        write.xlsx(list_of_datasets, file = filename)
+      } 
+    },
+    contentType = 'excel'
   )
   observeEvent(input$reset.hdr,{
     updateTextInput(session, "tuhdr1",label = 'Site ID',value = '')
