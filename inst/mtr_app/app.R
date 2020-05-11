@@ -20,10 +20,17 @@ library(rhandsontable)
 library(xRing)
 library(shinyMatrix)
 library(openxlsx)
-
+library(plotly)
+library(gridExtra)
 # Run the application
 createUI <- function()
 {
+  if(exists('calibration_profile')){
+    calibration_profile <<- NULL
+  }
+  if(exists('calibration')){
+    calibration <<- NULL
+  }
   shiny.title <- dashboardHeader(title = 'MtreeRing')
   shiny.sider <- dashboardSidebar(
     sidebarMenu(
@@ -229,7 +236,7 @@ createUI <- function()
       textInput('dpi', 'DPI', '', '75%'),
       textInput('sample_yr', 'Year', '', '75%'),
       textInput('sample_site', 'Site', '', '75%'),
-      textInput('sample_plot', 'Plot', '', '75%'),
+      textInput('sample_parcel', 'Parcel', '', '75%'),
       textInput('sample_species', 'Species', '', '75%'),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
       pickerInput(
@@ -505,9 +512,20 @@ createUI <- function()
         label = div(style = 'color:black;font-weight: bolder;',
                     'Maintain original width/height ratio'), 
         shape = "curve", value = F, status = "success"),
+      prettyCheckbox(
+        inputId = "show_profile", 
+        label = div(style = 'color:black;font-weight: bolder;',
+                    'Show Density Profile'), 
+        shape = "curve", value = F, status = "success"),
       hr(),
       fluidPage(
         fluidRow(
+          conditionalPanel(condition="input.show_profile",
+                           column(width = 11,
+                                  plotOutput('profile_edit',height="200px")
+                           )
+          )
+          ,
           column(width = 11,
                  plotOutput('ring_edit', height = "310px",
                             dblclick = "plot2_dblclick",
@@ -891,7 +909,7 @@ createServer <- function(input, output, session)
             pch = pch, cex = label.cex * 0.75)
           #year.u <- c(seq(sample_yr,(sample_yr - (length(by) + 1)*10),by=-10))
           year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-          print(year.u)
+          #print(year.u)
           text(bx, by, year.u, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenbx
@@ -1098,13 +1116,18 @@ createServer <- function(input, output, session)
       pix <- 255*tdata[bor_row,bor_col][1,]
     }
     if(exists("calibration")){
+      if(is.null(calibration)){}
+      else{
       bor_row <- nrow(tdata) - bor_xy$y + pymin
       bor_col <- bor_xy$x - pxmin
       path_pixes<- 255*tdata[bor_row,][1,]
       bor_pix <- 255*tdata[bor_row,bor_col][1,]
-      calibration_profile<-predict(calibration, (path_pixes))
-      calibration_profile[is.na(calibration_profile)] <- 0
-      plot(calibration_profile,main="density Profile")
+      calibration_profile<<-predict(calibration, (path_pixes))*10
+      #TODO: Add warning when nan
+      calibration_profile[is.na(calibration_profile)] <<- 0
+      calibration_profile <<- append(calibration_profile,integer(pxmin),0)
+      calibration_profile <<- append(calibration_profile,integer(dimcol-pxmax))
+      }
     }
     return(bor_xy)
   } 
@@ -1207,9 +1230,11 @@ createServer <- function(input, output, session)
     par(mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0))
     # 0730
     if(input$wh_ratio2) {
+      par(mar = c(0, 0, 0, 0), xaxs='i', yaxs='i')
       plot(tdata, xlim = c(xleft, xright), ylim = c(ybottom, ytop),
            main = '', xlab = "", ylab = "", cex.main = 1.2)
     } else {
+      par(mar = c(0, 0, 0, 0), xaxs='i', yaxs='i')
       plot(x = c(xleft, xright), y = c(ybottom, ytop),
            xlim = c(xleft, xright), ylim = c(ybottom, ytop),
            main = '', xlab = "", ylab = "",
@@ -1226,7 +1251,7 @@ createServer <- function(input, output, session)
     return(tdata)
   }
   # Functions listed above are used for shiny app
-  
+
   options(shiny.maxRequestSize = 150*(1024^2))
   
   img.file <- reactiveValues(data = NULL)
@@ -2063,7 +2088,7 @@ createServer <- function(input, output, session)
   # Prints  the core with the borders (if any). img.file.crop$data contains the data of the img. df.loc$data contiene los puntos donde est los bordes.
   output$ring_edit <- renderPlot({
     if (is.null(img.file$data)) return()
-    imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
+    fig1 <- imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
     sample_yr <- as.numeric(input$sample_yr)
     if (is.na(sample_yr)) return()
     pch <- as.numeric(input$pch)
@@ -2073,6 +2098,15 @@ createServer <- function(input, output, session)
     label.cex <- as.numeric(input$label.cex)*0.7
     plot.marker(path.info, hover.xy, sample_yr, l.w, pch,
                 bor.color, lab.color, label.cex)
+  })
+  
+  output$profile_edit<- renderPlot({
+    if(input$buttondensity && input$button_run_auto){ 
+    dimrow<-nrow(data.frame(calibration_profile))
+    par(mar = c(0, 0, 1, 0), xaxs='i')
+    plot(calibration_profile, xlim=c(round(input$img_hor[1]*dimrow/100),round(input$img_hor[2]*dimrow/100)),ann=FALSE,xaxt='n',yaxt='n',type='l')
+    abline(v=df.loc$data$x,col="blue")
+    }
   })
   
   observeEvent(input$button_del, { 
@@ -2374,31 +2408,12 @@ createServer <- function(input, output, session)
       } 
       sample_yr <- as.numeric(input$sample_yr)
       sample_site <- input$sample_site
-      sample_plot <- input$sample_plot
+      sample_parcel <- input$sample_parcel
       sample_species <- input$sample_species
+      tuid <- input$tuid
+      dpi <- input$dpi
       if (is.na(sample_yr)) {
         error.text <- paste('Please check the argument \'Sampling year\' ')
-        sendSweetAlert(
-          session = session, title = "Error", text = error.text, type = "error"
-        )
-        return()
-      }
-      if (sample_site=="") {
-        error.text <- paste('Please check the argument \'Site\' ')
-        sendSweetAlert(
-          session = session, title = "Error", text = error.text, type = "error"
-        )
-        return()
-      }
-      if (sample_plot=="") {
-        error.text <- paste('Please check the argument \'Plot\' ')
-        sendSweetAlert(
-          session = session, title = "Error", text = error.text, type = "error"
-        )
-        return()
-      }
-      if (sample_species=="") {
-        error.text <- paste('Please check the argument \'Species\' ')
         sendSweetAlert(
           session = session, title = "Error", text = error.text, type = "error"
         )
@@ -2421,7 +2436,7 @@ createServer <- function(input, output, session)
         }
         if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
           df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
-          tree_info <- data.frame(sample_plot, sample_site, sample_species)
+          tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
           list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
           write.xlsx(list_of_datasets, file = filename)
         } else {
@@ -2444,7 +2459,7 @@ createServer <- function(input, output, session)
         }
       } else {
         df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
-        tree_info <- data.frame(sample_plot, sample_site, sample_species)
+        tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
         list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
         write.xlsx(list_of_datasets, file = filename)
       } 
