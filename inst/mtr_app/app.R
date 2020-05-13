@@ -168,7 +168,7 @@ createUI <- function()
         font-weight: bolder', 'Light calibration'), status = 'primary', solidHeader = T, collapsible = T, width = 5,
       helpText("Introduce thickness parameters",
                "as well as image intensity, number of steps",
-               "and the material density.",
+               "and the material density for densitometry analysis",
                style = 'color:black;font-size:90%;text-align:justify;'),
       numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
       conditionalPanel(
@@ -235,9 +235,26 @@ createUI <- function()
       textInput('tuid', 'Series ID', '', width = '75%'),
       textInput('dpi', 'DPI', '', '75%'),
       textInput('sample_yr', 'Year', '', '75%'),
-      textInput('sample_site', 'Site', '', '75%'),
-      textInput('sample_parcel', 'Parcel', '', '75%'),
-      textInput('sample_species', 'Species', '', '75%'),
+      prettyCheckbox(
+        inputId = "moreinfo", 
+        label = div(
+          style = 'color:black;font-weight: bolder;font-size:90%', 
+          'Enter more Info'), 
+        shape = "curve", value = F, status = "success"
+      ),
+      prettyCheckbox(
+        inputId = "decades", 
+        label = div(
+          style = 'color:black;font-weight: bolder;font-size:90%', 
+          'Years in Decades'), 
+        shape = "curve", value = F, status = "success"
+      ),
+      conditionalPanel(
+        condition = "input.moreinfo",
+        textInput('sample_site', 'Site', '', '75%'),
+        textInput('sample_parcel', 'Parcel', '', '75%'),
+        textInput('sample_species', 'Species', '', '75%')
+      ),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
       pickerInput(
         inputId = "sel_sin_mul", 
@@ -512,11 +529,14 @@ createUI <- function()
         label = div(style = 'color:black;font-weight: bolder;',
                     'Maintain original width/height ratio'), 
         shape = "curve", value = F, status = "success"),
-      prettyCheckbox(
-        inputId = "show_profile", 
-        label = div(style = 'color:black;font-weight: bolder;',
-                    'Show Density Profile'), 
-        shape = "curve", value = F, status = "success"),
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_det'",
+        prettyCheckbox(
+          inputId = "show_profile", 
+          label = div(style = 'color:black;font-weight: bolder;',
+                      'Show Density Profile'), 
+          shape = "curve", value = F, status = "success")
+      ),
       hr(),
       fluidPage(
         fluidRow(
@@ -883,7 +903,12 @@ createServer <- function(input, output, session)
         if (lenup >= 1) {
           points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          year.u <- c(sample_yr:(sample_yr - lenup + 1))
+          if(input$decades){
+            year.u <- c(seq(sample_yr,(sample_yr - (lenup)*10 + 1),by=-10))
+          }
+          else{
+            year.u <- c(sample_yr:(sample_yr - lenup + 1))
+          }
           text(bx[up], by[up], year.u, adj = c(-0.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenup
@@ -895,7 +920,12 @@ createServer <- function(input, output, session)
         if (lenlo >= 1) {
           points(bx[lower], by[lower], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          year.l <- c(sample_yr:(sample_yr - lenlo + 1))
+          if(input$decades){
+            year.l <- c(seq(sample_yr,(sample_yr - (lenlo)*10 + 1),by=-10))
+          }
+          else{
+            year.l <- c(sample_yr:(sample_yr - lenlo + 1))
+          }
           text(bx[lower], by[lower], year.l, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenlo
@@ -907,9 +937,12 @@ createServer <- function(input, output, session)
           lenbx <- length(bx)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          #year.u <- c(seq(sample_yr,(sample_yr - (length(by) + 1)*10),by=-10))
+          if(input$decades){
+            year.u <- c(seq(sample_yr,(sample_yr - (length(by))*10  + 1),by=-10))
+          }
+          else{
           year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-          #print(year.u)
+          }
           text(bx, by, year.u, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenbx
@@ -935,7 +968,12 @@ createServer <- function(input, output, session)
       dy <- diff(by)
       d <- sqrt(dx^2 + dy^2)
       rw <- c(NA, round(d / dp, 2))
-      years <- c(sample_yr:(sample_yr - lenbx + 1))
+      if(input$decades){
+        years <- c(seq(sample_yr,(sample_yr - (lenbx)*10 + 1),by=-10))
+      }
+      else{
+        years <- c(sample_yr:(sample_yr - lenbx + 1))
+      }
       df.rw <- data.frame(year = years, x = bx, y = by, ring.width = rw)
     } else { 
       up <- which(bz == 'u')
@@ -949,8 +987,12 @@ createServer <- function(input, output, session)
       bx.lower <- bx[lower]
       diff.col.num.lower <- diff(bx.lower)
       rw.lower <- round(diff.col.num.lower/dp, 2)
-      
-      years <- c(sample_yr:(sample_yr - lenup + 1))
+      if(input$decades){
+        years <- c(seq(sample_yr,(sample_yr - (lengup)*10 + 1),by=-10))
+      }
+      else{
+        years <- c(sample_yr:(sample_yr - lenup + 1))
+      }
       mean.bor <- (diff.col.num.lower + diff.col.num.up)/2
       x.cor <- abs(bx.lower - bx.up)
       x.cor <- x.cor[-length(x.cor)]
@@ -1071,7 +1113,7 @@ createServer <- function(input, output, session)
         bor_xy_u <- intersect(bor_xy, df.upper)
         bor_xy_u <- f.sort(bor_xy_u, dp)
         bor_xy_u$z <- 'u'
-        # bor_xy_l <- intersect(bor_xy, df.lower)
+        bor_xy_l <- intersect(bor_xy, df.lower)
         bor_xy_l <- f.sort(bor_xy_l, dp)
         bor_xy_l$z <- 'l'
         bor_xy <- rbind(bor_xy_u, bor_xy_l)
@@ -1118,15 +1160,15 @@ createServer <- function(input, output, session)
     if(exists("calibration")){
       if(is.null(calibration)){}
       else{
-      bor_row <- nrow(tdata) - bor_xy$y + pymin
-      bor_col <- bor_xy$x - pxmin
-      path_pixes<- 255*tdata[bor_row,][1,]
-      bor_pix <- 255*tdata[bor_row,bor_col][1,]
-      calibration_profile<<-predict(calibration, (path_pixes))*10
-      #TODO: Add warning when nan
-      calibration_profile[is.na(calibration_profile)] <<- 0
-      calibration_profile <<- append(calibration_profile,integer(pxmin),0)
-      calibration_profile <<- append(calibration_profile,integer(dimcol-pxmax))
+        bor_row <- nrow(tdata) - bor_xy$y + pymin
+        bor_col <- bor_xy$x - pxmin
+        path_pixes<- 255*tdata[bor_row,][1,]
+        bor_pix <- 255*tdata[bor_row,bor_col][1,]
+        calibration_profile<<-predict(calibration, (path_pixes))
+        #TODO: Add warning when nan
+        calibration_profile[is.na(calibration_profile)] <<- 0
+        calibration_profile <<- append(calibration_profile,integer(pxmin),0)
+        calibration_profile <<- append(calibration_profile,integer(dimcol-pxmax))
       }
     }
     return(bor_xy)
@@ -1867,7 +1909,7 @@ createServer <- function(input, output, session)
       path.info$df <- path.df
     }
   })
-
+    
   ## run auto detection
   observeEvent(input$button_run_auto, { 
     if (is.null(path.info$df)) {
@@ -2458,7 +2500,18 @@ createServer <- function(input, output, session)
           }
         }
       } else {
-        df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+        if(is.null(calibration_profile)){
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+        }
+        else{
+          prev = 0
+          vector <- vector()
+          for (i in df.loc$data$x){
+            vector <- c(vector, round(mean(calibration_profile[prev:i]),digits=2))
+          }
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+          df.rw$ring.density <- vector
+        }
         tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
         list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
         write.xlsx(list_of_datasets, file = filename)
