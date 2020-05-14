@@ -20,7 +20,6 @@ library(rhandsontable)
 library(xRing)
 library(shinyMatrix)
 library(openxlsx)
-library(plotly)
 library(gridExtra)
 # Run the application
 createUI <- function()
