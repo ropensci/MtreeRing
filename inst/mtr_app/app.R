@@ -19,10 +19,17 @@ library(dplyr)
 library(rhandsontable)
 library(xRing)
 library(shinyMatrix)
-
+library(openxlsx)
+library(gridExtra)
 # Run the application
 createUI <- function()
 {
+  if(exists('calibration_profile')){
+    calibration_profile <<- NULL
+  }
+  if(exists('calibration')){
+    calibration <<- NULL
+  }
   shiny.title <- dashboardHeader(title = 'MtreeRing')
   shiny.sider <- dashboardSidebar(
     sidebarMenu(
@@ -32,7 +39,8 @@ createUI <- function()
         icon = icon('gear', lib = 'font-awesome'))
     )
   )
-  page1 <- fluidRow(
+  page1 <- fluidPage(
+    fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%; 
         font-weight: bolder', 'Image Preview'),
@@ -49,7 +57,8 @@ createUI <- function()
           opacity = 0.25,
           resetOnNew = TRUE)
       )
-      ),
+      )),
+    fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Image Upload'),
@@ -148,33 +157,67 @@ createUI <- function()
         class = "btn btn-primary btn-md",
         icon = icon('repeat',"fa-1x"),
         style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;')
-    ),
+        font-weight: bolder;font-size:110%;'),
+      
+    ),),
+    fluidRow(
     # New box to fill in data for light calibration
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
         font-weight: bolder', 'Light calibration'), status = 'primary', solidHeader = T, collapsible = T, width = 5,
-      tableOutput("static"),
       helpText("Introduce thickness parameters",
                "as well as image intensity, number of steps",
-               "and the material density.",
+               "and the material density for densitometry analysis",
                style = 'color:black;font-size:90%;text-align:justify;'),
-      numericInput("nsteps", "Number of Steps:", 10, min = 1, max = 30),
       numericInput("density", "Density (g/cm3):", 1.20, step=0.1),
-      matrixInput("thickness_matrix",
-                  value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Density"))),
-                  rows = list(
-                    editableNames = TRUE),
-                  class = "numeric",
-                  cols = list(names = TRUE)
+      conditionalPanel(
+        condition = '!input.loadMatrix',
+        tableOutput("static"),
+        numericInput("nsteps", "Number of Steps:", 2, min = 1, max = 30),
+        matrixInput("thickness_matrix",
+                    value = matrix(0, 2, 2,dimnames = list(NULL,c("Thickness","Intensity"))),
+                    rows = list(
+                      editableNames = TRUE),
+                    class = "numeric",
+                    cols = list(names = TRUE)
+        ),
+        uiOutput("matrixcontrol")),
+      conditionalPanel(
+        condition = 'input.loadMatrix',
+        fileInput('path_matrix', 'Choose a txt file of the matrix',
+                  buttonLabel = 'Browse...', width = '80%'),
       ),
-      uiOutput("matrixcontrol"),
+      conditionalPanel(
+        condition = '!input.loadMatrix',
+        prettyCheckbox(
+          inputId = "saveMatrix", 
+          label = div(style = 'color:black;font-weight: bolder;','Save Matrix'), 
+          shape = "curve", value = F, status = "success")),
+      conditionalPanel(
+        helpText("Save matrix to a file",
+                 style = 'color:black;font-size:90%;text-align:justify;'),
+        textInput("filenameMatrix","Enter filename:"),
+        condition = 'input.saveMatrix && !input.loadMatrix',actionButton(
+          'savematrix', 'Save',
+          class = "btn btn-primary btn-md",
+          icon = icon('upload',  "fa-1x"),
+          style = 'color:#FFFFFF;text-align:center;
+        font-weight: bolder;font-size:110%;'),
+        br(),
+        br()),
+      prettyCheckbox(
+        inputId = "loadMatrix", 
+        label = div(style = 'color:black;font-weight: bolder;','Matrix Path'), 
+        shape = "curve", value = F, status = "success"),
+      br(),
+      br(),
       actionButton(
         'buttondensity', 'Plot',
         class = "btn btn-primary btn-md",
         icon = icon('upload',  "fa-1x"),
         style = 'color:#FFFFFF;text-align:center;
         font-weight: bolder;font-size:110%;'),
+        hr()
     ), 
     # Box for diplaying light Calibration
     box(
@@ -182,7 +225,7 @@ createUI <- function()
         font-weight: bolder', 'Light Calibration'),width = 6, status = 'primary', solidHeader = T, collapsible = T,
       hr(),
       plotOutput("light")
-    ),)
+    ),))
   page2.1 <- fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
@@ -190,7 +233,27 @@ createUI <- function()
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       textInput('tuid', 'Series ID', '', width = '75%'),
       textInput('dpi', 'DPI', '', '75%'),
-      textInput('sample_yr', 'Sampling year', '', '75%'),
+      textInput('sample_yr', 'Year', '', '75%'),
+      prettyCheckbox(
+        inputId = "moreinfo", 
+        label = div(
+          style = 'color:black;font-weight: bolder;font-size:90%', 
+          'Enter more Info'), 
+        shape = "curve", value = F, status = "success"
+      ),
+      prettyCheckbox(
+        inputId = "decades", 
+        label = div(
+          style = 'color:black;font-weight: bolder;font-size:90%', 
+          'Years in Decades'), 
+        shape = "curve", value = F, status = "success"
+      ),
+      conditionalPanel(
+        condition = "input.moreinfo",
+        textInput('sample_site', 'Site', '', '75%'),
+        textInput('sample_parcel', 'Parcel', '', '75%'),
+        textInput('sample_species', 'Species', '', '75%')
+      ),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
       pickerInput(
         inputId = "sel_sin_mul", 
@@ -465,9 +528,31 @@ createUI <- function()
         label = div(style = 'color:black;font-weight: bolder;',
                     'Maintain original width/height ratio'), 
         shape = "curve", value = F, status = "success"),
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_det'",
+        prettyCheckbox(
+          inputId = "show_profile", 
+          label = div(style = 'color:black;font-weight: bolder;',
+                      'Show Density Profile'), 
+          shape = "curve", value = F, status = "success")
+      ),
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_det'",
+        prettyCheckbox(
+          inputId = "show_wood", 
+          label = div(style = 'color:black;font-weight: bolder;',
+                      'Show Early/Late Wood'), 
+          shape = "curve", value = F, status = "success")
+      ),
       hr(),
       fluidPage(
         fluidRow(
+          conditionalPanel(condition="input.show_profile",
+                           column(width = 11,
+                                  plotOutput('profile_edit',height="200px")
+                           )
+          )
+          ,
           column(width = 11,
                  plotOutput('ring_edit', height = "310px",
                             dblclick = "plot2_dblclick",
@@ -581,6 +666,16 @@ createUI <- function()
           #HTML("<p style = 'color:black;'><b>CSV</b></p>"),
           downloadButton(
             'RingWidth.csv', 'Download CSV',
+            class = "btn btn-primary btn-md",
+            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+          )
+        ),
+        tabPanel(
+          div(style = 'color:black;font-weight: bolder;',
+              icon('arrow-down', 'fa-1x'), ' Excel'),
+          textInput('excel.name', 'Name of the excel file', '', width = '50%'),
+          downloadButton(
+            'RingWidth.xlsx', 'Download excel',
             class = "btn btn-primary btn-md",
             style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
           )
@@ -758,7 +853,7 @@ createServer <- function(input, output, session)
     bor_xy <- bor_xy[filter.col,]
     return(bor_xy)
   }
-
+  # Plots borders on top of img
   plot.marker <- function(path.info, hover.xy, sample_yr, l.w, pch,
                           bor.color, lab.color, label.cex)
   {
@@ -801,6 +896,7 @@ createServer <- function(input, output, session)
     if(is.null(df.loc$data))
       return()
     df.loc <- df.loc$data
+    # Here we have the data of the borders and path pixels and yr printing
     if (nrow(df.loc) >= 1) {
       bx <- df.loc$x - crop.offset.xy$x
       by <- df.loc$y - crop.offset.xy$y
@@ -814,9 +910,36 @@ createServer <- function(input, output, session)
         if (lenup >= 1) {
           points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          year.u <- c(sample_yr:(sample_yr - lenup + 1))
-          text(bx[up], by[up], year.u, adj = c(-0.5, 0.5), 
-               srt = 90, col = lab.color, cex = label.cex)
+          if(input$show_wood){
+            prevx = p.x[1]
+            vectorx = vector()
+            for (border in bx[up]){
+              vectorx <- c(vectorx,(prevx+border)/2)
+              prevx=border
+            }
+            prevy = p.y[1] + d
+            vectory = vector()
+            for (border in by[up]){
+              vectory <- c(vectory,(prevy+border)/2)
+              prevy=border
+            }
+            points(vectorx, vectory, col = 'red', type = "p", 
+                   pch = pch, cex = label.cex * 0.75)
+          }
+          if(input$decades){
+            oddvalsx <- seq(1, length(bx[up]), by=10)
+            oddvalsy <- seq(1, length(by[up]), by=10)
+            year.u <- c(seq(sample_yr,(sample_yr - lenup + 1),by=-10))
+            bx_modu <- bx[up][oddvalsx]
+            by_modu <- by[up][oddvalsy]
+            text(bx_modu, by_modu, year.u, adj = c(-0.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
+          }
+          else{
+            year.u <- c(sample_yr:(sample_yr - lenup + 1))
+            text(bx[up], by[up], year.u, adj = c(-0.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
+          }
           border.num <- 1:lenup
           text(bx[up], by[up], border.num, adj = c(0.5, 2.25), 
                col = lab.color, cex = label.cex)
@@ -826,9 +949,36 @@ createServer <- function(input, output, session)
         if (lenlo >= 1) {
           points(bx[lower], by[lower], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          year.l <- c(sample_yr:(sample_yr - lenlo + 1))
-          text(bx[lower], by[lower], year.l, adj = c(1.5, 0.5), 
-               srt = 90, col = lab.color, cex = label.cex)
+          if(input$show_wood){
+            prevx = p.x[1]
+            vectorx = vector()
+            for (border in bx[lower]){
+              vectorx <- c(vectorx,(prevx+border)/2)
+              prevx=border
+            }
+            prevy = p.y[1] - d
+            vectory = vector()
+            for (border in by[lower]){
+              vectory <- c(vectory,(prevy+border)/2)
+              prevy=border
+            }
+            points(vectorx, vectory, col = 'red', type = "p", 
+                   pch = pch, cex = label.cex * 0.75)
+          }
+          if(input$decades){
+            oddvalsx <- seq(1, length(bx[lower]), by=10)
+            oddvalsy <- seq(1, length(by[lower]), by=10)
+            year.l <- c(seq(sample_yr,(sample_yr - lenlo + 1),by=-10))
+            bx_modl <- bx[lower][oddvalsx]
+            by_modl <- by[lower][oddvalsy]
+            text(bx_modl, by_modl, year.l, adj = c(1.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
+          }
+          else{
+            year.l <- c(sample_yr:(sample_yr - lenlo + 1))
+            text(bx[lower], by[lower], year.l, adj = c(1.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
+          }
           border.num <- 1:lenlo
           text(bx[lower], by[lower], border.num, adj = c(0.5, -1.25), 
                col = lab.color, cex = label.cex)
@@ -838,10 +988,38 @@ createServer <- function(input, output, session)
           lenbx <- length(bx)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
+          if(input$show_wood){
+            prevx = p.x[1]
+            print(p.x)
+            vectorx = vector()
+            for (border in bx){
+              vectorx <- c(vectorx,(prevx+border)/2)
+              prevx=border
+            }
+            prevy = p.y[1]
+            vectory = vector()
+            for (border in by){
+              vectory <- c(vectory,(prevy+border)/2)
+              prevy=border
+            }
+            points(vectorx, vectory, col = 'red', type = "p", 
+                   pch = pch, cex = label.cex * 0.75)
+          }
+          if(input$decades){
+            oddvalsx <- seq(1, length(bx), by=10)
+            oddvalsy <- seq(1, length(by), by=10)
+            year.u <- c(seq(sample_yr,(sample_yr - length(by)  + 1),by=-10))
+            bx_mod <- bx[oddvalsx]
+            by_mod <- by[oddvalsy]
+            text(bx_mod, by_mod, year.u, adj = c(1.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
+          }
+          else{
           year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-
           text(bx, by, year.u, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
+          }
+          
           border.num <- 1:lenbx
           text(bx, by, border.num, adj = c(0.5, -1.25), 
                col = lab.color, cex = label.cex)
@@ -865,7 +1043,12 @@ createServer <- function(input, output, session)
       dy <- diff(by)
       d <- sqrt(dx^2 + dy^2)
       rw <- c(NA, round(d / dp, 2))
-      years <- c(sample_yr:(sample_yr - lenbx + 1))
+      if(input$decades){
+        years <- c(seq(sample_yr,(sample_yr - (lenbx)*10 + 1),by=-10))
+      }
+      else{
+        years <- c(sample_yr:(sample_yr - lenbx + 1))
+      }
       df.rw <- data.frame(year = years, x = bx, y = by, ring.width = rw)
     } else { 
       up <- which(bz == 'u')
@@ -879,8 +1062,12 @@ createServer <- function(input, output, session)
       bx.lower <- bx[lower]
       diff.col.num.lower <- diff(bx.lower)
       rw.lower <- round(diff.col.num.lower/dp, 2)
-      
-      years <- c(sample_yr:(sample_yr - lenup + 1))
+      if(input$decades){
+        years <- c(seq(sample_yr,(sample_yr - (lengup)*10 + 1),by=-10))
+      }
+      else{
+        years <- c(sample_yr:(sample_yr - lenup + 1))
+      }
       mean.bor <- (diff.col.num.lower + diff.col.num.up)/2
       x.cor <- abs(bx.lower - bx.up)
       x.cor <- x.cor[-length(x.cor)]
@@ -906,6 +1093,7 @@ createServer <- function(input, output, session)
   }
   
   # 0804
+  # Here img contains the img cropped
   automatic.det <- function(
     img, incline, method, h.dis, dpi, RGB, px, py, path.hor, path.df,
     watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
@@ -937,7 +1125,6 @@ createServer <- function(input, output, session)
       pymax <- pymax + round(h.dis * dp / 2)
     if (pymax >= dimrow)
       pymax <- dimrow
-    
     # crop an image
     img.range <- paste0(as.character(pxmax - pxmin), 'x', 
                         as.character(pymax - pymin), '+',
@@ -962,8 +1149,8 @@ createServer <- function(input, output, session)
       seg.data <- rd.m.array[, , 1]
     if (rd.channel >= 3)
       seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
-    
     tdata <- seg.data
+    # img contiene la foto en grises de la parte cortada, habria que coger las x de df.loc$data y coger todos los pixels de esa fila.
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
@@ -1044,6 +1231,20 @@ createServer <- function(input, output, session)
       bor_row <- nrow(tdata) - bor_xy$y + pymin
       bor_col <- bor_xy$x - pxmin
       pix <- 255*tdata[bor_row,bor_col][1,]
+    }
+    if(exists("calibration")){
+      if(is.null(calibration)){}
+      else{
+        bor_row <- nrow(tdata) - bor_xy$y + pymin
+        bor_col <- bor_xy$x - pxmin
+        path_pixes<- 255*tdata[bor_row,][1,]
+        bor_pix <- 255*tdata[bor_row,bor_col][1,]
+        calibration_profile<<-predict(calibration, (path_pixes))
+        #TODO: Add warning when nan
+        calibration_profile[is.na(calibration_profile)] <<- 0
+        calibration_profile <<- append(calibration_profile,integer(pxmin),0)
+        calibration_profile <<- append(calibration_profile,integer(dimcol-pxmax))
+      }
     }
     return(bor_xy)
   } 
@@ -1146,9 +1347,11 @@ createServer <- function(input, output, session)
     par(mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0))
     # 0730
     if(input$wh_ratio2) {
+      par(mar = c(0, 0, 0, 0), xaxs='i', yaxs='i')
       plot(tdata, xlim = c(xleft, xright), ylim = c(ybottom, ytop),
            main = '', xlab = "", ylab = "", cex.main = 1.2)
     } else {
+      par(mar = c(0, 0, 0, 0), xaxs='i', yaxs='i')
       plot(x = c(xleft, xright), y = c(ybottom, ytop),
            xlim = c(xleft, xright), ylim = c(ybottom, ytop),
            main = '', xlab = "", ylab = "",
@@ -1165,7 +1368,7 @@ createServer <- function(input, output, session)
     return(tdata)
   }
   # Functions listed above are used for shiny app
-  
+
   options(shiny.maxRequestSize = 150*(1024^2))
   
   img.file <- reactiveValues(data = NULL)
@@ -1173,8 +1376,9 @@ createServer <- function(input, output, session)
   img.file.copy <- reactiveValues(data = NULL)
   
   # It modifies the entries of the matrix based on the number of steps the user wants
-  output$matrixcontrol <- renderUI({
-    updateMatrixInput(session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Density"))))})
+  output$matrixcontrol <- renderDataTable({
+    if(!input$loadMatrix){
+    updateMatrixInput(session=session, "thickness_matrix", matrix(0, input$nsteps, 2, dimnames = list(NULL,c("Thickness","Intensity"))))}})
   
   observeEvent(input$inmethod, {
     img.file$data <- NULL
@@ -1215,6 +1419,9 @@ createServer <- function(input, output, session)
       prettyOptions = list(shape = "curve", status = "success",
         fill = F, inline = F)
     )
+  })
+  observeEvent(input$savematrix, {
+    write.table(input$thickness_matrix, file = paste(input$filenameMatrix,".txt"), col.names = FALSE,quote=FALSE,row.names =FALSE)
   })
   observeEvent(input$buttonrotate, {
     if (!input$inmethod)
@@ -1305,8 +1512,13 @@ createServer <- function(input, output, session)
     }
     # If its loaded it reads it with imRead(black and white)
     im <- imRead(img)
+    if(!input$loadMatrix){
     # Runs the calibration with the input data from thickness_matrix and density
-    calibration <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)
+    calibration <<- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
+    if(input$loadMatrix){
+      density_matrix = read.table(input$path_matrix["datapath"] %>% as.character)
+      calibration <<- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
+    }
   })
   
   output$light <- renderPlot({
@@ -1772,7 +1984,7 @@ createServer <- function(input, output, session)
       path.info$df <- path.df
     }
   })
-
+    
   ## run auto detection
   observeEvent(input$button_run_auto, { 
     if (is.null(path.info$df)) {
@@ -1990,10 +2202,10 @@ createServer <- function(input, output, session)
     }
     
   })
-  
+  # Prints  the core with the borders (if any). img.file.crop$data contains the data of the img. df.loc$data contiene los puntos donde est los bordes.
   output$ring_edit <- renderPlot({
     if (is.null(img.file$data)) return()
-    imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
+    fig1 <- imgInput_crop(img.file.crop$data, input$img_ver, input$img_hor)
     sample_yr <- as.numeric(input$sample_yr)
     if (is.na(sample_yr)) return()
     pch <- as.numeric(input$pch)
@@ -2003,6 +2215,15 @@ createServer <- function(input, output, session)
     label.cex <- as.numeric(input$label.cex)*0.7
     plot.marker(path.info, hover.xy, sample_yr, l.w, pch,
                 bor.color, lab.color, label.cex)
+  })
+  
+  output$profile_edit<- renderPlot({
+    if(input$buttondensity && input$button_run_auto){ 
+    dimrow<-nrow(data.frame(calibration_profile))
+    par(mar = c(0, 0, 1, 0), xaxs='i')
+    plot(calibration_profile, xlim=c(round(input$img_hor[1]*dimrow/100),round(input$img_hor[2]*dimrow/100)),ann=FALSE,xaxt='n',yaxt='n',type='l')
+    abline(v=df.loc$data$x,col="blue")
+    }
   })
   
   observeEvent(input$button_del, { 
@@ -2273,6 +2494,105 @@ createServer <- function(input, output, session)
       } 
     },
     contentType = 'csv'
+  )
+  output$RingWidth.xlsx <- downloadHandler(
+    filename =  function() {
+      if (is.null(img.file$data)) {
+        img.name <- 'Download Fail'
+        return(paste0(img.name, '.xlsx'))
+      } else {
+        img.name <- input$tuid
+      }
+      if (input$excel.name != '')
+        img.name <- input$excel.name
+      return(paste0(img.name, '.xlsx'))
+    },
+    content = function(filename) {
+      if (is.null(df.loc$data)) {
+        error.text <- 'Ring border was not found along the path'
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      } 
+      if (nrow(df.loc$data) <= 1) {
+        error.text <- paste('A minimum of two ring borders on each path',
+                            'was required to generate a ring-width series')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      } 
+      sample_yr <- as.numeric(input$sample_yr)
+      sample_site <- input$sample_site
+      sample_parcel <- input$sample_parcel
+      sample_species <- input$sample_species
+      tuid <- input$tuid
+      dpi <- input$dpi
+      if (is.na(sample_yr)) {
+        error.text <- paste('Please check the argument \'Sampling year\' ')
+        sendSweetAlert(
+          session = session, title = "Error", text = error.text, type = "error"
+        )
+        return()
+      }
+      dpi <- path.info$dpi
+      dp <- dpi/25.4
+      incline <- path.info$incline
+      h.dis <- path.info$h
+      
+      if (incline) {
+        incline.cond <- df.loc$data$z %>% table %>% as.numeric
+        if (length(incline.cond) == 1) {
+          rt <- paste('A minimum of two ring borders on each path',
+                      'was required to generate a ring-width series')
+          sendSweetAlert(
+            session = session, title = "Error", text = rt, type = "error"
+          )
+          return()
+        }
+        if (all(incline.cond >= 2) & incline.cond[1] == incline.cond[2]) {
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+          tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
+          list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
+          write.xlsx(list_of_datasets, file = filename)
+        } else {
+          if (any(incline.cond < 2)) {
+            rt <- paste('A minimum of two ring borders on each path ',
+                        'was required to generate a ring-width series')
+            sendSweetAlert(
+              session = session, title = "Error", text = rt, type = "error"
+            )
+            return()
+          } else {
+            rt <-  paste("If you tick the checkbox \"Inclined tree",
+                         "rings\", the upper and lower paths should",
+                         "have the same number of ring borders.")
+            sendSweetAlert(
+              session = session, title = "Error", text = rt, type = "error"
+            )
+            return()
+          }
+        }
+      } else {
+        if(is.null(calibration_profile)){
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+        }
+        else{
+          prev = 0
+          vector <- vector()
+          for (i in df.loc$data$x){
+            vector <- c(vector, round(mean(calibration_profile[prev:i]),digits=2))
+          }
+          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+          df.rw$ring.density <- vector
+        }
+        tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
+        list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
+        write.xlsx(list_of_datasets, file = filename)
+      } 
+    },
+    contentType = 'excel'
   )
   observeEvent(input$reset.hdr,{
     updateTextInput(session, "tuhdr1",label = 'Site ID',value = '')
