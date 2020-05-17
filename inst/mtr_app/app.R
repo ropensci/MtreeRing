@@ -536,6 +536,14 @@ createUI <- function()
                       'Show Density Profile'), 
           shape = "curve", value = F, status = "success")
       ),
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_det'",
+        prettyCheckbox(
+          inputId = "show_wood", 
+          label = div(style = 'color:black;font-weight: bolder;',
+                      'Show Early/Late Wood'), 
+          shape = "curve", value = F, status = "success")
+      ),
       hr(),
       fluidPage(
         fluidRow(
@@ -902,14 +910,36 @@ createServer <- function(input, output, session)
         if (lenup >= 1) {
           points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
+          if(input$show_wood){
+            prevx = p.x[1]
+            vectorx = vector()
+            for (border in bx[up]){
+              vectorx <- c(vectorx,(prevx+border)/2)
+              prevx=border
+            }
+            prevy = p.y[1] + d
+            vectory = vector()
+            for (border in by[up]){
+              vectory <- c(vectory,(prevy+border)/2)
+              prevy=border
+            }
+            points(vectorx, vectory, col = 'red', type = "p", 
+                   pch = pch, cex = label.cex * 0.75)
+          }
           if(input$decades){
-            year.u <- c(seq(sample_yr,(sample_yr - (lenup)*10 + 1),by=-10))
+            oddvalsx <- seq(1, length(bx[up]), by=10)
+            oddvalsy <- seq(1, length(by[up]), by=10)
+            year.u <- c(seq(sample_yr,(sample_yr - lenup + 1),by=-10))
+            bx_modu <- bx[up][oddvalsx]
+            by_modu <- by[up][oddvalsy]
+            text(bx_modu, by_modu, year.u, adj = c(-0.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
           }
           else{
             year.u <- c(sample_yr:(sample_yr - lenup + 1))
+            text(bx[up], by[up], year.u, adj = c(-0.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
           }
-          text(bx[up], by[up], year.u, adj = c(-0.5, 0.5), 
-               srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenup
           text(bx[up], by[up], border.num, adj = c(0.5, 2.25), 
                col = lab.color, cex = label.cex)
@@ -919,14 +949,36 @@ createServer <- function(input, output, session)
         if (lenlo >= 1) {
           points(bx[lower], by[lower], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
+          if(input$show_wood){
+            prevx = p.x[1]
+            vectorx = vector()
+            for (border in bx[lower]){
+              vectorx <- c(vectorx,(prevx+border)/2)
+              prevx=border
+            }
+            prevy = p.y[1] - d
+            vectory = vector()
+            for (border in by[lower]){
+              vectory <- c(vectory,(prevy+border)/2)
+              prevy=border
+            }
+            points(vectorx, vectory, col = 'red', type = "p", 
+                   pch = pch, cex = label.cex * 0.75)
+          }
           if(input$decades){
-            year.l <- c(seq(sample_yr,(sample_yr - (lenlo)*10 + 1),by=-10))
+            oddvalsx <- seq(1, length(bx[lower]), by=10)
+            oddvalsy <- seq(1, length(by[lower]), by=10)
+            year.l <- c(seq(sample_yr,(sample_yr - lenlo + 1),by=-10))
+            bx_modl <- bx[lower][oddvalsx]
+            by_modl <- by[lower][oddvalsy]
+            text(bx_modl, by_modl, year.l, adj = c(1.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
           }
           else{
             year.l <- c(sample_yr:(sample_yr - lenlo + 1))
+            text(bx[lower], by[lower], year.l, adj = c(1.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
           }
-          text(bx[lower], by[lower], year.l, adj = c(1.5, 0.5), 
-               srt = 90, col = lab.color, cex = label.cex)
           border.num <- 1:lenlo
           text(bx[lower], by[lower], border.num, adj = c(0.5, -1.25), 
                col = lab.color, cex = label.cex)
@@ -936,14 +988,38 @@ createServer <- function(input, output, session)
           lenbx <- length(bx)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
+          if(input$show_wood){
+            prevx = p.x[1]
+            print(p.x)
+            vectorx = vector()
+            for (border in bx){
+              vectorx <- c(vectorx,(prevx+border)/2)
+              prevx=border
+            }
+            prevy = p.y[1]
+            vectory = vector()
+            for (border in by){
+              vectory <- c(vectory,(prevy+border)/2)
+              prevy=border
+            }
+            points(vectorx, vectory, col = 'red', type = "p", 
+                   pch = pch, cex = label.cex * 0.75)
+          }
           if(input$decades){
-            year.u <- c(seq(sample_yr,(sample_yr - (length(by))*10  + 1),by=-10))
+            oddvalsx <- seq(1, length(bx), by=10)
+            oddvalsy <- seq(1, length(by), by=10)
+            year.u <- c(seq(sample_yr,(sample_yr - length(by)  + 1),by=-10))
+            bx_mod <- bx[oddvalsx]
+            by_mod <- by[oddvalsy]
+            text(bx_mod, by_mod, year.u, adj = c(1.5, 0.5), 
+                 srt = 90, col = lab.color, cex = label.cex)
           }
           else{
           year.u <- c(sample_yr:(sample_yr - length(by) + 1))
-          }
           text(bx, by, year.u, adj = c(1.5, 0.5), 
                srt = 90, col = lab.color, cex = label.cex)
+          }
+          
           border.num <- 1:lenbx
           text(bx, by, border.num, adj = c(0.5, -1.25), 
                col = lab.color, cex = label.cex)
