@@ -544,6 +544,14 @@ createUI <- function()
                       'Show Early/Late Wood'), 
           shape = "curve", value = F, status = "success")
       ),
+      conditionalPanel(
+        condition = "input.sel_mode == 'sel_edit'",
+        prettyCheckbox(
+          inputId = "edit_wood", 
+          label = div(style = 'color:black;font-weight: bolder;',
+                      'Edit Early/Late Wood'), 
+          shape = "curve", value = F, status = "success")
+      ),
       hr(),
       fluidPage(
         fluidRow(
@@ -855,7 +863,7 @@ createServer <- function(input, output, session)
   }
   # Plots borders on top of img
   plot.marker <- function(path.info, hover.xy, sample_yr, l.w, pch,
-                          bor.color, lab.color, label.cex)
+                          bor.color, lab.color, label.cex, el_wood)
   {
     if(is.null(path.info$x))
       return()
@@ -912,18 +920,20 @@ createServer <- function(input, output, session)
             pch = pch, cex = label.cex * 0.75)
           if(input$show_wood){
             prevx = p.x[1]
-            vectorx = vector()
-            for (border in bx[up]){
-              vectorx <- c(vectorx,(prevx+border)/2)
-              prevx=border
+            if(is.null(el_wood$x)){
+              el_wood$x <- vector()
+              for (border in bx[up]){
+                el_wood$x <- c(el_wood$x,(prevx+border)/2)
+                prevx=border
+              }
+              prevy = p.y[1] + d
+              el_wood$y <- vector()
+              for (border in by[up]){
+                el_wood$y <- c(el_wood$y,(prevy+border)/2)
+                prevy=border
+              }
             }
-            prevy = p.y[1] + d
-            vectory = vector()
-            for (border in by[up]){
-              vectory <- c(vectory,(prevy+border)/2)
-              prevy=border
-            }
-            points(vectorx, vectory, col = 'red', type = "p", 
+            points(el_wood$x, el_wood$y, col = 'red', type = "p", 
                    pch = pch, cex = label.cex * 0.75)
           }
           if(input$decades){
@@ -989,20 +999,23 @@ createServer <- function(input, output, session)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           if(input$show_wood){
-            prevx = p.x[1]
-            print(p.x)
-            vectorx = vector()
-            for (border in bx){
-              vectorx <- c(vectorx,(prevx+border)/2)
-              prevx=border
+            if(is.null(el_wood$x)){
+              prevx = p.x[1]
+              vectorx = vector()
+              for (border in bx){
+                vectorx <- c(vectorx,(prevx+border)/2)
+                prevx=border
+              }
+              prevy = p.y[1]
+              vectory = vector()
+              for (border in by){
+                vectory <- c(vectory,(prevy+border)/2)
+                prevy=border
+              }
+              el_wood$x <- vectorx
+              el_wood$y <- vectory
             }
-            prevy = p.y[1]
-            vectory = vector()
-            for (border in by){
-              vectory <- c(vectory,(prevy+border)/2)
-              prevy=border
-            }
-            points(vectorx, vectory, col = 'red', type = "p", 
+            points(el_wood$x, el_wood$y, col = 'red', type = "p", 
                    pch = pch, cex = label.cex * 0.75)
           }
           if(input$decades){
@@ -1371,6 +1384,7 @@ createServer <- function(input, output, session)
 
   options(shiny.maxRequestSize = 150*(1024^2))
   
+  el_wood <- reactiveValues(x = NULL, y = NULL)
   img.file <- reactiveValues(data = NULL)
   img.file.crop <- reactiveValues(data = NULL)
   img.file.copy <- reactiveValues(data = NULL)
@@ -2091,6 +2105,11 @@ createServer <- function(input, output, session)
       return()
     }
   })
+  observeEvent(input$plot2_dblclick, {
+    if(input$edit_wood){
+      
+    }
+  })
   # add a point by double clicking
   observeEvent(input$plot2_dblclick, {
     if(input$sel_mode != "sel_edit")
@@ -2157,7 +2176,13 @@ createServer <- function(input, output, session)
       py <- path.df$y[path.df$x == px]
       temp.df <- data.frame(x = px, y = py, z = 'u')
     }
-    df.loc$data <- rbind(bor.df, temp.df)
+    if(input$edit_wood){
+      el_wood$x <- c(el_wood$x, temp.df$x)
+      el_wood$y <- c(el_wood$y, temp.df$y)
+    }
+    else{
+      df.loc$data <- rbind(bor.df, temp.df)
+    }
   })
   
   # delete points with a brush
@@ -2214,7 +2239,7 @@ createServer <- function(input, output, session)
     l.w <- as.numeric(input$linelwd)
     label.cex <- as.numeric(input$label.cex)*0.7
     plot.marker(path.info, hover.xy, sample_yr, l.w, pch,
-                bor.color, lab.color, label.cex)
+                bor.color, lab.color, label.cex, el_wood)
   })
   
   output$profile_edit<- renderPlot({
