@@ -495,9 +495,22 @@ createUI <- function()
           class = "btn btn-success btn-md", icon = icon('play'),
           style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
         ),
+        actionButton(
+          'button_run_auto_xray', 'Run Detection for X-RAY',
+          class = "btn btn-success btn-md", icon = icon('play'),
+          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+        ),
         useSweetAlert(),
         br(),
-        br()
+        br(),
+        actionButton(
+          'button_run_auto_early', 'Run Detection for Early-Late Wood',
+          class = "btn btn-success btn-md", icon = icon('play'),
+          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+        ),
+        
+        br(),
+        br(),
       ),
       conditionalPanel(
         condition = "input.sel_mode == 'sel_edit'",
@@ -893,7 +906,11 @@ createServer <- function(input, output, session)
       points(c(p.x[len], hover.xy$x), c(p.y[len], y), 
              type = 'l', col = lab.color, lty = 2, lwd = l.w)
     }
-    
+    if(!is.null(el_wood)){
+      if(input$show_wood){
+        points(el_wood$x, el_wood$y, col = 'red', type = "p", 
+               pch = pch, cex = label.cex * 0.75)
+    }}
     # plot border point
     if(is.null(df.loc$data))
       return()
@@ -912,24 +929,6 @@ createServer <- function(input, output, session)
         if (lenup >= 1) {
           points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          if(input$show_wood){
-            "prevx = p.x[1]
-            if(is.null(el_wood$x)){
-              el_wood$x <- vector()
-              for (border in bx[up]){
-                el_wood$x <- c(el_wood$x,(prevx+border)/2)
-                prevx=border
-              }
-              prevy = p.y[1] + d
-              el_wood$y <- vector()
-              for (border in by[up]){
-                el_wood$y <- c(el_wood$y,(prevy+border)/2)
-                prevy=border
-              }
-            }"
-            points(el_wood$x, el_wood$y, col = 'red', type = "p", 
-                   pch = pch, cex = label.cex * 0.75)
-          }
           if(input$decades){
             oddvalsx <- seq(1, length(bx[up]), by=10)
             oddvalsy <- seq(1, length(by[up]), by=10)
@@ -953,22 +952,6 @@ createServer <- function(input, output, session)
         if (lenlo >= 1) {
           points(bx[lower], by[lower], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          if(input$show_wood){
-            prevx = p.x[1]
-            vectorx = vector()
-            for (border in bx[lower]){
-              vectorx <- c(vectorx,(prevx+border)/2)
-              prevx=border
-            }
-            prevy = p.y[1] - d
-            vectory = vector()
-            for (border in by[lower]){
-              vectory <- c(vectory,(prevy+border)/2)
-              prevy=border
-            }
-            points(vectorx, vectory, col = 'red', type = "p", 
-                   pch = pch, cex = label.cex * 0.75)
-          }
           if(input$decades){
             oddvalsx <- seq(1, length(bx[lower]), by=10)
             oddvalsy <- seq(1, length(by[lower]), by=10)
@@ -992,26 +975,6 @@ createServer <- function(input, output, session)
           lenbx <- length(bx)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
-          if(input$show_wood){
-            "if(is.null(el_wood$x)){
-              prevx = p.x[1]
-              vectorx = vector()
-              for (border in bx){
-                vectorx <- c(vectorx,(prevx+border)/2)
-                prevx=border
-              }
-              prevy = p.y[1]
-              vectory = vector()
-              for (border in by){
-                vectory <- c(vectory,(prevy+border)/2)
-                prevy=border
-              }
-              el_wood$x <- vectorx
-              el_wood$y <- vectory
-            }"
-            points(el_wood$x, el_wood$y, col = 'red', type = "p", 
-                   pch = pch, cex = label.cex * 0.75)
-          }
           if(input$decades){
             oddvalsx <- seq(1, length(bx), by=10)
             oddvalsy <- seq(1, length(by), by=10)
@@ -1239,14 +1202,21 @@ createServer <- function(input, output, session)
       bor_col <- bor_xy$x - pxmin
       pix <- 255*tdata[bor_row,bor_col][1,]
     }
-    if(is.null(calibration)){}
+    if(is.null(calibration$data)){}
       else{
         bor_row <- nrow(tdata) - bor_xy$y + pymin
+        bor_row_plus <- bor_row + 5
+        bor_row_less <- bor_row - 5
         bor_col <- bor_xy$x - pxmin
         path_pixes<- 255*tdata[bor_row,][1,]
         bor_pix <- 255*tdata[bor_row,bor_col][1,]
-        calibration_profile$data <-predict(calibration$data, (path_pixes))
-        #TODO: Add warning when nan
+        path_matrix <- 255*tdata[bor_row,][1,]
+        for (i in 1:5){
+          path_matrix <- rbind(path_matrix,255*tdata[bor_row+i,][1,])
+          path_matrix <- rbind(path_matrix,255*tdata[bor_row-i,][1,])
+        }
+        print(colMeans(path_matrix))
+        calibration_profile$data <-predict(calibration$data, (colMeans(path_matrix)))
         calibration_profile$data[is.na(calibration_profile$data)] <- 0
         calibration_profile$data <- append(calibration_profile$data,integer(pxmin),0)
         calibration_profile$data <- append(calibration_profile$data,integer(dimcol-pxmax))
@@ -1803,14 +1773,14 @@ createServer <- function(input, output, session)
 
   # del border points
   observeEvent(input$rm_all_border, {
-    if(is.null(df.loc$data)) {
-      et <- 'Ring borders were not found'
-      sendSweetAlert(
-        session = session, title = "Error", text = et, type = "error"
-      )
-      return()
-    }
     if(input$edit_wood){
+      if(is.null(el_wood$x)) {
+        et <- 'Early/Late borders were not found'
+        sendSweetAlert(
+          session = session, title = "Error", text = et, type = "error"
+        )
+        return()
+      }
       el_wood$x <- NULL
       el_wood$y <- NULL
       et <- 'All early-wood borders have been removed'
@@ -1820,6 +1790,14 @@ createServer <- function(input, output, session)
       return()
     }
     else{
+      if(is.null(df.loc$data)) {
+        et <- 'Ring borders were not found'
+        sendSweetAlert(
+          session = session, title = "Error", text = et, type = "error"
+        )
+        return()
+      }
+      
       df.loc$data <- NULL
       et <- 'All ring borders have been removed'
       sendSweetAlert(
@@ -2114,7 +2092,202 @@ createServer <- function(input, output, session)
       )
     }  
   })
-
+  observeEvent(input$button_run_auto_early, { 
+    if (is.null(path.info$df)) {
+      et <- 'A path has not been created.'
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    isrgb <- input$isrgb
+    if (isrgb) {
+      RGB <- c(0.299, 0.587, 0.114)
+    } else {
+      RGB <- strsplit(input$customRGB, ',')[[1]] %>% as.numeric
+    }
+    dpi <- path.info$dpi
+    dp <- dpi/25.4
+    incline <- path.info$incline
+    h.dis <- path.info$h
+    ph <- path.info$horizontal
+    path.df <- path.info$df
+    px <- path.info$x
+    py <- path.info$y
+    defaultse <- input$defaultse
+    if (defaultse) {
+      struc.ele1 <- NULL
+      struc.ele2 <- NULL
+    } else {
+      struc.ele1 <- c(input$struc.ele1, input$struc.ele1) %>% as.numeric
+      struc.ele2 <- c(input$struc.ele2, input$struc.ele2) %>% as.numeric
+    }  
+    img <- img.file.crop$data
+    method <- input$method
+    if(input$watershed.threshold == 'custom.waterthr'){
+      watershed.threshold <- input$watershed.threshold2
+    } else {
+      watershed.threshold <- input$watershed.threshold
+    }
+    watershed.adjust <- input$watershed.adjust
+    progressSweetAlert(
+      session = session, id = "detect_progress",
+      title = "Detection in progress",
+      display_pct = F, value = 0
+    )
+    if (method == 'watershed') {
+      el_wood_prev <- automatic.det(
+        img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
+        watershed.threshold, watershed.adjust, struc.ele1, struc.ele2
+      )
+      el_wood$x <- el_wood_prev$x
+      el_wood$y <- el_wood_prev$y
+    }
+    if (method == "canny") {
+      default.canny <- input$defaultcanny
+      canny.t1 <- as.numeric(input$canny.t1)
+      canny.t2 <- as.numeric(input$canny.t2)
+      canny.adjust <- input$canny.adjust
+      canny.smoothing <- input$canny.smoothing
+      el_wood_prev <- automatic.det(
+        img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
+        watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
+        default.canny, canny.t1, canny.t2, canny.adjust, canny.smoothing
+      )
+      el_wood$x <- el_wood_prev$x
+      el_wood$y <- el_wood_prev$y
+    }   
+    if (method == "lineardetect") {
+      if (incline | path.info$type == "Multi Segments" | !ph) {
+        rt <- paste('The linear detection supports only Single Segment',
+                    'mode (without ring width correction). Please recreate',
+                    'a horizontal single-segment path.')
+        sendSweetAlert(
+          session = session, title = "ERROR", text = rt, type = "warning"
+        )
+        return()
+      }
+      origin <- as.numeric(input$origin)
+      f.df.loc <- automatic.det(
+        img, incline, method, h.dis, dpi, RGB, px, py, ph, path.df, 
+        struc.ele1 = struc.ele1, struc.ele2 = struc.ele2, origin = origin
+      )
+      el_wood_prev <- f.df.loc
+      el_wood$x <- el_wood_prev$x
+      el_wood$y <- el_wood_prev$y
+    }
+    number.border <- length(el_wood$x)
+    if (number.border == 0) {
+      rt <- 'Ring border was NOT detected'
+      closeSweetAlert(session = session)
+      sendSweetAlert(
+        session = session, title = "Error", text = rt, type = "error"
+      )
+    } else {
+      rt <- paste(number.border, 'borders were detected')
+      closeSweetAlert(session = session)
+      sendSweetAlert(
+        session = session, title = "Finished", text = rt, type = "success"
+      )
+    }  
+  })
+  
+  observeEvent(input$button_run_auto_xray, { 
+    if (is.null(path.info$df)) {
+      et <- 'A path has not been created.'
+      sendSweetAlert(
+        session = session, title = "Error", text = et, type = "error"
+      )
+      return()
+    }
+    isrgb <- input$isrgb
+    if (isrgb) {
+      RGB <- c(0.299, 0.587, 0.114)
+    } else {
+      RGB <- strsplit(input$customRGB, ',')[[1]] %>% as.numeric
+    }
+    dpi <- path.info$dpi
+    dp <- dpi/25.4
+    incline <- path.info$incline
+    h.dis <- path.info$h
+    ph <- path.info$horizontal
+    path.df <- path.info$df
+    px <- path.info$x
+    py <- path.info$y
+    defaultse <- input$defaultse
+    if (defaultse) {
+      struc.ele1 <- NULL
+      struc.ele2 <- NULL
+    } else {
+      struc.ele1 <- c(input$struc.ele1, input$struc.ele1) %>% as.numeric
+      struc.ele2 <- c(input$struc.ele2, input$struc.ele2) %>% as.numeric
+    }  
+    img <- img.file.crop$data
+    print(img)
+    imgn <- image_negate(img)
+    print(imgn)
+    method <- input$method
+    if(input$watershed.threshold == 'custom.waterthr'){
+      watershed.threshold <- input$watershed.threshold2
+    } else {
+      watershed.threshold <- input$watershed.threshold
+    }
+    watershed.adjust <- input$watershed.adjust
+    progressSweetAlert(
+      session = session, id = "detect_progress",
+      title = "Detection in progress",
+      display_pct = F, value = 0
+    )
+    if (method == 'watershed') {
+      df.loc$data <- automatic.det(
+        imgn, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
+        watershed.threshold, watershed.adjust, struc.ele1, struc.ele2
+      )
+    }
+    if (method == "canny") {
+      default.canny <- input$defaultcanny
+      canny.t1 <- as.numeric(input$canny.t1)
+      canny.t2 <- as.numeric(input$canny.t2)
+      canny.adjust <- input$canny.adjust
+      canny.smoothing <- input$canny.smoothing
+      df.loc$data <- automatic.det(
+        imgn, incline, method, h.dis, dpi, RGB, px, py, ph, path.df,
+        watershed.threshold, watershed.adjust, struc.ele1, struc.ele2,
+        default.canny, canny.t1, canny.t2, canny.adjust, canny.smoothing
+      )
+    }   
+    if (method == "lineardetect") {
+      if (incline | path.info$type == "Multi Segments" | !ph) {
+        rt <- paste('The linear detection supports only Single Segment',
+                    'mode (without ring width correction). Please recreate',
+                    'a horizontal single-segment path.')
+        sendSweetAlert(
+          session = session, title = "ERROR", text = rt, type = "warning"
+        )
+        return()
+      }
+      origin <- as.numeric(input$origin)
+      f.df.loc <- automatic.det(
+        imgn, incline, method, h.dis, dpi, RGB, px, py, ph, path.df, 
+        struc.ele1 = struc.ele1, struc.ele2 = struc.ele2, origin = origin
+      )
+      df.loc$data <- f.df.loc
+    }
+    number.border <- nrow(df.loc$data)
+    if (number.border == 0) {
+      rt <- 'Ring border was NOT detected'
+      closeSweetAlert(session = session)
+      sendSweetAlert(
+        session = session, title = "Error", text = rt, type = "error"
+      )
+    } else {
+      rt <- paste(number.border, 'borders were detected')
+      closeSweetAlert(session = session)
+      sendSweetAlert(
+        session = session, title = "Finished", text = rt, type = "success"
+      )
+    }  
+  })
   ## Ring editing mode
   observeEvent(input$plot2_dblclick, {
     if(input$sel_mode == "sel_det"){
@@ -2124,11 +2297,6 @@ createServer <- function(input, output, session)
         session = session, title = "Error", text = et, type = "error"
       )
       return()
-    }
-  })
-  observeEvent(input$plot2_dblclick, {
-    if(input$edit_wood){
-      
     }
   })
   # add a point by double clicking
@@ -2222,29 +2390,58 @@ createServer <- function(input, output, session)
       )
       return()
     } 
-    if (is.null(df.loc$data)) {
-      remove.text <- 'Ring border was NOT found along the path'
-      sendSweetAlert(
-        session = session, title = "Error", text = remove.text, type = "error"
-      )
-      return()
-    } 
+    if(input$edit_wood){
+      if (is.null(el_wood$x)) {
+        remove.text <- 'Early/Late border was NOT found along the path'
+        sendSweetAlert(
+          session = session, title = "Error", text = remove.text, type = "error"
+        )
+        return()
+      } 
+    }
+    else{
+      if (is.null(df.loc$data)) {
+        remove.text <- 'Ring border was NOT found along the path'
+        sendSweetAlert(
+          session = session, title = "Error", text = remove.text, type = "error"
+        )
+        return()
+      } 
+    }
     xmin <- round(input$plot2_brush$xmin + crop.offset.xy$x)
     xmax <- round(input$plot2_brush$xmax + crop.offset.xy$x)
     ymin <- round(input$plot2_brush$ymin + crop.offset.xy$y)
     ymax <- round(input$plot2_brush$ymax + crop.offset.xy$y)
-    x.ranges <- df.loc$data$x
-    delete.bor <- x.ranges >= xmin & x.ranges <= xmax
-    y.ranges <- df.loc$data$y
-    is.contain <- ymin <= y.ranges & ymax >= y.ranges
-    delete.bor <- delete.bor & is.contain
-    if (any(delete.bor)) {
-      df.loc$data <- df.loc$data[!delete.bor,]
-    } else {
-      err.text <- 'Ring border was NOT found in the area you selected'
-      sendSweetAlert(
-        session = session, title = "Error", text = err.text, type = "error"
-      )
+    if(input$edit_wood){
+      x.ranges <- el_wood$x
+      delete.bor <- x.ranges >= xmin & x.ranges <= xmax
+      y.ranges <- el_wood$y
+      is.contain <- ymin <= y.ranges & ymax >= y.ranges
+      delete.bor <- delete.bor & is.contain
+      if (any(delete.bor)) {
+        el_wood$x <- el_wood$x[!delete.bor]
+        el_wood$y <- el_wood$y[!delete.bor]
+      } else {
+        err.text <- 'Early/Late border was NOT found in the area you selected'
+        sendSweetAlert(
+          session = session, title = "Error", text = err.text, type = "error"
+        )
+      }
+    }
+    else{
+      x.ranges <- df.loc$data$x
+      delete.bor <- x.ranges >= xmin & x.ranges <= xmax
+      y.ranges <- df.loc$data$y
+      is.contain <- ymin <= y.ranges & ymax >= y.ranges
+      delete.bor <- delete.bor & is.contain
+      if (any(delete.bor)) {
+        df.loc$data <- df.loc$data[!delete.bor,]
+      } else {
+        err.text <- 'Ring border was NOT found in the area you selected'
+        sendSweetAlert(
+          session = session, title = "Error", text = err.text, type = "error"
+        )
+      }
     }
     
   })
@@ -2264,7 +2461,7 @@ createServer <- function(input, output, session)
   })
   
   output$profile_edit<- renderPlot({
-    if(input$buttondensity && input$button_run_auto){ 
+    if(input$buttondensity && !is.null(calibration_profile$data)){ 
     dimrow<-nrow(data.frame(calibration_profile$data))
     par(mar = c(0, 0, 1, 0), xaxs='i')
     plot(calibration_profile$data, xlim=c(round(input$img_hor[1]*dimrow/100),round(input$img_hor[2]*dimrow/100)),ann=FALSE,xaxt='n',yaxt='n',type='l')
@@ -2620,10 +2817,10 @@ createServer <- function(input, output, session)
             return()
           }
         }
-        #TODO: Check how to modify df.rw based on data about calibration_profile and el_wood
       } else {
         df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
         if(!is.null(calibration_profile$data)){
+          print("hi")
           prev = 0
           mean <- vector()
           max <- vector()
@@ -2641,6 +2838,11 @@ createServer <- function(input, output, session)
           df.rw$ring.maxDensity <- max
           df.rw$ring.std <- std
           if (!is.null(el_wood$x)){
+            print(length(el_wood$x))
+            print(nrow(df.loc$data))
+            if(length(el_wood$x) != nrow(df.loc$data)){
+              showNotification(paste("WARNING: Number or Ring borders is different of number of Early/Late borders, add or remove borders until they are the same length"), duration = 5)
+            }
             df.rw$el_wood.x <- el_wood$x
             df.rw$el_wood.y <- el_wood$y
             early_density <- vector()
@@ -2678,10 +2880,10 @@ createServer <- function(input, output, session)
             df.rw$std_early_density <- std_early_density
             df.rw$std_late_density <- std_late_density
         }
+        }
           tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
           list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
           write.xlsx(list_of_datasets, file = filename)
-        }
       } 
     },
     contentType = 'excel'
