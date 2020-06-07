@@ -24,12 +24,6 @@ library(gridExtra)
 # Run the application
 createUI <- function()
 {
-  if(exists('calibration_profile')){
-    calibration_profile <<- NULL
-  }
-  if(exists('calibration')){
-    calibration <<- NULL
-  }
   shiny.title <- dashboardHeader(title = 'MtreeRing')
   shiny.sider <- dashboardSidebar(
     sidebarMenu(
@@ -207,7 +201,7 @@ createUI <- function()
         br()),
       prettyCheckbox(
         inputId = "loadMatrix", 
-        label = div(style = 'color:black;font-weight: bolder;','Matrix Path'), 
+        label = div(style = 'color:black;font-weight: bolder;','Load Matrix'), 
         shape = "curve", value = F, status = "success"),
       br(),
       br(),
@@ -229,7 +223,7 @@ createUI <- function()
   page2.1 <- fluidRow(
     box(
       title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Path Options'), height = "auto",
+        font-weight: bolder', 'Sample Info'), height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       textInput('tuid', 'Series ID', '', width = '75%'),
       textInput('dpi', 'DPI', '', '75%'),
@@ -238,7 +232,7 @@ createUI <- function()
         inputId = "moreinfo", 
         label = div(
           style = 'color:black;font-weight: bolder;font-size:90%', 
-          'Enter more Info'), 
+          'More Info'), 
         shape = "curve", value = F, status = "success"
       ),
       prettyCheckbox(
@@ -251,7 +245,7 @@ createUI <- function()
       conditionalPanel(
         condition = "input.moreinfo",
         textInput('sample_site', 'Site', '', '75%'),
-        textInput('sample_parcel', 'Parcel', '', '75%'),
+        textInput('sample_parcel', 'Plot', '', '75%'),
         textInput('sample_species', 'Species', '', '75%')
       ),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
@@ -919,7 +913,7 @@ createServer <- function(input, output, session)
           points(bx[up], by[up], col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           if(input$show_wood){
-            prevx = p.x[1]
+            "prevx = p.x[1]
             if(is.null(el_wood$x)){
               el_wood$x <- vector()
               for (border in bx[up]){
@@ -932,7 +926,7 @@ createServer <- function(input, output, session)
                 el_wood$y <- c(el_wood$y,(prevy+border)/2)
                 prevy=border
               }
-            }
+            }"
             points(el_wood$x, el_wood$y, col = 'red', type = "p", 
                    pch = pch, cex = label.cex * 0.75)
           }
@@ -999,7 +993,7 @@ createServer <- function(input, output, session)
           points(bx, by, col = bor.color, type = "p", 
             pch = pch, cex = label.cex * 0.75)
           if(input$show_wood){
-            if(is.null(el_wood$x)){
+            "if(is.null(el_wood$x)){
               prevx = p.x[1]
               vectorx = vector()
               for (border in bx){
@@ -1014,7 +1008,7 @@ createServer <- function(input, output, session)
               }
               el_wood$x <- vectorx
               el_wood$y <- vectory
-            }
+            }"
             points(el_wood$x, el_wood$y, col = 'red', type = "p", 
                    pch = pch, cex = label.cex * 0.75)
           }
@@ -1245,20 +1239,19 @@ createServer <- function(input, output, session)
       bor_col <- bor_xy$x - pxmin
       pix <- 255*tdata[bor_row,bor_col][1,]
     }
-    if(exists("calibration")){
-      if(is.null(calibration)){}
+    if(is.null(calibration)){}
       else{
         bor_row <- nrow(tdata) - bor_xy$y + pymin
         bor_col <- bor_xy$x - pxmin
         path_pixes<- 255*tdata[bor_row,][1,]
         bor_pix <- 255*tdata[bor_row,bor_col][1,]
-        calibration_profile<<-predict(calibration, (path_pixes))
+        calibration_profile$data <-predict(calibration$data, (path_pixes))
         #TODO: Add warning when nan
-        calibration_profile[is.na(calibration_profile)] <<- 0
-        calibration_profile <<- append(calibration_profile,integer(pxmin),0)
-        calibration_profile <<- append(calibration_profile,integer(dimcol-pxmax))
+        calibration_profile$data[is.na(calibration_profile$data)] <- 0
+        calibration_profile$data <- append(calibration_profile$data,integer(pxmin),0)
+        calibration_profile$data <- append(calibration_profile$data,integer(dimcol-pxmax))
       }
-    }
+    
     return(bor_xy)
   } 
   readImg <- function(img, img.name, magick.switch = TRUE) {
@@ -1383,7 +1376,8 @@ createServer <- function(input, output, session)
   # Functions listed above are used for shiny app
 
   options(shiny.maxRequestSize = 150*(1024^2))
-  
+  calibration <- reactiveValues(data = NULL)
+  calibration_profile <- reactiveValues(data = NULL)
   el_wood <- reactiveValues(x = NULL, y = NULL)
   img.file <- reactiveValues(data = NULL)
   img.file.crop <- reactiveValues(data = NULL)
@@ -1527,11 +1521,23 @@ createServer <- function(input, output, session)
     # If its loaded it reads it with imRead(black and white)
     im <- imRead(img)
     if(!input$loadMatrix){
-    # Runs the calibration with the input data from thickness_matrix and density
-    calibration <<- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
+      if (max(input$thickness_matrix[,2]) != 255 && max(input$thickness_matrix[,2]) != 65536){
+        showNotification(paste("WARNING: max intensity inserted is lower than possible max"), duration = 5)
+      }
+      if (min(input$thickness_matrix[,2]) != 0){
+        showNotification(paste("WARNING: min intensity inserted is higher than 0"), duration = 5)
+      }
+      # Runs the calibration with the input data from thickness_matrix and density
+      calibration$data <- fitCalibrationModel(input$thickness_matrix[,2], input$thickness_matrix[,1], density = input$density, plot = TRUE)}
     if(input$loadMatrix){
       density_matrix = read.table(input$path_matrix["datapath"] %>% as.character)
-      calibration <<- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
+      if (max(density_matrix[,2]) != 255 && max(density_matrix[,2]) != 65536){
+        showNotification(paste("WARNING: max intensity inserted is lower than possible max"), duration = 5)
+      }
+      if (min(density_matrix[,2]) != 0){
+        showNotification(paste("WARNING: min intensity inserted is higher than 0"), duration = 5)
+      }
+      calibration$data <- fitCalibrationModel(density_matrix[,2], density_matrix[,1], density = input$density, plot = TRUE)
     }
   })
   
@@ -1770,6 +1776,10 @@ createServer <- function(input, output, session)
       return()
     }
     if(length(path.info$x) >= 1) {
+      calibration$data <- NULL
+      el_wood$x <- NULL
+      el_wood$y <- NULL
+      calibration_profile$data <- NULL
       path.info$x <- NULL
       path.info$y <- NULL
       path.info$type <- NULL
@@ -1800,12 +1810,23 @@ createServer <- function(input, output, session)
       )
       return()
     }
-    df.loc$data <- NULL
-    et <- 'All ring borders have been removed'
-    sendSweetAlert(
-      session = session, "Success", et, "success"
-    )
-    return()
+    if(input$edit_wood){
+      el_wood$x <- NULL
+      el_wood$y <- NULL
+      et <- 'All early-wood borders have been removed'
+      sendSweetAlert(
+        session = session, "Success", et, "success"
+      )
+      return()
+    }
+    else{
+      df.loc$data <- NULL
+      et <- 'All ring borders have been removed'
+      sendSweetAlert(
+        session = session, "Success", et, "success"
+      )
+      return()
+    }
   })
   
   # record slider info
@@ -2244,9 +2265,9 @@ createServer <- function(input, output, session)
   
   output$profile_edit<- renderPlot({
     if(input$buttondensity && input$button_run_auto){ 
-    dimrow<-nrow(data.frame(calibration_profile))
+    dimrow<-nrow(data.frame(calibration_profile$data))
     par(mar = c(0, 0, 1, 0), xaxs='i')
-    plot(calibration_profile, xlim=c(round(input$img_hor[1]*dimrow/100),round(input$img_hor[2]*dimrow/100)),ann=FALSE,xaxt='n',yaxt='n',type='l')
+    plot(calibration_profile$data, xlim=c(round(input$img_hor[1]*dimrow/100),round(input$img_hor[2]*dimrow/100)),ann=FALSE,xaxt='n',yaxt='n',type='l')
     abline(v=df.loc$data$x,col="blue")
     }
   })
@@ -2599,22 +2620,68 @@ createServer <- function(input, output, session)
             return()
           }
         }
+        #TODO: Check how to modify df.rw based on data about calibration_profile and el_wood
       } else {
-        if(is.null(calibration_profile)){
-          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
-        }
-        else{
+        df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
+        if(!is.null(calibration_profile$data)){
           prev = 0
-          vector <- vector()
+          mean <- vector()
+          max <- vector()
+          min <- vector()
+          std <- vector()
           for (i in df.loc$data$x){
-            vector <- c(vector, round(mean(calibration_profile[prev:i]),digits=2))
+            mean <- c(mean, round(mean(calibration_profile$data[prev:i]),digits=2))
+            max <- c(max, round(max(calibration_profile$data[prev:i]),digits=2))
+            min <- c(min, round(min(calibration_profile$data[prev:i]),digits=2))
+            std <- c(std, round(sd(calibration_profile$data[prev:i]),digits=2))
+            prev = i
           }
-          df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
-          df.rw$ring.density <- vector
+          df.rw$ring.meanDensity <- mean
+          df.rw$ring.minDensity <- min
+          df.rw$ring.maxDensity <- max
+          df.rw$ring.std <- std
+          if (!is.null(el_wood$x)){
+            df.rw$el_wood.x <- el_wood$x
+            df.rw$el_wood.y <- el_wood$y
+            early_density <- vector()
+            late_density <- vector()
+            max_early_density <- vector()
+            min_early_density <- vector()
+            std_early_density <- vector()
+            max_late_density <- vector()
+            min_late_density <- vector()
+            std_late_density <- vector()
+            for (i in 1:length(df.loc$data$x)){
+              early_density <- c(early_density, round(mean(calibration_profile$data[el_wood$x[i]:df.loc$data$x[i]]),digits=2))
+              max_early_density <- c(max_early_density, round(max(calibration_profile$data[el_wood$x[i]:df.loc$data$x[i]]),digits=2))
+              min_early_density <- c(min_early_density, round(min(calibration_profile$data[el_wood$x[i]:df.loc$data$x[i]]),digits=2))
+              std_early_density <- c(std_early_density, round(sd(calibration_profile$data[el_wood$x[i]:df.loc$data$x[i]]),digits=2))
+              if (i != length(df.loc$data$x)){
+                late_density <- c(late_density, round(mean(calibration_profile$data[df.loc$data$x[i]:el_wood$x[i+1]]),digits=2))
+                max_late_density <- c(max_late_density, round(max(calibration_profile$data[df.loc$data$x[i]:el_wood$x[i+1]]),digits=2))
+                min_late_density <- c(min_late_density, round(min(calibration_profile$data[df.loc$data$x[i]:el_wood$x[i+1]]),digits=2))
+                std_late_density <- c(std_late_density, round(sd(calibration_profile$data[df.loc$data$x[i]:el_wood$x[i+1]]),digits=2))
+              }
+              else{
+                late_density <- c(late_density, round(mean(calibration_profile$data[df.loc$data$x[i]:length(calibration_profile$data)]),digits=2))
+                max_late_density <- c(max_late_density, round(max(calibration_profile$data[df.loc$data$x[i]:length(calibration_profile$data)]),digits=2))
+                min_late_density <- c(min_late_density, round(min(calibration_profile$data[df.loc$data$x[i]:length(calibration_profile$data)]),digits=2))
+                std_late_density <- c(std_late_density, round(sd(calibration_profile$data[df.loc$data$x[i]:length(calibration_profile$data)]),digits=2))
+              }
+            }
+            df.rw$early_density <- early_density
+            df.rw$late_density <- late_density
+            df.rw$min_early_density <- min_early_density
+            df.rw$min_late_density <- min_late_density
+            df.rw$max_early_density <- max_early_density
+            df.rw$max_late_density <- max_late_density
+            df.rw$std_early_density <- std_early_density
+            df.rw$std_late_density <- std_late_density
         }
-        tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
-        list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
-        write.xlsx(list_of_datasets, file = filename)
+          tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
+          list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
+          write.xlsx(list_of_datasets, file = filename)
+        }
       } 
     },
     contentType = 'excel'
