@@ -338,6 +338,10 @@ createUI <- function()
       title = div(style = 'color:#FFFFFF;font-size:80%;
                   font-weight: bolder', 'Detection Options'),  height = "auto",
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
+      numericInput('pixelspath', 
+                   div(style = 'color:black;font-weight:bolder;font-size:90%', 
+                       'Pixels for density profile'),
+                   value = 5, min = 0, max = 20, step = 1, width = "75%"),
       prettyCheckbox(
         inputId = "isrgb", 
         label = div(
@@ -691,6 +695,26 @@ createUI <- function()
           textInput('excel.name', 'Name of the excel file', '', width = '50%'),
           downloadButton(
             'RingWidth.xlsx', 'Download excel',
+            class = "btn btn-primary btn-md",
+            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+          )
+        ),
+        tabPanel(
+          div(style = 'color:black;font-weight: bolder;',
+              icon('arrow-down', 'fa-1x'), 'Image'),
+          textInput('image.name', 'Name of the image file', '', width = '50%'),
+          downloadButton(
+            'imageCore', 'Save image',
+            class = "btn btn-primary btn-md",
+            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+          )
+        ),
+        tabPanel(
+          div(style = 'color:black;font-weight: bolder;',
+              icon('arrow-down', 'fa-1x'), 'Path'),
+          textInput('imgpath.name', 'Name of the image file', '', width = '50%'),
+          downloadButton(
+            'imagePath', 'Save image',
             class = "btn btn-primary btn-md",
             style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
           )
@@ -1120,7 +1144,6 @@ createServer <- function(input, output, session)
     if (rd.channel >= 3)
       seg.data <- apply(rd.m.array[, , 1:3], 1, function(x) x %*% RGB) %>% t
     tdata <- seg.data
-    # img contiene la foto en grises de la parte cortada, habria que coger las x de df.loc$data y coger todos los pixels de esa fila.
     if (method == 'watershed') {
       seg.mor <- f.morphological(seg.data, struc.ele1, struc.ele2, dpi)
       black.hat <- hat(seg.mor, dpi, watershed.threshold, watershed.adjust)
@@ -1202,6 +1225,7 @@ createServer <- function(input, output, session)
       bor_col <- bor_xy$x - pxmin
       pix <- 255*tdata[bor_row,bor_col][1,]
     }
+    # Calculates the density profile
     if(is.null(calibration$data)){}
       else{
         bor_row <- nrow(tdata) - bor_xy$y + pymin
@@ -1210,18 +1234,29 @@ createServer <- function(input, output, session)
         bor_col <- bor_xy$x - pxmin
         path_pixes<- 255*tdata[bor_row,][1,]
         bor_pix <- 255*tdata[bor_row,bor_col][1,]
-        path_matrix <- 255*tdata[bor_row,][1,]
-        for (i in 1:5){
+        path_matrix <- matrix(data=255*tdata[bor_row,][1,],nrow=1,ncol=length(255*tdata[bor_row,][1,]))
+        if (nrow(tdata) < bor_row[1] + input$pixelspath){
+          top <- nrow(tdata) - bor_row[1] - 1
+        }
+        else{
+          top <- input$pixelspath
+        }
+        if (0 > bor_row[1] - input$pixelspath){
+          bot <- bor_row[1] - 1
+        }
+        else{
+          bot <- input$pixelspath
+        }
+        for (i in 1:min(bot,top)-1){
           path_matrix <- rbind(path_matrix,255*tdata[bor_row+i,][1,])
           path_matrix <- rbind(path_matrix,255*tdata[bor_row-i,][1,])
         }
-        print(colMeans(path_matrix))
+        pathposition$data <- bor_row
         calibration_profile$data <-predict(calibration$data, (colMeans(path_matrix)))
         calibration_profile$data[is.na(calibration_profile$data)] <- 0
         calibration_profile$data <- append(calibration_profile$data,integer(pxmin),0)
         calibration_profile$data <- append(calibration_profile$data,integer(dimcol-pxmax))
       }
-    
     return(bor_xy)
   } 
   readImg <- function(img, img.name, magick.switch = TRUE) {
@@ -1346,6 +1381,7 @@ createServer <- function(input, output, session)
   # Functions listed above are used for shiny app
 
   options(shiny.maxRequestSize = 150*(1024^2))
+  pathposition <- reactiveValues(data = NULL)
   calibration <- reactiveValues(data = NULL)
   calibration_profile <- reactiveValues(data = NULL)
   el_wood <- reactiveValues(x = NULL, y = NULL)
@@ -1746,7 +1782,6 @@ createServer <- function(input, output, session)
       return()
     }
     if(length(path.info$x) >= 1) {
-      calibration$data <- NULL
       el_wood$x <- NULL
       el_wood$y <- NULL
       calibration_profile$data <- NULL
@@ -1998,7 +2033,7 @@ createServer <- function(input, output, session)
     }
   })
     
-  ## run auto detection
+  ## Detect ring borders
   observeEvent(input$button_run_auto, { 
     if (is.null(path.info$df)) {
       et <- 'A path has not been created.'
@@ -2092,6 +2127,7 @@ createServer <- function(input, output, session)
       )
     }  
   })
+  # Detect Early/late borders
   observeEvent(input$button_run_auto_early, { 
     if (is.null(path.info$df)) {
       et <- 'A path has not been created.'
@@ -2191,7 +2227,7 @@ createServer <- function(input, output, session)
       )
     }  
   })
-  
+  # Detect rings for x-ray images
   observeEvent(input$button_run_auto_xray, { 
     if (is.null(path.info$df)) {
       et <- 'A path has not been created.'
@@ -2223,9 +2259,7 @@ createServer <- function(input, output, session)
       struc.ele2 <- c(input$struc.ele2, input$struc.ele2) %>% as.numeric
     }  
     img <- img.file.crop$data
-    print(img)
     imgn <- image_negate(img)
-    print(imgn)
     method <- input$method
     if(input$watershed.threshold == 'custom.waterthr'){
       watershed.threshold <- input$watershed.threshold2
@@ -2738,6 +2772,49 @@ createServer <- function(input, output, session)
     },
     contentType = 'csv'
   )
+  # Export image
+  output$imageCore <- downloadHandler(
+    filename =  function() {
+      if (is.null(img.file$data)) {
+        img.name <- 'Download Fail'
+        return(paste0(img.name, '.png'))
+      } else {
+        img.name <- input$tuid
+      }
+      if (input$image.name != '')
+        img.name <- input$image.name
+      return(paste0(img.name, '.png'))
+    },
+    content = function(filename) {
+      png(filename)
+      plot(img.file.crop$data)
+      dev.off()
+      }
+  )
+  # Export Image from path
+  output$imagePath <- downloadHandler(
+    filename =  function() {
+      if (is.null(img.file$data)) {
+        img.name <- 'Download Fail'
+        return(paste0(img.name, '.png'))
+      } else {
+        img.name <- input$tuid
+      }
+      if (input$imgpath.name != '')
+        img.name <- input$imgpath.name
+      return(paste0(img.name, '.png'))
+    },
+    content = function(filename) {
+      png(filename)
+      y <- path.info$y - crop.offset.xy$y
+      par(mar = c(0, 0, 0, 0), xaxs='i', yaxs='i')
+      plot(img.file.crop$data, ylim = c(y[1]-input$pixelspath, y[1]+input$pixelspath),
+           main = '', xlab = "", ylab = "", cex.main = 1.2)
+      dev.off()
+    }
+  )
+    
+    
   output$RingWidth.xlsx <- downloadHandler(
     filename =  function() {
       if (is.null(img.file$data)) {
@@ -2820,7 +2897,6 @@ createServer <- function(input, output, session)
       } else {
         df.rw <- f.rw(df.loc$data, sample_yr, incline, dpi, h.dis)
         if(!is.null(calibration_profile$data)){
-          print("hi")
           prev = 0
           mean <- vector()
           max <- vector()
@@ -2838,8 +2914,6 @@ createServer <- function(input, output, session)
           df.rw$ring.maxDensity <- max
           df.rw$ring.std <- std
           if (!is.null(el_wood$x)){
-            print(length(el_wood$x))
-            print(nrow(df.loc$data))
             if(length(el_wood$x) != nrow(df.loc$data)){
               showNotification(paste("WARNING: Number or Ring borders is different of number of Early/Late borders, add or remove borders until they are the same length"), duration = 5)
             }
@@ -2882,7 +2956,7 @@ createServer <- function(input, output, session)
         }
         }
           tree_info <- data.frame(tuid, dpi, sample_yr, sample_parcel, sample_site, sample_species)
-          list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info)
+          list_of_datasets <- list("RingData" = df.rw, "TreeInfo" = tree_info, "DensityProfile" = calibration_profile$data)
           write.xlsx(list_of_datasets, file = filename)
       } 
     },
