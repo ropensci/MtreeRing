@@ -82,10 +82,10 @@
 #' t1 <- ring_read(img = img.path, dpi = 1200, plot = FALSE)
 #'
 #' ## Use the arcs of inner rings to calibrate ring-width series:
-#' \donttest{t2 <- pith_measure(t1, inner.arc = TRUE, last.yr = 2016)}
+#' \dontrun{t2 <- pith_measure(t1, inner.arc = TRUE, last.yr = 2016)}
 #' 
 #' ## Try another method to measure ring widths:
-#' \donttest{t3 <- pith_measure(t1, inner.arc = FALSE, last.yr = 2016)}
+#' \dontrun{t3 <- pith_measure(t1, inner.arc = FALSE, last.yr = 2016)}
 
 
 pith_measure <- function(ring.data, inner.arc = TRUE, last.yr = NULL, 
