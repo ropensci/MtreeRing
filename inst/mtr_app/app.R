@@ -11,7 +11,7 @@ library(bmp)
 library(magick)
 library(imager)
 library(dplR)
-library(spatstat)
+library(spatstat.geom)
 library(measuRing)
 library(dplyr)
 

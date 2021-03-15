@@ -5,11 +5,11 @@ MtreeRing
 <!--require(knitr);require(markdown);knit("README.Rmd")-->
 
 
-**Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning_Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei_Xiang15)<br/>
+**Authors:** [Jingning Shi](https://www.researchgate.net/profile/Jingning-Shi), [Wei Xiang](https://www.researchgate.net/profile/Wei-Xiang-11)<br/>
 **License:** [GPL3](https://cran.r-project.org/web/licenses/GPL-3)
 
 <!--pkg badges-->
-[![TravisCI Build Status](https://travis-ci.org/ropensci/MtreeRing.svg?branch=master)](https://travis-ci.org/ropensci/MtreeRing.svg?branch=master)
+[![TravisCI Build Status](https://api.travis-ci.org/ropensci/MtreeRing.svg?branch=master)](https://api.travis-ci.org/ropensci/MtreeRing.svg?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cti7i110hecl8kpf?svg=true)](https://ci.appveyor.com/project/JingningShi/MtreeRing)
 [![codecov](https://codecov.io/github/ropensci/MtreeRing/coverage.svg?branch=master)](https://codecov.io/github/ropensci/MtreeRing?branch=master)
 [![ropensci](https://badges.ropensci.org/287_status.svg)](https://github.com/ropensci/software-review/issues/287)
@@ -61,7 +61,7 @@ After plotting the image, the automatic detection of ring borders can be perform
 t2 <- ring_detect(ring.data = t1, seg = 2, method = 'watershed')
 ```
 
-<center><img src="docs/articles/img/README-img001.png" width = "65%" height = "65%" /></center>
+<center><img src="inst/README-img001.png" width = "65%" height = "65%" /></center>
 <center>Figure 1. The automatic detection of ring borders</center>
 
 ### 3. Calculate ring-width series 
@@ -90,7 +90,7 @@ This command allows to run a Shiny-based application within the system's default
 
 The dashboard has three components: a header, sidebar and body, like this
 
-<img src="docs/articles/img/README-img002.png" width = "85%" height = "85%" />
+<img src="inst/README-img002.png" width = "85%" height = "85%" />
 
 A workflow for the Shiny app can be found at https://ropensci.github.io/MtreeRing/articles/app-MtreeRing.html. Most steps are demonstrated with a gif to make the workflow more understandable.
 
@@ -100,7 +100,7 @@ If an increment borer is used to extract samples, it is well known that the auge
 
 Under such conditions, you can create two paths by setting the argument `incline = TRUE`, or by ticking the checkbox **Inclined tree rings**. See this example.
 
-<img src="docs/articles/img/RingCorrection.png" width = "80%" height = "80%" /> 
+<img src="inst/RingCorrection.png" width = "80%" height = "80%" /> 
 
 The line segment connecting two dots on the same ring should match the tangent of a tree ring border. The corrected ring width is estimated from the distance between adjacent rings and orientation of ring borders.
 

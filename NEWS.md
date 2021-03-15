@@ -1,5 +1,11 @@
 MtreeRing News
 =======
+### MtreeRing 1.4.4 (2021-03-15)
+- Update links in the README file
+
+### MtreeRing 1.4.3 (2021-03-14)
+- Replace ‘spatstat’ with ‘spatstat.geom’ based on feedback from the Spatstat Team
+
 ### MtreeRing 1.4.2 (2019-10-03)
 - Update GitHub links in `ring_app_launch` function
 
