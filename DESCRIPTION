@@ -13,7 +13,7 @@ LazyData: TRUE
 NeedsCompilation: no
 Repository: CRAN, GitHub
 Encoding: UTF-8
-URL: https://github.com/ropensci/MtreeRing
+URL: https://docs.ropensci.org/MtreeRing, https://github.com/ropensci/MtreeRing
 BugReports: https://github.com/ropensci/MtreeRing/issues
 RoxygenNote: 6.1.1
 Language: en-US
