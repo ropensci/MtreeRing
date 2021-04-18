@@ -1,3 +1,4 @@
+
 library(shiny)
 library(shinyWidgets)
 library(shinydashboard)
@@ -15,390 +16,512 @@ library(spatstat.geom)
 library(measuRing)
 library(dplyr)
 
+# define common CSS styles
+style1 = ';font-weight:bolder;font-family:"Times New Roman"'
+style2 = ';font-family:"Times New Roman"'
+
 # Run the application
 createUI <- function()
 {
-  shiny.title <- dashboardHeader(title = 'MtreeRing')
+  shiny.title <- dashboardHeader(
+    title = div(style = paste0('font-size:2vw;', style1), 'MtreeRing'),
+    tags$li(
+      tags$style(".main-header {min-height: 0vw}"),
+      tags$style(".main-header .logo {height: 4vw; line-height:4vw;}"),
+      tags$style(".sidebar-toggle {height: 4vw; min-height:0vw}"),
+      tags$style(".main-header .sidebar-toggle {font-size:1.5vw;
+                 padding:0.8vw 1.5vw 0.8vw 1.5vw}"),
+      tags$style(".navbar {height:4vw}"),
+      tags$style(".main-header .navbar {min-height:0vw}"),
+      tags$style(".main-header .navbar-custom-menu {min-height:0vw}"),
+      tags$style(".main-header .navbar-custom-menu .navbar-nav 
+                 {min-height:0vw}"),
+
+      div(
+        style = 'padding:1.3vw;height:4vw;content-align:center',
+        a(
+          div(
+            style = paste0('font-size:1.4vw;color:white;line-height:0vw', 
+                           style2),
+            span(icon('fas fa-question-circle fa-fw'), 'User Manual')),
+          href = paste0("https://ropensci.github.io/MtreeRing/",
+                        "articles/app-MtreeRing.html"),
+          target = "_blank"
+          
+        )
+      ),
+      
+      class = "dropdown"
+    ),
+    titleWidth = '15vw'
+  )
   shiny.sider <- dashboardSidebar(
+    width = '15vw',
+    tags$style(".left-side, .main-sidebar {padding-top: 4vw}"),
     sidebarMenu(
-      menuItem('Image Loading',tabName = 'input_pre', 
-        icon = icon('folder-open', lib = 'font-awesome'), selected = TRUE),
-      menuItem('Measurement',tabName = 'mea_arg', 
-        icon = icon('gear', lib = 'font-awesome'))
+      menuItem(
+        div(style = paste0('font-size:1.4vw;', style1), 
+            span(icon('fas fa-folder-open fa-fw'), 'Image Loading')),
+        tabName = 'input_pre', selected = TRUE),
+      menuItem(
+        tabName = 'mea_arg', 
+        div(style = paste0('font-size:1.4vw;', style1), 
+            span(icon('fas fa-gear fa-fw'), 'Measurement'))
+      )
     )
   )
   page1 <- fluidRow(
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%; 
-        font-weight: bolder', 'Image Preview'),
+      title = div(style = paste0('font-size:1.5vw', style1), 'Image Preview'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
-      prettyCheckbox(
-        inputId = "wh_ratio", 
-        label = div(style = 'color:black;font-weight: bolder;',
-                    'Maintain original width/height ratio'), 
-        shape = "curve", value = F, status = "success"),
-      hr(),
-      plotOutput('pre.img',
-        brush = brushOpts(
-          id = "plot1_brush",
-          opacity = 0.25,
-          resetOnNew = TRUE)
+      plotOutput(outputId = 'pre.img', height = "25vw",
+        brush = brushOpts(id = "plot1_brush", opacity = 0.25, resetOnNew = TRUE)
       )
-      ), 
+    ), 
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Image Upload'),
+      title = div(style = paste0('font-size:1.5vw', style1), 'Image Upload'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       conditionalPanel(
         condition = '!input.inmethod',
-        fileInput('selectfile', 'Choose an image file',
-          buttonLabel = 'Browse...', width = '80%')
+        div(
+          style = paste0('font-size:1.5vw', style1),
+          fileInput(
+            inputId = 'selectfile', width = '80%',
+            label = 'Choose an image file'
+          )
+        )
       ),
-      prettySwitch(inputId = "magick.switch", label = "Magick ON",
-        value = TRUE, fill = TRUE, status = "success"),
-      helpText('Image upload is limited to 150 MB per file. Supported',
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        prettySwitch(
+          inputId = "magick.switch", value = TRUE, status = "success",
+          label = div(style = 'font-weight:bolder', "Magick ON"))
+      ),
+      helpText('The maximum file size is 100 MB. Supported',
         ' formats include png, jpg, tif and bmp.',
-        style = 'color:black;font-size:90%'),
-      prettyCheckbox(
-        inputId = "inmethod", 
-        label = div(style = 'color:black;font-weight: bolder;','Image Path'), 
-        shape = "curve", value = F, status = "success"),
+        style = paste0(
+          'font-size:1.2vw;text-align:justify;color:black;', style2)),
+      div(
+        style = paste0('font-size:1.3vw', style1),
+        prettyCheckbox(
+          inputId = "inmethod", shape = "curve", value = F, 
+          status = "success", 
+          label = div(style = 'font-weight:bolder', 'Image Path'))
+      ),
       conditionalPanel(
         condition = 'input.inmethod',
-        textInput('enter.path', 'Enter file path', ''),
+        textInput(
+          inputId = 'enter.path', value =  '',
+          label = div(
+            style = paste0('font-size:1.3vw', style1), 'File Path')
+        ),
         helpText('For example: C:/Users/shiny/img01.png',
-          style = 'color:black;font-size:90%'),
+          style = paste0('font-size:1.2vw;color:black;', style2)),
         hr()
+      ),
+      div(
+        style = paste0('font-size:1.3vw;', style1),
+        prettyCheckbox(
+          inputId = "wh_ratio",
+          label = div(style = 'font-weight:bolder', 'Original Aspect Ratio'),
+          shape = "curve", value = F, status = "success")
       ),
       actionButton(
         'buttoninputimage', 'Load ',
         class = "btn btn-primary btn-md",
         icon = icon('upload',  "fa-1x"),
-        style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;'),
+        style = 'color:#FFFFFF;text-align:center;font-family:"Times New Roman";
+        font-weight: bolder;font-size:1.4vw;'),
       useSweetAlert()
-      ),
+    ),
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Image Rotation'),
+      title = div(style = paste0('font-size:1.5vw', style1), 'Image Rotation'),
       width = 3, status = 'primary', solidHeader = T, collapsible = T,
-      prettyRadioButtons(inputId = "rotatede", label = "",
-        choices = c("0 degrees" = "rotate0",
-          "90 degrees" = "rotate90",
-          "180 degrees" = "rotate180",
-          "270 degrees" = "rotate270"),
-        shape = "curve", status = "success",
-        fill = TRUE, inline = TRUE),
-      helpText("Rotation angle in degrees. Note that the bark ",
+      div(
+        style = paste0('font-size:1.3vw', style1),
+        prettyRadioButtons(
+          inputId = "rotatede", label = "",
+          choices = c("0 degrees" = "rotate0",
+                      "90 degrees" = "rotate90",
+                      "180 degrees" = "rotate180",
+                      "270 degrees" = "rotate270"),
+          shape = "curve", status = "success",
+          fill = TRUE, inline = TRUE
+        )
+      ),
+      helpText(
+        "Rotation angle in degrees. Note that the bark ",
         "side should be placed at the left side of the ",
         "graphics window and the pith side at the right.",
-        style = 'color:black;font-size:90%;text-align:justify;'),
+        style = paste0(
+          'font-size:1.2vw;color:black;text-align:justify;', style2)),
       actionButton(
         'buttonrotate', 'Rotate',
         class = "btn btn-primary btn-md",
         icon = icon('repeat',"fa-1x"),
-        style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;')
-      ),
+        style = 'color:#FFFFFF;text-align:center;font-family:"Times New Roman";
+        font-weight: bolder;font-size:1.4vw;')
+    ),
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Image Cropping'),
+      title = div(style = paste0('font-size:1.5vw', style1), 'Image Cropping'),
       width = 3, status = 'primary', solidHeader = T, collapsible = T,
-      helpText("To remove unwanted cores and irrelevant objects, ",
+      helpText(
+        "To remove unwanted cores and irrelevant objects, ",
         "move the mouse to the core you wish to measure and",
         "create a rectangle by brushing, see details below.",
-        style = 'color:black;font-size:90%;text-align:justify;'),
-      prettyRadioButtons(inputId = "cropcondition", label = "",
-        choiceNames = 'UNCROPPED', choiceValues = list('a'),
-        status = "danger", shape = "square",
-        fill = FALSE, inline = FALSE),
-      prettyCheckbox(
-        inputId = "showcropp", 
-        label = div(style = 'color:black;font-weight: bolder;', 'Show Help'),
-        shape = "curve", value = F, status = "success"
-      ),
+        style = paste0(
+          'font-size:1.2vw;color:black;text-align:justify;', style2)),
+      div(
+        style = paste0('font-size:1.3vw', style1),
+        prettyRadioButtons(
+          inputId = "cropcondition", label = "",
+          choiceNames = 'UNCROPPED', choiceValues = list('a'),
+          status = "danger", shape = "square",
+          fill = FALSE, inline = FALSE)),
+      div(
+        style = paste0('font-size:1.3vw', style1),
+        prettyCheckbox(
+          inputId = "showcropp", 
+          label = div(style = 'color:black;font-weight: bolder;', 'Show Help'),
+          shape = "curve", value = F, status = "success")),
       conditionalPanel(
         condition = 'input.showcropp',
         helpText(
           "The operation \"brush\" allows users to create a transparent ", 
           "rectangle on the image and drag it around. For cores scanned ", 
           "side by side, the user can choose a core of interest by brushing.", 
-          style = 'color:black;text-align:justify;'),
+          style = paste0(
+            'font-size:1.2vw;color:black;text-align:justify;', style2)),
         helpText(
           "After brushing, click on the button \"Crop\" to create a",
           " cropped area. The measurement will be performed within", 
           " this area, rather than the whole (uncropped) image.",
-          style = 'color:black;text-align:justify;'),
+          style = paste0(
+            'font-size:1.2vw;color:black;text-align:justify;', style2)),
         helpText(
           "To cancel this operation, click on the button \"Cancel\".",
           " If the transparent rectangle exists, the user should first ",
           "click on the outer region of the rectangle (this will make the",
           " rectangle disappear) and then click on the button \"Cancel\".",
-          style = 'color:#FF0000;text-align:justify;')
+          style = paste0(
+            'font-size:1.2vw;color:black;text-align:justify;', style2))
       ),  
       hr(),
       actionButton(
         'buttoncrop', 'Crop',
         class = "btn btn-primary btn-md",
         icon = icon('crop',"fa-1x"),
-        style = 'color:#FFFFFF;text-align:center;
-        font-weight: bolder;font-size:110%;')
-      )
-      )
+        style = 'color:#FFFFFF;text-align:center;font-family:"Times New Roman";
+        font-weight: bolder;font-size:1.4vw;')
+    )
+  )
   page2.1 <- fluidRow(
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Path Options'), height = "auto",
+      title = div(style = paste0('font-size:1.4vw', style1), 'Path Options'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
-      textInput('tuid', 'Series ID', '', width = '75%'),
-      textInput('dpi', 'DPI', '', '75%'),
-      textInput('sample_yr', 'Sampling year', '', '75%'),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        textInput('tuid', 'Series ID', '', width = '75%')),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        textInput('dpi', 'DPI', '', '75%')),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        textInput('sample_yr', 'Sampling year', '', '75%')),
       # textInput('m_line', 'Y-coordinate of path', '', '75%'),
-      pickerInput(
-        inputId = "sel_sin_mul", 
-        div(
-          style = 'color:black;font-weight:bolder;font-size:90%', 
-          'Path Mode'), 
-        width = '87%',
-        choices = c("Single Segment", "Multi Segments"),
-        options = list(style = "btn-primary")
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        pickerInput(
+          inputId = "sel_sin_mul", label = 'Path Mode', width = '87%',
+          choices = c("Single Segment", "Multi Segments"),
+          options = list(
+            style = "btn-primary"))
       ),
       conditionalPanel(
         condition = 'input.sel_sin_mul == "Single Segment"',
-        prettyCheckbox(
-          inputId = "hor_path", 
-          label = div(
-            style = 'color:black;font-weight: bolder;font-size:90%', 
-            'Horizontal path'), 
-          shape = "curve", value = T, status = "success"
-        )
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          prettyCheckbox(
+            inputId = "hor_path", 
+            label = div(style = 'font-weight:bolder', 'Horizontal path'),
+            shape = "curve", value = T, status = "success"
+          ))
       ),
-      numericInput('num_seg', 
-        div(style = 'color:black;font-weight:bolder;font-size:90%', 
-            'Number of segments'),
+      numericInput(
+        inputId = 'num_seg', 
+        div(style = paste0('font-size:1.2vw', style1), 'Number of segments'),
         value = 1, min = 1, max = 1, step = 1, width = "75%"),
       conditionalPanel(
         condition = 'input.hor_path',
-        prettyCheckbox(
-          inputId = "incline", 
-          label = div(
-            style = 'color:black;font-weight: bolder;font-size:90%', 
-            'Inclined tree rings'), 
-          shape = "curve", value = F, status = "success"
-        ),
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          prettyCheckbox(
+            inputId = "incline", 
+            label = div(
+              style = 'color:black;font-weight: bolder', 
+              'Inclined tree rings'), 
+            shape = "curve", value = F, status = "success")),
         conditionalPanel(
           condition = 'input.incline',
-          numericInput('h.dis', 'Distance between paths (mm)', 
-                       1, 0.1, 30, 0.1, width = '75%')
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            numericInput('h.dis', 'Distance between paths (mm)', 
+                         1, 0.1, 30, 0.1, width = '75%'))
         ) 
       )
-      
     ),
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-        font-weight: bolder', 'Label Options'), height = "auto",
+      title = div(style = paste0('font-size:1.4vw', style1), 'Label Options'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
-      sliderInput('linelwd', 'Path width', 
-        0.2, 3, 1, 0.1, width = '80%'),
-      sliderInput('label.cex', 'Magnification for labels',
-        0.2, 3, 1.5, 0.1, width = '80%'),
-      radioGroupButtons(
-        inputId = "pch", 
-        label = 'Symbol for borders', status = "btn btn-primary btn-md",
-        size = 'sm',
-        choiceNames = list(
-          div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('circle', 'fa-lg')), 
-          div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('circle', 'fa-1x')), 
-          div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('circle-o', 'fa-1x')), 
-          div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('times', 'fa-1x')),
-          div(style = 'color:#FFFFFF;font-weight: bolder;',
-            icon('plus', 'fa-1x'))
-        ),
-        selected = '20', 
-        choiceValues = list('19', '20', '1', '4', '3'),
-        width = '100%'
-      ),
-      colorSelectorInput(
-        inputId = "border.color", label = "Color for borders",
-        choices = c("black", "gray", "white", "red", "#FF6000", 
-          "#FFBF00", "#DFFF00", "#80FF00", "#20FF00", 
-          "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
-          "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
-        selected = '#20FF00', mode = "radio", display_label = FALSE, ncol = 9
-      ),
-      colorSelectorInput(
-        inputId = "label.color", label = "Color for labels",
-        choices = c("black", "gray", "white", "red", "#FF6000", 
-          "#FFBF00", "#DFFF00", "#80FF00", "#20FF00", 
-          "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
-          "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
-        selected = 'black', mode = "radio", display_label = FALSE, ncol = 9
-      )
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        sliderInput('linelwd', 'Path width', 0.1, 3, 1, 0.1, width = '80%')),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        sliderInput('label.cex', 'Magnification for labels',
+          0.1, 3, 1.5, 0.1, width = '80%')),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        radioGroupButtons(
+          inputId = "pch", 
+          label = 'Symbol for borders', status = "btn btn-primary btn-md",
+          size = 'sm',
+          choiceNames = list(
+            div(style = 'color:#FFFFFF;font-weight: bolder;',
+              icon('circle', 'fa-lg')), 
+            div(style = 'color:#FFFFFF;font-weight: bolder;',
+              icon('circle', 'fa-1x')), 
+            div(style = 'color:#FFFFFF;font-weight: bolder;',
+              icon('circle-o', 'fa-1x')), 
+            div(style = 'color:#FFFFFF;font-weight: bolder;',
+              icon('times', 'fa-1x')),
+            div(style = 'color:#FFFFFF;font-weight: bolder;',
+              icon('plus', 'fa-1x'))
+          ),
+          selected = '20', 
+          choiceValues = list('19', '20', '1', '4', '3'),
+          width = '100%'
+        )),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        colorSelectorInput(
+          inputId = "border.color", label = "Color for borders",
+          choices = c("black", "gray", "white", "red", "#FF6000", 
+            "#FFBF00", "#DFFF00", "#80FF00", "#20FF00", 
+            "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
+            "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
+          selected = '#20FF00', mode = "radio", display_label = FALSE, ncol = 9
+        )),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        colorSelectorInput(
+          inputId = "label.color", label = "Color for labels",
+          choices = c("black", "gray", "white", "red", "#FF6000", 
+            "#FFBF00", "#DFFF00", "#80FF00", "#20FF00", 
+            "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
+            "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
+          selected = 'black', mode = "radio", display_label = FALSE, ncol = 9
+        ))
     ),
     box(
-      title = div(style = 'color:#FFFFFF;font-size:80%;
-                  font-weight: bolder', 'Detection Options'),  height = "auto",
+      title = div(
+        style = paste0('font-size:1.4vw', style1), 'Detection Options'), 
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
-      prettyCheckbox(
-        inputId = "isrgb", 
-        label = div(
-          style = 'color:black;;font-size:90%;font-weight:bolder;', 
-          "Default RGB"), 
-        shape = "curve", value = T, status = "success"
-      ),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        prettyCheckbox(
+          inputId = "isrgb", 
+          label = div(
+            style = 'color:black;;font-size:90%;font-weight:bolder;', 
+            "Default RGB"), 
+          shape = "curve", value = T, status = "success"
+        )),
       conditionalPanel(
         condition = '!input.isrgb',
-        textInput('customRGB', 'Custom RGB', '0.299,0.587,0.114'),
-        helpText('Note:The three numbers correspond to',
-                 'R, G and B components,respectively.',
-                 style = 'color:black;font-weight: bolder'),
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          textInput('customRGB', 'Custom RGB', '0.299,0.587,0.114')),
+        helpText(
+          'Note:The three numbers correspond to',
+          'R, G and B components,respectively.',
+          style = paste0(
+            'font-size:1.1vw;color:black;text-align:justify;', style2)),
         hr()
       ),
-      radioGroupButtons(
-        inputId = "method",
-        label = div(style = 'color:black;font-weight: bolder;font-size:85%',
-                    'Ring detection method'),
-        status = "btn btn-primary btn-md",
-        #individual = T,
-        selected = 'canny',
-        size = 'normal',
-        choiceNames = list(
-          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:85%',
-              'Watershed'),
-          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:85%',
-              'Canny'),
-          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:85%',
-              'measuRing')
-        ),
-        choiceValues = list('watershed', 'canny', 'lineardetect'), 
-        width = '100%'
-      ),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        radioGroupButtons(
+          inputId = "method", label = 'Ring detection method', size = 'normal',
+          status = "btn btn-primary btn-md", selected = 'canny', 
+          choiceNames = list(
+            div(style = 'color:#FFFFFF;font-weight: bolder;font-size:1vw',
+                'Watershed'),
+            div(style = 'color:#FFFFFF;font-weight: bolder;font-size:1vw',
+                'Canny'),
+            div(style = 'color:#FFFFFF;font-weight: bolder;font-size:1vw',
+                'measuRing')
+          ),
+          choiceValues = list('watershed', 'canny', 'lineardetect'), 
+          width = '100%'
+        )),
       conditionalPanel(
         condition = 'input.method=="watershed"',
-        selectInput('watershed.threshold',
-                    'Otsu threshold',
-                    c('Auto (Recommended)' = 'auto',
-                      'Custom' = 'custom.waterthr'),
-                    width = '75%'
-        ),
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          selectInput('watershed.threshold',
+                      'Otsu threshold',
+                      c('Auto (Recommended)' = 'auto',
+                        'Custom' = 'custom.waterthr'),
+                      width = '75%')),
         conditionalPanel(
           condition = 'input["watershed.threshold"]=="auto"',
-          sliderInput('watershed.adjust',
-                      'Threshold adjusment factor',
-                      0.5, 1.5, 0.8, 0.05, width = '85%')
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            sliderInput('watershed.adjust',
+                        'Threshold adjusment factor',
+                        0.5, 1.5, 0.8, 0.05, width = '85%'))
         ),
         conditionalPanel(
           condition = 'input["watershed.threshold"]=="custom.waterthr"',
-          textInput('watershed.threshold2', 
-                    'Threshold value', '', width = '75%'),
-          'A value of the form XX% (e.g. 98%)',
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            textInput(
+              'watershed.threshold2', 
+              'Threshold value', '', width = '75%')),
+          helpText(
+            'A value of the form XX% (e.g. 98%)',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)),
           br(),
           br()
         )
       ),
       conditionalPanel(
         condition = 'input.method=="canny"',
-        prettyCheckbox(
-          inputId = "defaultcanny", 
-          label = div(
-            style = 'color:black;font-size:90%;font-weight: bolder;',
-            "Auto threshold (Recommanded)"), 
-          shape = "curve", value = T, status = "success"),
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          prettyCheckbox(
+            inputId = "defaultcanny", 
+            label = div(style = 'color:black;font-weight:bolder;', 
+                        "Auto threshold (Recommanded)"), 
+            shape = "curve", value = T, status = "success")),
         conditionalPanel(
           condition = 'input.defaultcanny',
-          sliderInput('canny.adjust',
-                      'Threshold adjusment factor',
-                      0.8, 1.8, 1.4, 0.05, width = '85%')
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            sliderInput(
+              'canny.adjust', 'Threshold adjusment factor',
+              0.8, 1.8, 1.4, 0.05, width = '85%'))
         ),
         conditionalPanel(
           condition = '!input.defaultcanny',
-          textInput('canny.t2', 'Threshold for strong edges', '', '85%'),
-          textInput('canny.t1', 'Threshold for weak edges', '', '85%')
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            textInput('canny.t2', 'Threshold for strong edges', '', '85%'),
+            textInput('canny.t1', 'Threshold for weak edges', '', '85%'))
         ),
-        sliderInput('canny.smoothing', 'Degree of smoothing',
-                    0, 5, 2, 1, width = '85%')
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          sliderInput('canny.smoothing', 'Degree of smoothing',
+                      0, 5, 2, 1, width = '85%'))
         # numericInput('canny.smoothing', 'Degree of smoothing',
         #   1, 0, 4, 1, width = '75%')
       ),
       conditionalPanel(
         condition = 'input.method!="lineardetect"',
-        prettyCheckbox(inputId = "defaultse", 
-                       label = div(
-                       style = 'color:black;font-size:90%;font-weight:bolder;',
-                       "Default structuring elements"), 
-                       shape = "curve", value = T, status = "success"),
+        div(
+          style = paste0('font-size:1.2vw', style1),
+        prettyCheckbox(
+          inputId = "defaultse", 
+          label = div(style = 'font-weight:bolder', 
+                      "Default structuring elements"), 
+          shape = "curve", value = T, status = "success")),
         conditionalPanel(
           condition = '!input.defaultse',
-          numericInput('struc.ele1', 'First structuring element', 
-                       3, 1, 100, 1, "75%"),
-          numericInput('struc.ele2', 'First structuring element', 
-                       9, 1, 100, 1, "75%")
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            numericInput('struc.ele1', 'First structuring element', 
+                         3, 1, 100, 1, "75%"),
+            numericInput('struc.ele2', 'First structuring element', 
+                         9, 1, 100, 1, "75%"))
         ),
         hr()
       ),
       conditionalPanel(
         condition = 'input.method=="lineardetect"',
-        textInput('origin', ' Origin in smoothed gray', '0', '75%'),
-        'If you use the linear detection, don\'t ',
-        'tick the checkbox "Inclined tree rings".',
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          textInput('origin', ' Origin in smoothed gray', '0', '75%')),
+        helpText(
+          'In this mode, don\'t tick the checkbox "Inclined tree rings".',
+          style = paste0(
+            'font-size:1.1vw;color:black;text-align:justify;', style2)),
         hr()
       ),
-      helpText('Automatic detection may take a few seconds.',
-               # 'depending on the image size and complexity of the sample.',
-               # style = 'color:black;font-size:95%;text-align:justify;')
-               style = 'color:black;font-size:90%;')
+      helpText(
+        # div(
+        #   style = 
+        #     paste0('font-size:1.1vw;color:red;text-align:justify;', style1),
+        #   ''
+        #   ),
+        div(
+          style = 
+            paste0('font-size:1.1vw;color:black;text-align:justify;', style1),
+          'Note: Automatic detection may take a few seconds'
+        )
+      )
     ),
     box(
-      title = div(style = 'color:#FFFFFF;font-size:100%;
-        font-weight: bolder', 'Main Window'),
+      title = div(style = paste0('font-size:1.4vw', style1), 'Main Window'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
-      radioGroupButtons(inputId = "sel_mode", status = "primary",
-        label = 
-          div(style = 'color:black;font-weight: bolder;font-size:110%',
-              'Working mode selector'),
-        choiceNames = list(
-          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
-              'Path Creation'),
-          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
-              'Ring Detection'),
-          div(style = 'color:#FFFFFF;font-weight: bolder;font-size:110%',
-              'Ring Editing')
-        ),
-        # direction = "vertical",
-        choiceValues = list('sel_path', 'sel_det', 'sel_edit')
+      # height = '60vw',
+      div(
+        style = paste0('font-size:1.25vw', style1),
+        radioGroupButtons(inputId = "sel_mode", status = "primary",
+          label = 
+            div(style = 'color:black;font-weight:bolder',
+                'Working mode selector'),
+          choiceNames = list(
+            div(style = 'font-size:1.1vw;font-weight:bolder', 'Path Creation'),
+            div(style = 'font-size:1.1vw;font-weight:bolder', 'Ring Detection'),
+            div(style = 'font-size:1.1vw;font-weight:bolder', 'Ring Editing')
+          ),
+          choiceValues = list('sel_path', 'sel_det', 'sel_edit')
+        )
       ),
       conditionalPanel(
         condition = "input.sel_mode == 'sel_path'",
         actionButton(
           'rm_last', 'Remove Last',
           class = "btn btn-warning btn-md", icon = icon('reply'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+          style = 'color:#FFFFFF;text-align:center;
+          font-family:"Times New Roman";font-weight:bolder;font-size:1.2vw;'
         ),
         useSweetAlert(),
         actionButton(
           'rm_all', 'Remove All',
           class = "btn btn-danger btn-md", icon = icon('trash'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+          style = 'color:#FFFFFF;text-align:center;
+          font-family:"Times New Roman";font-weight:bolder;font-size:1.2vw;'
         ),
         useSweetAlert(),
         br(),
         br(),
-        prettyCheckbox(
-          inputId = "pre_path", 
-          label = div(style = 'color:black;font-weight: bolder;',
-                      'Show the preview path'), 
-          shape = "curve", value = F, status = "success")
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          prettyCheckbox(
+            inputId = "pre_path", 
+            label = div(style = 'color:black;font-weight: bolder;',
+                        'Show the preview path'), 
+            shape = "curve", value = F, status = "success", inline = T))
       ),
       conditionalPanel(
         condition = "input.sel_mode == 'sel_det'",
         actionButton(
           'button_run_auto', 'Run Detection',
           class = "btn btn-success btn-md", icon = icon('play'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+          style = 'color:#FFFFFF;text-align:center;
+          font-family:"Times New Roman";font-weight:bolder;font-size:1.2vw;'
         ),
         useSweetAlert(),
         br(),
@@ -410,42 +533,48 @@ createUI <- function()
           'buttonzoomdel', 'Delete Border',
           class = "btn btn-warning btn-md",
           icon = icon('eraser'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+          style = 'color:#FFFFFF;text-align:center;
+          font-family:"Times New Roman";font-weight:bolder;font-size:1.2vw;'
         ),
         useSweetAlert(),
         actionButton(
           'rm_all_border', 'Remove All',
           class = "btn btn-danger btn-md", icon = icon('trash'),
-          style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+          style = 'color:#FFFFFF;text-align:center;
+          font-family:"Times New Roman";font-weight:bolder;font-size:1.2vw;'
         ),
         useSweetAlert(),
         br(),
         br()
       ),
-      prettyCheckbox(
-        inputId = "wh_ratio2", 
-        label = div(style = 'color:black;font-weight: bolder;',
-                    'Maintain original width/height ratio'), 
-        shape = "curve", value = F, status = "success"),
+      div(
+        style = paste0('font-size:1.2vw', style1),
+        prettyCheckbox(
+          inputId = "wh_ratio2", 
+          label = div(style = 'color:black;font-weight: bolder;',
+                      'Maintain original width/height ratio'), 
+          shape = "curve", value = F, status = "success")),
       hr(),
       fluidPage(
         fluidRow(
-          column(width = 11,
-                 plotOutput('ring_edit', height = "310px",
-                            dblclick = "plot2_dblclick",
-                            brush = brushOpts(
-                              id = "plot2_brush", resetOnNew = TRUE
-                            ),
-                            hover = hoverOpts(
-                              id = "plot2_hover", delay = 300,
-                              delayType = "debounce"
-                            )
-                 )
+          column(
+            width = 11,
+            plotOutput(
+              'ring_edit', height = "25vw",
+              dblclick = "plot2_dblclick",
+              brush = brushOpts(
+                id = "plot2_brush", resetOnNew = TRUE
+              ),
+              hover = hoverOpts(
+                id = "plot2_hover", delay = 300,
+                delayType = "debounce"
+              )
+            )
           ),
           column(width = 1,
                  br(), br(),
                  noUiSliderInput(
-                   width = "100px", height = "250px",
+                   width = "100px", height = "20vw",
                    inputId = "img_ver", label = NULL, tooltips = F,
                    min = 0, max = 1000, step = 10,
                    value = c(0, 1000), margin = 10,
@@ -472,146 +601,182 @@ createUI <- function()
       conditionalPanel(
         condition = '!input.tuheader',
         box(
-          title = div(style = 'color:#FFFFFF;font-size:80%;
-            font-weight: bolder', 'Delete Borders'),
+          title = div(
+            style = paste0('font-size:1.4vw', style1), 'Delete Borders'),
           width = 3, status = 'primary', solidHeader = T, collapsible = T,
           conditionalPanel(
             condition = 'input.incline',
-            textInput('del.u', 'Border number in the upper portion', '', '75%'),
-            textInput('del.l', 'Border number in the lower portion', '', '75%')
+            div(
+              style = paste0('font-size:1.2vw', style1),
+              textInput('del.u', 'Border number in the upper portion', 
+                        '', '75%'),
+              textInput('del.l', 'Border number in the lower portion', 
+                        '', '75%'))
           ),
           conditionalPanel(
             condition = '!input.incline',
-            textInput('del', 'Border number', '', '75%')
+            div(
+              style = paste0('font-size:1.2vw', style1),
+              textInput('del', 'Border number', '', '75%'))
           ),
           helpText(
             "To perform a mass deletion of ring borders, use commas ",
             "to separate border numbers, e.g. 1, 2, 3, 4",
-            style = 'color:black;text-align:justify;'
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)
           ),
           br(),
           br(),
           actionButton(
             'button_del', 'Delete Border',
             class = "btn btn-danger btn-md", icon = icon('eraser'),
-            style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+            style = 'color:#FFFFFF;text-align:center;font-size:1.2vw;
+            font-family:"Times New Roman";font-weight: bolder;'
           )
         )
       ),
       tabBox(
         #title = tagList(shiny::icon("gear"), 'Output'),
-        title = div(
-          style = 'color:black;font-weight: bolder;',
+        title = div(style = paste0('font-size:1.4vw', style1), 
           icon('cog', class = 'fa-spin', lib = 'font-awesome'), 'Output'),
         width = 6,
         tabPanel(
-          div(style = 'color:black;font-weight: bolder;',
+          div(style = paste0('font-size:1.2vw', style1), 
             icon('list-ol', 'fa-1x'), ' Results'),
           #HTML("<p style = 'color:black;'><b>Results</b></p>"),
           actionButton(
             'button_results', 'Generate Series',
             class = "btn btn-primary btn-md",
-            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+            style = 'color:#FFFFFF;text-align:center;font-size:1.2vw;
+            font-family:"Times New Roman";font-weight:bolder;'
           ),
           useSweetAlert(),
           actionButton(
             'button_hide', 'Hide Series',
             class = "btn btn-primary btn-md",
-            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+            style = 'color:#FFFFFF;text-align:center;font-size:1.2vw;
+            font-family:"Times New Roman";font-weight:bolder;'
           ),
           useSweetAlert(),
           br(),
           tableOutput('results')
         ),
         tabPanel(
-          div(style = 'color:black;font-weight: bolder;',
+          div(style = paste0('font-size:1.2vw', style1), 
             icon('arrow-down', 'fa-1x'), ' CSV'
           ),
-          textInput('csv.name', 'Name of the csv file', '', width = '50%'),
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            textInput('csv.name', 'Name of the csv file', '', width = '50%')),
           helpText(
-            style = 'color:black;font-weight: normal;',
             'The filename extension is not required. ',
-            'Leave blank to use the current series ID.'
+            'Leave blank to use the current series ID.',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)
           ),
           helpText(
-            style = 'color:#FF0000;font-weight: normal;',
             'Attention: if running the app within an RStudio window',
             ', the rename operation doesn\'t work. Please run the app',
-            ' within a browser.'
+            ' within a browser.',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)
           ),
           hr(),
           #HTML("<p style = 'color:black;'><b>CSV</b></p>"),
           downloadButton(
             'RingWidth.csv', 'Download CSV',
             class = "btn btn-primary btn-md",
-            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+            style = 'color:#FFFFFF;text-align:center;font-size:1.2vw;
+            font-family:"Times New Roman";font-weight:bolder;'
           )
         ),
         tabPanel(
-          div(style = 'color:black;font-weight: bolder;',
+          div(style = paste0('font-size:1.2vw', style1), 
             icon('arrow-down', 'fa-1x'), ' RWL'),
-          textInput('rwl.name', 'Name of the rwl file', '', width = '50%'),
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            textInput('rwl.name', 'Name of the rwl file', '', width = '50%')),
           helpText(style = 'color:black;font-weight: normal;',
             'The filename extension is not required. ',
-            ' Leave blank to use the current series ID.'),
+            ' Leave blank to use the current series ID.',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)),
           helpText(style = 'color:#FF0000;font-weight: normal;',
             'Attention: if running the app within an RStudio window',
             ', the rename operation doesn\'t work. Please run the app',
-            ' within a browser.'),
+            ' within a browser.',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)),
           hr(),
-          selectInput('tuprec', 'Precision of the rwl file',
-            c('0.01' = '0.01', '0.001' = '0.001'),
-            selected = '0.01', width = '50%'),
-          helpText(style = 'color:black;font-weight: normal;', 
-            'Units are in mm.'),
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            selectInput('tuprec', 'Precision of the rwl file',
+              c('0.01' = '0.01', '0.001' = '0.001'),
+              selected = '0.01', width = '50%')),
+          helpText(
+            'Units are in mm.',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)),
           hr(),
-          checkboxInput('tuheader', 'Header of the File', F),
+          div(
+            style = paste0('font-size:1.2vw', style1),
+            checkboxInput('tuheader', 'Header of the File', F)),
           conditionalPanel(  
             condition = 'input.tuheader',
             actionButton(
               'reset.hdr', 'Reset Header',
               class = "btn btn-danger btn-md",
               icon = icon('trash'),
-              style = 'color:#FFFFFF;text-align:center;font-weight: bolder'
+              style = 'color:#FFFFFF;text-align:center;font-size:1.2vw;
+            font-family:"Times New Roman";font-weight:bolder;'
             )
           ),
           helpText(style = 'color:black;font-weight: normal;',
             'For more details about the header, please', 
             'read reference manual of the R package dplR.', 
-            'The output file is Tucson format.'),
+            'The output file is Tucson format.',
+            style = paste0(
+              'font-size:1.1vw;color:black;text-align:justify;', style2)),
           hr(),
           #HTML("<p style = 'color:black;'><b>RWL</b></p>"),
           downloadButton(
             'RingWidth.rwl', 'Download RWL',
             class = "btn btn-primary btn-md",
-            style = 'color:#FFFFFF;text-align:center;font-weight:bolder;'
+            style = 'color:#FFFFFF;text-align:center;font-size:1.2vw;
+            font-family:"Times New Roman";font-weight:bolder;'
           )
         )
       ),
       conditionalPanel(  
         condition = 'input.tuheader',
-        box(
-          title = 'Header',width = 3, 
-          status = 'primary', solidHeader = T, collapsible = T,
-          textInput('tuhdr1', 'Site ID', ''),
-          textInput('tuhdr2', 'Site Name', ''),
-          textInput('tuhdr3', 'Species Code', ''),
-          textInput('tuhdr4', 'State or Country', ''),
-          textInput('tuhdr5', 'Species', ''),
-          textInput('tuhdr6', 'Elevation', '')
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          box(
+            title = 'Header',width = 3, 
+            status = 'primary', solidHeader = T, collapsible = T,
+            textInput('tuhdr1', 'Site ID', ''),
+            textInput('tuhdr2', 'Site Name', ''),
+            textInput('tuhdr3', 'Species Code', ''),
+            textInput('tuhdr4', 'State or Country', ''),
+            textInput('tuhdr5', 'Species', ''),
+            textInput('tuhdr6', 'Elevation', '')
+          )
         )
       ),   
       conditionalPanel(  
         condition = 'input.tuheader',
-        box(
-          title = 'Header',width = 3, 
-          status = 'primary', solidHeader = T, collapsible = T,
-          textInput('tuhdr7', 'Latitude', ''),
-          textInput('tuhdr8', 'Longitude', ''),
-          textInput('tuhdr9', 'First Year', ''),
-          textInput('tuhdr10', 'Last Year', ''),
-          textInput('tuhdr11', 'Lead Investigator', ''),
-          textInput('tuhdr12', 'Completion Date', '')
+        div(
+          style = paste0('font-size:1.2vw', style1),
+          box(
+            title = 'Header',width = 3, 
+            status = 'primary', solidHeader = T, collapsible = T,
+            textInput('tuhdr7', 'Latitude', ''),
+            textInput('tuhdr8', 'Longitude', ''),
+            textInput('tuhdr9', 'First Year', ''),
+            textInput('tuhdr10', 'Last Year', ''),
+            textInput('tuhdr11', 'Lead Investigator', ''),
+            textInput('tuhdr12', 'Completion Date', '')
+          )
         )
       )   
     )
@@ -1123,7 +1288,7 @@ createServer <- function(input, output, session)
   }
   # Functions listed above are used for shiny app
   
-  options(shiny.maxRequestSize = 150*(1024^2))
+  options(shiny.maxRequestSize = 100*(1024^2))
   
   img.file <- reactiveValues(data = NULL)
   img.file.crop <- reactiveValues(data = NULL)
