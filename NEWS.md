@@ -1,5 +1,8 @@
 MtreeRing News
 =======
+### MtreeRing 1.4.5 (2021-04-20)
+- Update CSS styles of the app
+
 ### MtreeRing 1.4.4 (2021-03-15)
 - Update links in the README file
 
