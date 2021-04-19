@@ -1,4 +1,3 @@
-
 library(shiny)
 library(shinyWidgets)
 library(shinydashboard)
@@ -18,13 +17,14 @@ library(dplyr)
 
 # define common CSS styles
 style1 = ';font-weight:bolder;font-family:"Times New Roman"'
-style2 = ';font-family:"Times New Roman"'
+style1 = ';font-family:"Times New Roman"'
 
 # Run the application
 createUI <- function()
 {
   shiny.title <- dashboardHeader(
-    title = div(style = paste0('font-size:2vw;', style1), 'MtreeRing'),
+    title = div(style = paste0('font-size:2vw;font-weight:bolder;', 
+                               style1), 'MtreeRing'),
     tags$li(
       tags$style(".main-header {min-height: 0vw}"),
       tags$style(".main-header .logo {height: 4vw; line-height:4vw;}"),
@@ -41,8 +41,9 @@ createUI <- function()
         style = 'padding:1.3vw;height:4vw;content-align:center',
         a(
           div(
-            style = paste0('font-size:1.4vw;color:white;line-height:0vw', 
-                           style2),
+            style = paste0(
+              'font-weight:bolder;font-size:1.4vw;color:white;line-height:0vw', 
+                           style1),
             span(icon('fas fa-question-circle fa-fw'), 'User Manual')),
           href = paste0("https://ropensci.github.io/MtreeRing/",
                         "articles/app-MtreeRing.html"),
@@ -60,7 +61,7 @@ createUI <- function()
     tags$style(".left-side, .main-sidebar {padding-top: 4vw}"),
     sidebarMenu(
       menuItem(
-        div(style = paste0('font-size:1.4vw;', style1), 
+        div(style = paste0('font-size:1.4vw', style1), 
             span(icon('fas fa-folder-open fa-fw'), 'Image Loading')),
         tabName = 'input_pre', selected = TRUE),
       menuItem(
@@ -72,14 +73,20 @@ createUI <- function()
   )
   page1 <- fluidRow(
     box(
-      title = div(style = paste0('font-size:1.5vw', style1), 'Image Preview'),
+      title = div(style = paste0('font-size:1.5vw;font-weight:bolder', 
+                                 style1), 'Image Preview'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
       plotOutput(outputId = 'pre.img', height = "25vw",
         brush = brushOpts(id = "plot1_brush", opacity = 0.25, resetOnNew = TRUE)
       )
     ), 
+    tags$li(
+      tags$style(".progress {height:18px;margin-bottom: 0px}"),
+      tags$style(".progress-bar {line-height:18px; font-size: 15px}")
+    ),
     box(
-      title = div(style = paste0('font-size:1.5vw', style1), 'Image Upload'),
+      title = div(style = paste0('font-size:1.5vw;font-weight:bolder', 
+                                 style1), 'Image Upload'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       conditionalPanel(
         condition = '!input.inmethod',
@@ -100,7 +107,7 @@ createUI <- function()
       helpText('The maximum file size is 100 MB. Supported',
         ' formats include png, jpg, tif and bmp.',
         style = paste0(
-          'font-size:1.2vw;text-align:justify;color:black;', style2)),
+          'font-size:1.2vw;color:black;font-weight:bolder', style1)),
       div(
         style = paste0('font-size:1.3vw', style1),
         prettyCheckbox(
@@ -116,7 +123,8 @@ createUI <- function()
             style = paste0('font-size:1.3vw', style1), 'File Path')
         ),
         helpText('For example: C:/Users/shiny/img01.png',
-          style = paste0('font-size:1.2vw;color:black;', style2)),
+          style = paste0('font-size:1.2vw;color:black;font-weight:bolder;', 
+                         style1)),
         hr()
       ),
       div(
@@ -135,7 +143,8 @@ createUI <- function()
       useSweetAlert()
     ),
     box(
-      title = div(style = paste0('font-size:1.5vw', style1), 'Image Rotation'),
+      title = div(style = paste0('font-size:1.5vw;font-weight:bolder', 
+                                 style1), 'Image Rotation'),
       width = 3, status = 'primary', solidHeader = T, collapsible = T,
       div(
         style = paste0('font-size:1.3vw', style1),
@@ -150,11 +159,12 @@ createUI <- function()
         )
       ),
       helpText(
-        "Rotation angle in degrees. Note that the bark ",
+        "Rotation angle in degrees. The bark ",
         "side should be placed at the left side of the ",
         "graphics window and the pith side at the right.",
         style = paste0(
-          'font-size:1.2vw;color:black;text-align:justify;', style2)),
+          'font-size:1.2vw;color:black;text-align:justify;font-weight:bolder;',
+          style1)),
       actionButton(
         'buttonrotate', 'Rotate',
         class = "btn btn-primary btn-md",
@@ -163,14 +173,16 @@ createUI <- function()
         font-weight: bolder;font-size:1.4vw;')
     ),
     box(
-      title = div(style = paste0('font-size:1.5vw', style1), 'Image Cropping'),
+      title = div(style = paste0('font-size:1.5vw;font-weight:bolder', 
+                                 style1), 'Image Cropping'),
       width = 3, status = 'primary', solidHeader = T, collapsible = T,
       helpText(
         "To remove unwanted cores and irrelevant objects, ",
         "move the mouse to the core you wish to measure and",
         "create a rectangle by brushing, see details below.",
         style = paste0(
-          'font-size:1.2vw;color:black;text-align:justify;', style2)),
+          'font-size:1.2vw;color:black;text-align:justify;font-weight:bolder;',
+          style1)),
       div(
         style = paste0('font-size:1.3vw', style1),
         prettyRadioButtons(
@@ -191,20 +203,23 @@ createUI <- function()
           "rectangle on the image and drag it around. For cores scanned ", 
           "side by side, the user can choose a core of interest by brushing.", 
           style = paste0(
-            'font-size:1.2vw;color:black;text-align:justify;', style2)),
+            'font-size:1.2vw;color:black;text-align:justify;
+            font-weight:bolder;', style1)),
         helpText(
           "After brushing, click on the button \"Crop\" to create a",
           " cropped area. The measurement will be performed within", 
           " this area, rather than the whole (uncropped) image.",
           style = paste0(
-            'font-size:1.2vw;color:black;text-align:justify;', style2)),
+            'font-size:1.2vw;color:black;text-align:justify;
+            font-weight:bolder;', style1)),
         helpText(
           "To cancel this operation, click on the button \"Cancel\".",
           " If the transparent rectangle exists, the user should first ",
           "click on the outer region of the rectangle (this will make the",
           " rectangle disappear) and then click on the button \"Cancel\".",
           style = paste0(
-            'font-size:1.2vw;color:black;text-align:justify;', style2))
+            'font-size:1.2vw;color:black;text-align:justify;
+            font-weight:bolder;', style1))
       ),  
       hr(),
       actionButton(
@@ -217,30 +232,25 @@ createUI <- function()
   )
   page2.1 <- fluidRow(
     box(
-      title = div(style = paste0('font-size:1.4vw', style1), 'Path Options'),
+      title = div(style = paste0('font-size:1.4vw;font-weight:bolder', 
+                                 style1), 'Path Options'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       div(
-        style = paste0('font-size:1.2vw', style1),
-        textInput('tuid', 'Series ID', '', width = '75%')),
-      div(
-        style = paste0('font-size:1.2vw', style1),
-        textInput('dpi', 'DPI', '', '75%')),
-      div(
-        style = paste0('font-size:1.2vw', style1),
-        textInput('sample_yr', 'Sampling year', '', '75%')),
-      # textInput('m_line', 'Y-coordinate of path', '', '75%'),
-      div(
-        style = paste0('font-size:1.2vw', style1),
+        style = paste0('font-size:1.2vw;color:black;', style1),
+        textInput('tuid', 'Series ID', '', width = '75%'),
+        textInput('dpi', 'DPI', '', '75%'),
+        textInput('sample_yr', 'Sampling year', '', '75%'),
         pickerInput(
           inputId = "sel_sin_mul", label = 'Path Mode', width = '87%',
           choices = c("Single Segment", "Multi Segments"),
           options = list(
             style = "btn-primary"))
       ),
+      # textInput('m_line', 'Y-coordinate of path', '', '75%'),
       conditionalPanel(
         condition = 'input.sel_sin_mul == "Single Segment"',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           prettyCheckbox(
             inputId = "hor_path", 
             label = div(style = 'font-weight:bolder', 'Horizontal path'),
@@ -249,7 +259,8 @@ createUI <- function()
       ),
       numericInput(
         inputId = 'num_seg', 
-        div(style = paste0('font-size:1.2vw', style1), 'Number of segments'),
+        div(style = paste0('font-size:1.2vw;color:black;', style1), 
+            'Number of segments'),
         value = 1, min = 1, max = 1, step = 1, width = "75%"),
       conditionalPanel(
         condition = 'input.hor_path',
@@ -271,17 +282,14 @@ createUI <- function()
       )
     ),
     box(
-      title = div(style = paste0('font-size:1.4vw', style1), 'Label Options'),
+      title = div(style = paste0('font-size:1.4vw;font-weight:bolder', 
+                                 style1), 'Label Options'),
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       div(
-        style = paste0('font-size:1.2vw', style1),
-        sliderInput('linelwd', 'Path width', 0.1, 3, 1, 0.1, width = '80%')),
-      div(
-        style = paste0('font-size:1.2vw', style1),
+        style = paste0('font-size:1.2vw;color:black;', style1),
+        sliderInput('linelwd', 'Path width', 0.1, 3, 1, 0.1, width = '80%'),
         sliderInput('label.cex', 'Magnification for labels',
-          0.1, 3, 1.5, 0.1, width = '80%')),
-      div(
-        style = paste0('font-size:1.2vw', style1),
+          0.1, 3, 1.5, 0.1, width = '80%'),
         radioGroupButtons(
           inputId = "pch", 
           label = 'Symbol for borders', status = "btn btn-primary btn-md",
@@ -301,9 +309,7 @@ createUI <- function()
           selected = '20', 
           choiceValues = list('19', '20', '1', '4', '3'),
           width = '100%'
-        )),
-      div(
-        style = paste0('font-size:1.2vw', style1),
+        ),
         colorSelectorInput(
           inputId = "border.color", label = "Color for borders",
           choices = c("black", "gray", "white", "red", "#FF6000", 
@@ -311,9 +317,7 @@ createUI <- function()
             "#00FF40", "#00FF9F", "cyan", "#009FFF", "#0040FF",
             "#2000FF", "#8000FF", "#DF00FF", "#FF00BF"),
           selected = '#20FF00', mode = "radio", display_label = FALSE, ncol = 9
-        )),
-      div(
-        style = paste0('font-size:1.2vw', style1),
+        ),
         colorSelectorInput(
           inputId = "label.color", label = "Color for labels",
           choices = c("black", "gray", "white", "red", "#FF6000", 
@@ -325,31 +329,33 @@ createUI <- function()
     ),
     box(
       title = div(
-        style = paste0('font-size:1.4vw', style1), 'Detection Options'), 
+        style = paste0('font-size:1.4vw;font-weight:bolder', style1), 
+        'Detection Options'), 
       width = 4, status = 'primary', solidHeader = T, collapsible = T,
       div(
         style = paste0('font-size:1.2vw', style1),
         prettyCheckbox(
           inputId = "isrgb", 
           label = div(
-            style = 'color:black;;font-size:90%;font-weight:bolder;', 
+            style = 'color:black;font-size:90%;font-weight:bolder;', 
             "Default RGB"), 
           shape = "curve", value = T, status = "success"
         )),
       conditionalPanel(
         condition = '!input.isrgb',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           textInput('customRGB', 'Custom RGB', '0.299,0.587,0.114')),
         helpText(
           'Note:The three numbers correspond to',
           'R, G and B components,respectively.',
           style = paste0(
-            'font-size:1.1vw;color:black;text-align:justify;', style2)),
+            'font-size:1.1vw;color:black;text-align:justify;
+            font-weight:bolder;', style1)),
         hr()
       ),
       div(
-        style = paste0('font-size:1.2vw', style1),
+        style = paste0('font-size:1.2vw;color:black;', style1),
         radioGroupButtons(
           inputId = "method", label = 'Ring detection method', size = 'normal',
           status = "btn btn-primary btn-md", selected = 'canny', 
@@ -367,7 +373,7 @@ createUI <- function()
       conditionalPanel(
         condition = 'input.method=="watershed"',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           selectInput('watershed.threshold',
                       'Otsu threshold',
                       c('Auto (Recommended)' = 'auto',
@@ -376,7 +382,7 @@ createUI <- function()
         conditionalPanel(
           condition = 'input["watershed.threshold"]=="auto"',
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             sliderInput('watershed.adjust',
                         'Threshold adjusment factor',
                         0.5, 1.5, 0.8, 0.05, width = '85%'))
@@ -384,14 +390,15 @@ createUI <- function()
         conditionalPanel(
           condition = 'input["watershed.threshold"]=="custom.waterthr"',
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             textInput(
               'watershed.threshold2', 
               'Threshold value', '', width = '75%')),
           helpText(
             'A value of the form XX% (e.g. 98%)',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)),
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)),
           br(),
           br()
         )
@@ -399,7 +406,7 @@ createUI <- function()
       conditionalPanel(
         condition = 'input.method=="canny"',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           prettyCheckbox(
             inputId = "defaultcanny", 
             label = div(style = 'color:black;font-weight:bolder;', 
@@ -408,7 +415,7 @@ createUI <- function()
         conditionalPanel(
           condition = 'input.defaultcanny',
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             sliderInput(
               'canny.adjust', 'Threshold adjusment factor',
               0.8, 1.8, 1.4, 0.05, width = '85%'))
@@ -416,12 +423,12 @@ createUI <- function()
         conditionalPanel(
           condition = '!input.defaultcanny',
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             textInput('canny.t2', 'Threshold for strong edges', '', '85%'),
             textInput('canny.t1', 'Threshold for weak edges', '', '85%'))
         ),
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           sliderInput('canny.smoothing', 'Degree of smoothing',
                       0, 5, 2, 1, width = '85%'))
         # numericInput('canny.smoothing', 'Degree of smoothing',
@@ -430,16 +437,16 @@ createUI <- function()
       conditionalPanel(
         condition = 'input.method!="lineardetect"',
         div(
-          style = paste0('font-size:1.2vw', style1),
-        prettyCheckbox(
-          inputId = "defaultse", 
-          label = div(style = 'font-weight:bolder', 
-                      "Default structuring elements"), 
-          shape = "curve", value = T, status = "success")),
+          style = paste0('font-size:1.2vw;color:black;', style1),
+          prettyCheckbox(
+            inputId = "defaultse", 
+            label = div(style = 'font-weight:bolder', 
+                        "Default structuring elements"), 
+            shape = "curve", value = T, status = "success")),
         conditionalPanel(
           condition = '!input.defaultse',
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             numericInput('struc.ele1', 'First structuring element', 
                          3, 1, 100, 1, "75%"),
             numericInput('struc.ele2', 'First structuring element', 
@@ -450,12 +457,13 @@ createUI <- function()
       conditionalPanel(
         condition = 'input.method=="lineardetect"',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           textInput('origin', ' Origin in smoothed gray', '0', '75%')),
         helpText(
           'In this mode, don\'t tick the checkbox "Inclined tree rings".',
           style = paste0(
-            'font-size:1.1vw;color:black;text-align:justify;', style2)),
+            'font-size:1.1vw;color:black;text-align:justify;
+            font-weight:bolder;', style1)),
         hr()
       ),
       helpText(
@@ -466,13 +474,14 @@ createUI <- function()
         #   ),
         div(
           style = 
-            paste0('font-size:1.1vw;color:black;text-align:justify;', style1),
-          'Note: Automatic detection may take a few seconds'
+            paste0('font-size:1.1vw;color:black;font-weight:bolder;', style1),
+          'Automatic detection may take a few seconds'
         )
       )
     ),
     box(
-      title = div(style = paste0('font-size:1.4vw', style1), 'Main Window'),
+      title = div(style = paste0('font-size:1.4vw;font-weight:bolder', 
+                                 style1), 'Main Window'),
       width = 12, status = 'primary', solidHeader = T, collapsible = T,
       # height = '60vw',
       div(
@@ -552,7 +561,7 @@ createUI <- function()
         prettyCheckbox(
           inputId = "wh_ratio2", 
           label = div(style = 'color:black;font-weight: bolder;',
-                      'Maintain original width/height ratio'), 
+                      'Original Aspect Ratio'), 
           shape = "curve", value = F, status = "success")),
       hr(),
       fluidPage(
@@ -560,7 +569,7 @@ createUI <- function()
           column(
             width = 11,
             plotOutput(
-              'ring_edit', height = "25vw",
+              'ring_edit', height = "20vw",
               dblclick = "plot2_dblclick",
               brush = brushOpts(
                 id = "plot2_brush", resetOnNew = TRUE
@@ -574,7 +583,7 @@ createUI <- function()
           column(width = 1,
                  br(), br(),
                  noUiSliderInput(
-                   width = "100px", height = "20vw",
+                   width = "100px", height = "13vw",
                    inputId = "img_ver", label = NULL, tooltips = F,
                    min = 0, max = 1000, step = 10,
                    value = c(0, 1000), margin = 10,
@@ -602,12 +611,13 @@ createUI <- function()
         condition = '!input.tuheader',
         box(
           title = div(
-            style = paste0('font-size:1.4vw', style1), 'Delete Borders'),
+            style = paste0('font-size:1.4vw;font-weight:bolder', style1), 
+            'Delete Borders'),
           width = 3, status = 'primary', solidHeader = T, collapsible = T,
           conditionalPanel(
             condition = 'input.incline',
             div(
-              style = paste0('font-size:1.2vw', style1),
+              style = paste0('font-size:1.2vw;color:black;', style1),
               textInput('del.u', 'Border number in the upper portion', 
                         '', '75%'),
               textInput('del.l', 'Border number in the lower portion', 
@@ -616,14 +626,15 @@ createUI <- function()
           conditionalPanel(
             condition = '!input.incline',
             div(
-              style = paste0('font-size:1.2vw', style1),
+              style = paste0('font-size:1.2vw;color:black;', style1),
               textInput('del', 'Border number', '', '75%'))
           ),
           helpText(
             "To perform a mass deletion of ring borders, use commas ",
             "to separate border numbers, e.g. 1, 2, 3, 4",
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)
           ),
           br(),
           br(),
@@ -637,11 +648,13 @@ createUI <- function()
       ),
       tabBox(
         #title = tagList(shiny::icon("gear"), 'Output'),
-        title = div(style = paste0('font-size:1.4vw', style1), 
+        title = div(style = paste0('font-size:1.4vw;color:black;
+                                   font-weight:bolder;', style1), 
           icon('cog', class = 'fa-spin', lib = 'font-awesome'), 'Output'),
         width = 6,
         tabPanel(
-          div(style = paste0('font-size:1.2vw', style1), 
+          div(style = paste0('font-size:1.2vw;color:black;
+                             font-weight:bolder;', style1), 
             icon('list-ol', 'fa-1x'), ' Results'),
           #HTML("<p style = 'color:black;'><b>Results</b></p>"),
           actionButton(
@@ -662,24 +675,27 @@ createUI <- function()
           tableOutput('results')
         ),
         tabPanel(
-          div(style = paste0('font-size:1.2vw', style1), 
+          div(style = paste0('font-size:1.2vw;color:black;
+                             font-weight:bolder;', style1), 
             icon('arrow-down', 'fa-1x'), ' CSV'
           ),
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             textInput('csv.name', 'Name of the csv file', '', width = '50%')),
           helpText(
             'The filename extension is not required. ',
             'Leave blank to use the current series ID.',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)
           ),
           helpText(
             'Attention: if running the app within an RStudio window',
             ', the rename operation doesn\'t work. Please run the app',
             ' within a browser.',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)
           ),
           hr(),
           #HTML("<p style = 'color:black;'><b>CSV</b></p>"),
@@ -691,35 +707,39 @@ createUI <- function()
           )
         ),
         tabPanel(
-          div(style = paste0('font-size:1.2vw', style1), 
+          div(style = paste0('font-size:1.2vw;color:black;
+                             font-weight:bolder;', style1), 
             icon('arrow-down', 'fa-1x'), ' RWL'),
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             textInput('rwl.name', 'Name of the rwl file', '', width = '50%')),
-          helpText(style = 'color:black;font-weight: normal;',
+          helpText(
             'The filename extension is not required. ',
             ' Leave blank to use the current series ID.',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)),
-          helpText(style = 'color:#FF0000;font-weight: normal;',
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)),
+          helpText(
             'Attention: if running the app within an RStudio window',
             ', the rename operation doesn\'t work. Please run the app',
             ' within a browser.',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)),
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)),
           hr(),
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             selectInput('tuprec', 'Precision of the rwl file',
               c('0.01' = '0.01', '0.001' = '0.001'),
               selected = '0.01', width = '50%')),
           helpText(
             'Units are in mm.',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)),
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)),
           hr(),
           div(
-            style = paste0('font-size:1.2vw', style1),
+            style = paste0('font-size:1.2vw;color:black;', style1),
             checkboxInput('tuheader', 'Header of the File', F)),
           conditionalPanel(  
             condition = 'input.tuheader',
@@ -731,12 +751,13 @@ createUI <- function()
             font-family:"Times New Roman";font-weight:bolder;'
             )
           ),
-          helpText(style = 'color:black;font-weight: normal;',
+          helpText(
             'For more details about the header, please', 
             'read reference manual of the R package dplR.', 
             'The output file is Tucson format.',
             style = paste0(
-              'font-size:1.1vw;color:black;text-align:justify;', style2)),
+              'font-size:1.1vw;color:black;text-align:justify;
+              font-weight:bolder;', style1)),
           hr(),
           #HTML("<p style = 'color:black;'><b>RWL</b></p>"),
           downloadButton(
@@ -750,7 +771,7 @@ createUI <- function()
       conditionalPanel(  
         condition = 'input.tuheader',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           box(
             title = 'Header',width = 3, 
             status = 'primary', solidHeader = T, collapsible = T,
@@ -766,7 +787,7 @@ createUI <- function()
       conditionalPanel(  
         condition = 'input.tuheader',
         div(
-          style = paste0('font-size:1.2vw', style1),
+          style = paste0('font-size:1.2vw;color:black;', style1),
           box(
             title = 'Header',width = 3, 
             status = 'primary', solidHeader = T, collapsible = T,
