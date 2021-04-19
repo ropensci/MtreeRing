@@ -9,7 +9,6 @@ Suggests: testthat, knitr, shinytest, mockery, spelling
 Imports: magrittr (>= 1.5), png, jpeg, tiff, bmp, magick, imager, dplR, spatstat.geom, measuRing, shiny, dplyr, shinydashboard, shinyWidgets
 Description: Use morphological image processing and edge detection algorithms to automatically measure tree ring widths on digital images. Users can also manually mark tree rings on species with complex anatomical structures. The arcs of inner-rings and angles of successive inclined ring boundaries are used to correct ring-width series. The package provides a Shiny-based application, allowing R beginners to easily analyze tree ring images and export ring-width series in standard file formats.
 License: GPL-3
-LazyData: TRUE
 NeedsCompilation: no
 Repository: CRAN, GitHub
 Encoding: UTF-8
