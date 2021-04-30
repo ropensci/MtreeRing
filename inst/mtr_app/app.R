@@ -17,13 +17,13 @@ library(dplyr)
 
 # define common CSS styles
 style1 = ';font-weight:bolder;font-family:"Times New Roman"'
-style1 = ';font-family:"Times New Roman"'
+style2 = ';font-family:"Times New Roman"'
 
 # Run the application
 createUI <- function()
 {
   shiny.title <- dashboardHeader(
-    title = div(style = paste0('font-size:2vw;font-weight:bolder;', 
+    title = div(style = paste0('font-size:2vw;font-weight:bolder;',
                                style1), 'MtreeRing'),
     tags$li(
       tags$style(".main-header {min-height: 0vw}"),
@@ -809,6 +809,7 @@ createUI <- function()
     )
   )
   ui <- dashboardPage(
+    title = 'MtreeRing',
     shiny.title,
     shiny.sider,
     shiny.body
