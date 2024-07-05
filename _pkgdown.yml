@@ -10,7 +10,7 @@ navbar:
     - articles
     - tutorials
     - news
-    right: github
+    right: [search, github]
   components:
     home:
       icon: fa-home fa-lg
